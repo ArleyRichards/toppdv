@@ -1,68 +1,53 @@
-# CodeIgniter 4 Application Starter
 
-## What is CodeIgniter?
+# Sistema PDV Simples - CodeIgniter 4
 
-CodeIgniter is a PHP full-stack web framework that is light, fast, flexible and secure.
-More information can be found at the [official site](https://codeigniter.com).
+## Descrição
 
-This repository holds a composer-installable app starter.
-It has been built from the
-[development repository](https://github.com/codeigniter4/CodeIgniter4).
+Este projeto é um sistema PDV (Ponto de Venda) simples, desenvolvido com o framework CodeIgniter 4. O objetivo é oferecer uma solução leve e eficiente para gestão de vendas, produtos, clientes, fornecedores e usuários, com recursos essenciais para pequenos comércios.
 
-More information about the plans for version 4 can be found in [CodeIgniter 4](https://forum.codeigniter.com/forumdisplay.php?fid=28) on the forums.
+## Funcionalidades Principais
 
-You can read the [user guide](https://codeigniter.com/user_guide/)
-corresponding to the latest version of the framework.
+- Cadastro e gerenciamento de produtos
+- Controle de vendas e histórico
+- Gestão de clientes e fornecedores
+- Controle de garantias
+- Categorias de produtos
+- Gestão de usuários e permissões
+- Registro de logs de operações
+- Relatórios básicos
 
-## Installation & updates
+## Estrutura dos Models
 
-`composer create-project codeigniter4/appstarter` then `composer update` whenever
-there is a new release of the framework.
+- `CategoriaModel`: Gerencia categorias de produtos.
+- `ClienteModel`: Cadastro e controle de clientes.
+- `FornecedorModel`: Cadastro e controle de fornecedores.
+- `GarantiaModel`: Controle de garantias dos produtos.
+- `LogModel`: Registro de operações e eventos do sistema.
+- `ProdutoModel`: Cadastro e gerenciamento de produtos.
+- `ProdutoVendaModel`: Relaciona produtos às vendas realizadas.
+- `UsuarioModel`: Gerenciamento de usuários do sistema.
+- `VendaModel`: Controle de vendas realizadas.
 
-When updating, check the release notes to see if there are any changes you might need to apply
-to your `app` folder. The affected files can be copied or merged from
-`vendor/codeigniter4/framework/app`.
+## Requisitos
 
-## Setup
+- PHP 8.1 ou superior
+- Extensões PHP: intl, mbstring, json, mysqlnd, libcurl
 
-Copy `env` to `.env` and tailor for your app, specifically the baseURL
-and any database settings.
+## Instalação
 
-## Important Change with index.php
+1. Clone o repositório ou baixe os arquivos.
+2. Instale as dependências com Composer:
+	```
+	composer install
+	```
+3. Copie o arquivo `env` para `.env` e configure as variáveis, principalmente o `baseURL` e as credenciais do banco de dados.
+4. Importe o banco de dados inicial a partir do arquivo `DB/ci_pdv.sql`.
+5. Configure o servidor web para apontar para a pasta `public`.
 
-`index.php` is no longer in the root of the project! It has been moved inside the *public* folder,
-for better security and separation of components.
+## Uso
 
-This means that you should configure your web server to "point" to your project's *public* folder, and
-not to the project root. A better practice would be to configure a virtual host to point there. A poor practice would be to point your web server to the project root and expect to enter *public/...*, as the rest of your logic and the
-framework are exposed.
+Acesse o sistema via navegador apontando para o endereço configurado no `baseURL`. Realize o login e utilize os módulos disponíveis para gerenciar vendas, produtos, clientes, fornecedores e demais funcionalidades.
 
-**Please** read the user guide for a better explanation of how CI4 works!
+## Licença
 
-## Repository Management
-
-We use GitHub issues, in our main repository, to track **BUGS** and to track approved **DEVELOPMENT** work packages.
-We use our [forum](http://forum.codeigniter.com) to provide SUPPORT and to discuss
-FEATURE REQUESTS.
-
-This repository is a "distribution" one, built by our release preparation script.
-Problems with it can be raised on our forum, or as issues in the main repository.
-
-## Server Requirements
-
-PHP version 8.1 or higher is required, with the following extensions installed:
-
-- [intl](http://php.net/manual/en/intl.requirements.php)
-- [mbstring](http://php.net/manual/en/mbstring.installation.php)
-
-> [!WARNING]
-> - The end of life date for PHP 7.4 was November 28, 2022.
-> - The end of life date for PHP 8.0 was November 26, 2023.
-> - If you are still using PHP 7.4 or 8.0, you should upgrade immediately.
-> - The end of life date for PHP 8.1 will be December 31, 2025.
-
-Additionally, make sure that the following extensions are enabled in your PHP:
-
-- json (enabled by default - don't turn it off)
-- [mysqlnd](http://php.net/manual/en/mysqlnd.install.php) if you plan to use MySQL
-- [libcurl](http://php.net/manual/en/curl.requirements.php) if you plan to use the HTTP\CURLRequest library
+Este projeto segue a licença MIT.
