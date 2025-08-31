@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 30/08/2025 às 20:15
+-- Tempo de geração: 31/08/2025 às 15:41
 -- Versão do servidor: 10.4.32-MariaDB
 -- Versão do PHP: 8.2.12
 
@@ -65,6 +65,53 @@ CREATE TABLE `c2_clientes` (
   `c2_updated_at` datetime DEFAULT NULL,
   `c2_deleted_at` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura para tabela `c3_configuracoes`
+--
+
+CREATE TABLE `c3_configuracoes` (
+  `c3_id` bigint(20) UNSIGNED NOT NULL,
+  `c3_nome_app` varchar(255) NOT NULL DEFAULT 'Sistema PDV',
+  `c3_versao_app` varchar(20) NOT NULL DEFAULT '1.0.0',
+  `c3_nome_empresa` varchar(255) NOT NULL,
+  `c3_cnpj_empresa` varchar(18) DEFAULT NULL,
+  `c3_email_contato` varchar(255) NOT NULL,
+  `c3_telefone_empresa` varchar(15) DEFAULT NULL,
+  `c3_site_empresa` varchar(255) DEFAULT NULL,
+  `c3_endereco_empresa` text DEFAULT NULL,
+  `c3_logo_path` varchar(255) DEFAULT 'logo.png',
+  `c3_favicon_path` varchar(255) DEFAULT 'favicon.ico',
+  `c3_timezone` varchar(50) NOT NULL DEFAULT 'America/Sao_Paulo',
+  `c3_idioma` varchar(10) NOT NULL DEFAULT 'pt-BR',
+  `c3_moeda` varchar(10) NOT NULL DEFAULT 'BRL',
+  `c3_simbolo_moeda` varchar(5) NOT NULL DEFAULT 'R$',
+  `c3_casas_decimais` tinyint(1) NOT NULL DEFAULT 2,
+  `c3_separador_decimal` char(1) NOT NULL DEFAULT ',',
+  `c3_separador_milhar` char(1) NOT NULL DEFAULT '.',
+  `c3_tema` enum('light','dark','auto') NOT NULL DEFAULT 'dark',
+  `c3_limite_backup` int(11) NOT NULL DEFAULT 30,
+  `c3_email_notificacoes` varchar(255) DEFAULT NULL,
+  `c3_smtp_host` varchar(255) DEFAULT NULL,
+  `c3_smtp_port` int(5) DEFAULT NULL,
+  `c3_smtp_usuario` varchar(255) DEFAULT NULL,
+  `c3_smtp_senha` varchar(255) DEFAULT NULL,
+  `c3_smtp_criptografia` enum('ssl','tls','none') DEFAULT 'ssl',
+  `c3_status_loja` enum('aberta','fechada','manutencao') NOT NULL DEFAULT 'aberta',
+  `c3_mensagem_manutencao` text DEFAULT NULL,
+  `c3_created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `c3_updated_at` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `c3_deleted_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='Tabela de configurações do sistema PDV';
+
+--
+-- Despejando dados para a tabela `c3_configuracoes`
+--
+
+INSERT INTO `c3_configuracoes` (`c3_id`, `c3_nome_app`, `c3_versao_app`, `c3_nome_empresa`, `c3_cnpj_empresa`, `c3_email_contato`, `c3_telefone_empresa`, `c3_site_empresa`, `c3_endereco_empresa`, `c3_logo_path`, `c3_favicon_path`, `c3_timezone`, `c3_idioma`, `c3_moeda`, `c3_simbolo_moeda`, `c3_casas_decimais`, `c3_separador_decimal`, `c3_separador_milhar`, `c3_tema`, `c3_limite_backup`, `c3_email_notificacoes`, `c3_smtp_host`, `c3_smtp_port`, `c3_smtp_usuario`, `c3_smtp_senha`, `c3_smtp_criptografia`, `c3_status_loja`, `c3_mensagem_manutencao`, `c3_created_at`, `c3_updated_at`, `c3_deleted_at`) VALUES
+(1, 'Sistema PDV', '1.0.0', 'Sua Empresa', NULL, 'contato@empresa.com', NULL, NULL, NULL, 'logo.png', 'favicon.ico', 'America/Sao_Paulo', 'pt-BR', 'BRL', 'R$', 2, ',', '.', 'dark', 30, NULL, NULL, NULL, NULL, NULL, 'ssl', 'aberta', NULL, '2025-08-30 19:11:02', '2025-08-30 19:11:02', NULL);
 
 -- --------------------------------------------------------
 
@@ -245,6 +292,12 @@ ALTER TABLE `c2_clientes`
   ADD UNIQUE KEY `c2_cpf` (`c2_cpf`) USING BTREE;
 
 --
+-- Índices de tabela `c3_configuracoes`
+--
+ALTER TABLE `c3_configuracoes`
+  ADD PRIMARY KEY (`c3_id`) USING BTREE;
+
+--
 -- Índices de tabela `f1_fornecedores`
 --
 ALTER TABLE `f1_fornecedores`
@@ -320,6 +373,12 @@ ALTER TABLE `c1_categorias`
 --
 ALTER TABLE `c2_clientes`
   MODIFY `c2_id` bigint(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=150;
+
+--
+-- AUTO_INCREMENT de tabela `c3_configuracoes`
+--
+ALTER TABLE `c3_configuracoes`
+  MODIFY `c3_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de tabela `f1_fornecedores`
