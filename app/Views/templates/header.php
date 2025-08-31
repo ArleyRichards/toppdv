@@ -41,41 +41,33 @@
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
-            <a class="navbar-brand" href="#">
-                <i class="bi bi-house-fill me-2"></i>
-                Meu Sistema
-            </a>
+            <a class="navbar-brand d-flex align-items-center" href="<?= base_url('home') ?>">
+            <img src="<?= base_url(IMG_PATH . 'logo.png') ?>" alt="Logo Sistema PDV" class="logo me-2" style="height:32px;">
+            <span class="fw-bold">
+                <!-- <i class="bi bi-house-fill me-2"></i> -->
+                <?= $appName ?? 'Meu Sistema' ?>
+            </span>
+        </a>
             
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
             
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link active" href="#">
-                            <i class="bi bi-house me-1"></i>
-                            Início
-                        </a>
-                    </li>
+                <ul class="navbar-nav ms-auto">                    
                     <li class="nav-item">
                         <a class="nav-link" href="#">
-                            <i class="bi bi-people me-1"></i>
-                            Usuários
+                            <i class="bi bi-gear me-1"></i>                            
                         </a>
                     </li>
+                                        
                     <li class="nav-item">
-                        <a class="nav-link" href="#">
-                            <i class="bi bi-gear me-1"></i>
-                            Configurações
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">
+                        <a class="nav-link" href="<?= base_url('logout') ?>">
                             <i class="bi bi-box-arrow-right me-1"></i>
                             Sair
                         </a>
                     </li>
+                    
                 </ul>
             </div>
         </div>

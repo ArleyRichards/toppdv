@@ -17,7 +17,7 @@ class AuthController extends BaseController
     {
         $this->usuarioModel = new UsuarioModel();
         $this->session = session();
-        helper(['form', 'url']);
+        helper(['form', 'url', 'cookie']);
     }
 
     /**
