@@ -507,8 +507,7 @@
             }
         }
     }
-
-    // Configurar event listeners com jQuery
+    
     /**
      * Carrega os dados dos produtos via AJAX GET.
      * @author Arley Richards <arleyrichards@gmail.com>

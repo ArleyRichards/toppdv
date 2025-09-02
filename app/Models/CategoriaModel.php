@@ -28,8 +28,10 @@ class CategoriaModel extends Model
     
     // Validações
     protected $validationRules = [
-        'c1_categoria' => 'required|min_length[3]|max_length[100]|is_unique[c1_categorias.c1_categoria,c1_id,{c1_id}]',
-        'c1_comissao' => 'required|decimal|greater_than_equal_to[0]|less_than_equal_to[100]'
+    'c1_categoria' => 'required|min_length[3]|max_length[100]|is_unique[c1_categorias.c1_categoria,c1_id,{c1_id}]',
+    'c1_comissao' => 'required|decimal|greater_than_equal_to[0]|less_than_equal_to[100]',
+    // Placeholder field used by is_unique when updating an existing record
+    'c1_id' => 'permit_empty|integer'
     ];
     
     protected $validationMessages = [

@@ -36,3 +36,14 @@ $routes->resource('produtos', [
     'controller' => 'ProdutoController',
     'except' => ['new', 'edit']
 ]);
+
+// Rotas para gerenciamento de categorias
+$routes->get('categorias', 'CategoriaController::index');
+$routes->get('categorias/estatisticas', 'CategoriaController::estatisticas');
+$routes->get('categorias/buscar', 'CategoriaController::buscar');
+$routes->get('categorias/cep', 'CategoriaController::consultarCep');
+$routes->get('categorias/list', 'CategoriaController::list');
+$routes->resource('categorias', [
+    'controller' => 'CategoriaController',
+    'except' => ['new', 'edit']
+]);
