@@ -6,8 +6,13 @@ use App\Models\ClienteModel;
 use CodeIgniter\API\ResponseTrait;
 use CodeIgniter\RESTful\ResourceController;
 
+/**
+ * Controller responsável pelas operações de clientes.
+ * @author Arley Richards <arleyrichards@gmail.com>
+ */
 class ClienteController extends ResourceController
 {
+
     use ResponseTrait;
 
     protected $modelName = 'App\Models\ClienteModel';
@@ -17,11 +22,6 @@ class ClienteController extends ResourceController
     {
         helper(['form', 'url']);
     }
-
-        /**
-         * Controller responsável pelas operações de clientes.
-         * @author Arley Richards <arleyrichards@gmail.com>
-         */
 
     /**
      * Retorna a view principal de gerenciamento de clientes
@@ -42,15 +42,15 @@ class ClienteController extends ResourceController
     }
 
     /**
-     * Retorna todos os clientes (para DataTables)
+     * Retorna todos os clientes
      */
     public function list()
-        /**
-         * Lista todos os clientes cadastrados.
-         * Método GET: /clientes/list
-         * @return 
-         * @author Arley Richards <arleyrichards@gmail.com>
-         */
+    /**
+     * Lista todos os clientes cadastrados.
+     * Método GET: /clientes/list
+     * @return 
+     * @author Arley Richards <arleyrichards@gmail.com>
+     */
     {
         // Permitir requisições GET
         $request = service('request');
@@ -86,59 +86,52 @@ class ClienteController extends ResourceController
     }
 
     /**
-     * Retorna um cliente específico
+     * Retorna os dados de um cliente pelo ID.
+     * Método GET: /clientes/{id}
+     * @param int $id
+     * @return 
+     * @author Arley Richards <arleyrichards@gmail.com>
      */
-    public function show($id = null)
-        /**
-         * Retorna os dados de um cliente pelo ID.
-         * Método GET: /clientes/{id}
-         * @param int $id
-         * @return 
-         * @author Arley Richards <arleyrichards@gmail.com>
-         */
-    {
+    public function show($id = null){
         $cliente = $this->model->find($id);
-        
+
         if ($cliente) {
             // Formatar dados para exibição
             $cliente->c2_cpf = $this->formatarCpf($cliente->c2_cpf);
             $cliente->c2_telefone = $this->formatarTelefone($cliente->c2_telefone);
             $cliente->c2_celular = $this->formatarTelefone($cliente->c2_celular);
-            
+
             return $this->respond($cliente);
         }
-        
+
         return $this->failNotFound('Cliente não encontrado');
     }
 
     /**
-     * Cria um novo cliente
+     * Cadastra um novo cliente.
+     * Método POST: /clientes
+     * @return 
+     * @author Arley Richards <arleyrichards@gmail.com>
      */
-    public function create()
-        /**
-         * Cadastra um novo cliente.
-         * Método POST: /clientes
-         * @return 
-         * @author Arley Richards <arleyrichards@gmail.com>
-         */
+    public function create()    
     {
         $rules = $this->model->getValidationRules();
         $messages = $this->model->getValidationMessages();
-        
+
         if (!$this->validate($rules, $messages)) {
             return $this->failValidationErrors($this->validator->getErrors());
         }
-        
+
         $data = (array) $this->request->getJSON();
-        
+
         try {
             $id = $this->model->insert($data);
-            
+
             if ($id) {
                 $cliente = $this->model->find($id);
                 return $this->respondCreated($cliente, 'Cliente criado com sucesso');
             }
-            
+
             return $this->fail('Falha ao criar cliente');
         } catch (\Exception $e) {
             return $this->failServerError('Erro no servidor: ' . $e->getMessage());
@@ -146,47 +139,44 @@ class ClienteController extends ResourceController
     }
 
     /**
-     * Atualiza um cliente existente
+     * Atualiza os dados de um cliente existente.
+     * Método PUT: /clientes/{id}
+     * @param int $id
+     * @return 
+     * @author Arley Richards <arleyrichards@gmail.com>
      */
-    public function update($id = null)
-        /**
-         * Atualiza os dados de um cliente existente.
-         * Método PUT: /clientes/{id}
-         * @param int $id
-         * @return 
-         * @author Arley Richards <arleyrichards@gmail.com>
-         */
+    public function update($id = null)    
     {
         // Verificar se o cliente existe
         $cliente = $this->model->find($id);
         if (!$cliente) {
             return $this->failNotFound('Cliente não encontrado');
         }
-        
+
         $rules = $this->model->getValidationRules();
         $messages = $this->model->getValidationMessages();
-        
+
         // Remover regra unique para o próprio registro na atualização
         if (isset($rules['c2_cpf'])) {
             $rules['c2_cpf'] = str_replace(
-                '{c2_id}', 
-                $id, 
+                '{c2_id}',
+                $id,
                 $rules['c2_cpf']
             );
         }
-        
+
         if (!$this->validate($rules, $messages)) {
             return $this->failValidationErrors($this->validator->getErrors());
         }
-        
+
         $data = (array) $this->request->getJSON();
-        
+
         try {
             if ($this->model->update($id, $data)) {
                 $cliente = $this->model->find($id);
                 return $this->respondUpdated($cliente, 'Cliente atualizado com sucesso');
             }
-            
+
             return $this->fail('Falha ao atualizar cliente');
         } catch (\Exception $e) {
             return $this->failServerError('Erro no servidor: ' . $e->getMessage());
@@ -194,28 +184,24 @@ class ClienteController extends ResourceController
     }
 
     /**
-     * Exclui um cliente (soft delete)
+     * Exclui um cliente pelo ID.
+     * Método DELETE: /clientes/{id}
+     * @param int $id
+     * @return 
+     * @author Arley Richards <arleyrichards@gmail.com>
      */
-    public function delete($id = null)
-        /**
-         * Exclui um cliente pelo ID.
-         * Método DELETE: /clientes/{id}
-         * @param int $id
-         * @return 
-         * @author Arley Richards <arleyrichards@gmail.com>
-         */
-    {
+    public function delete($id = null){
         // Verificar se o cliente existe
         $cliente = $this->model->find($id);
         if (!$cliente) {
             return $this->failNotFound('Cliente não encontrado');
         }
-        
+
         try {
             if ($this->model->delete($id)) {
                 return $this->respondDeleted(['id' => $id], 'Cliente excluído com sucesso');
             }
-            
+
             return $this->fail('Falha ao excluir cliente');
         } catch (\Exception $e) {
             return $this->failServerError('Erro no servidor: ' . $e->getMessage());
@@ -228,13 +214,13 @@ class ClienteController extends ResourceController
     public function buscar()
     {
         $termo = $this->request->getVar('term');
-        
+
         if (empty($termo)) {
             return $this->respond([]);
         }
-        
+
         $clientes = $this->model->buscarPorNome($termo, 10);
-        
+
         $resultados = [];
         foreach ($clientes as $cliente) {
             $resultados[] = [
@@ -242,7 +228,7 @@ class ClienteController extends ResourceController
                 'text' => "{$cliente->c2_nome} - {$this->formatarCpf($cliente->c2_cpf)}"
             ];
         }
-        
+
         return $this->respond($resultados);
     }
 
@@ -253,30 +239,30 @@ class ClienteController extends ResourceController
     {
         $cep = $this->request->getVar('cep');
         $cep = preg_replace('/[^0-9]/', '', $cep);
-        
+
         if (strlen($cep) !== 8) {
             return $this->fail('CEP inválido');
         }
-        
+
         // Consulta à API ViaCEP
         $url = "https://viacep.com.br/ws/{$cep}/json/";
-        
+
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        
+
         $response = curl_exec($ch);
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
-        
+
         if ($httpCode === 200 && $response) {
             $endereco = json_decode($response);
-            
+
             if (isset($endereco->erro)) {
                 return $this->fail('CEP não encontrado');
             }
-            
+
             return $this->respond([
                 'c2_cep' => $cep,
                 'c2_endereco' => $endereco->logradouro,
@@ -285,7 +271,7 @@ class ClienteController extends ResourceController
                 'c2_uf' => $endereco->uf
             ]);
         }
-        
+
         return $this->failServerError('Erro ao consultar CEP');
     }
 
@@ -304,11 +290,11 @@ class ClienteController extends ResourceController
     private function formatarCpf($cpf)
     {
         $cpf = preg_replace('/[^0-9]/', '', $cpf);
-        
+
         if (strlen($cpf) === 11) {
             return preg_replace('/(\d{3})(\d{3})(\d{3})(\d{2})/', '$1.$2.$3-$4', $cpf);
         }
-        
+
         return $cpf;
     }
 
@@ -318,13 +304,13 @@ class ClienteController extends ResourceController
     private function formatarTelefone($telefone)
     {
         $telefone = preg_replace('/[^0-9]/', '', $telefone);
-        
+
         if (strlen($telefone) === 11) {
             return preg_replace('/(\d{2})(\d{5})(\d{4})/', '($1) $2-$3', $telefone);
         } elseif (strlen($telefone) === 10) {
             return preg_replace('/(\d{2})(\d{4})(\d{4})/', '($1) $2-$3', $telefone);
         }
-        
+
         return $telefone;
     }
 
@@ -339,9 +325,9 @@ class ClienteController extends ResourceController
             ClienteModel::SITUACAO_PENDENTE => 'bg-warning',
             ClienteModel::SITUACAO_BLOQUEADO => 'bg-danger'
         ];
-        
+
         $classe = $classes[$situacao] ?? 'bg-secondary';
-        
+
         return "<span class='badge {$classe}'>{$situacao}</span>";
     }
 

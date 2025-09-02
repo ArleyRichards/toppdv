@@ -25,3 +25,14 @@ $routes->resource('clientes', [
     'controller' => 'ClienteController',
     'except' => ['new', 'edit']
 ]);
+
+// Rotas para gerenciamento de produtos
+$routes->get('produtos', 'ProdutoController::index');
+$routes->get('produtos/estatisticas', 'ProdutoController::estatisticas');
+$routes->get('produtos/buscar', 'ProdutoController::buscar');
+$routes->get('produtos/cep', 'ProdutoController::consultarCep');
+$routes->get('produtos/list', 'ProdutoController::list');
+$routes->resource('produtos', [
+    'controller' => 'ProdutoController',
+    'except' => ['new', 'edit']
+]);

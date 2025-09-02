@@ -37,6 +37,7 @@ class ProdutoModel extends Model
     
     // Validações
     protected $validationRules = [
+    'p1_id' => 'permit_empty|integer',
         'p1_nome_produto' => 'required|min_length[3]|max_length[255]',
         'p1_codigo_produto' => 'required|min_length[3]|max_length[255]|is_unique[p1_produtos.p1_codigo_produto,p1_id,{p1_id}]',
         'p1_fornecedor_id' => 'required|integer|is_not_unique[f1_fornecedores.f1_id]',
