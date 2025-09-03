@@ -80,8 +80,15 @@ class FornecedorModel extends Model
     protected function formatarCnpj(array $data)
     {
         if (!empty($data['data']['f1_cnpj'])) {
-            $cnpj = preg_replace('/[^0-9]/', '', $data['data']['f1_cnpj']);
-            $data['data']['f1_cnpj'] = $cnpj;
+            // remover caracteres não numéricos
+            $only = preg_replace('/[^0-9]/', '', $data['data']['f1_cnpj']);
+            // se houver 14 dígitos, formata como 00.000.000/0000-00
+            if (strlen($only) === 14) {
+                $data['data']['f1_cnpj'] = sprintf('%s.%s.%s/%s-%s', substr($only,0,2), substr($only,2,3), substr($only,5,3), substr($only,8,4), substr($only,12,2));
+            } else {
+                // caso contrário, armazena apenas os dígitos
+                $data['data']['f1_cnpj'] = $only;
+            }
         }
         return $data;
     }

@@ -67,3 +67,14 @@ $routes->resource('garantias', [
     'controller' => 'GarantiaController',
     'except' => ['new', 'edit']
 ]);
+
+// Rotas para gerenciamento de fornecedores
+$routes->get('fornecedores', 'FornecedorController::index');
+$routes->get('fornecedores/estatisticas', 'FornecedorController::estatisticas');
+$routes->get('fornecedores/buscar', 'FornecedorController::buscar');
+$routes->get('fornecedores/cep', 'FornecedorController::consultarCep');
+$routes->get('fornecedores/list', 'FornecedorController::list');
+$routes->resource('fornecedores', [
+    'controller' => 'FornecedorController',
+    'except' => ['new', 'edit']
+]);
