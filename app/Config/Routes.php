@@ -9,6 +9,15 @@ $routes->get('/', 'AuthController::index');
 $routes->get('/login', 'AuthController::index');
 $routes->get('/logout', 'AuthController::logout');
 
+// Rotas de autenticação (login, logout, recuperar/redefinir senha)
+$routes->post('auth/login', 'AuthController::processLogin');
+$routes->get('auth/logout', 'AuthController::logout');
+$routes->get('auth/recuperar-senha', 'AuthController::recuperarSenha');
+$routes->post('auth/recuperar-senha', 'AuthController::processRecuperarSenha');
+$routes->get('auth/redefinir-senha/(:any)', 'AuthController::redefinirSenha/$1');
+$routes->post('auth/redefinir-senha', 'AuthController::processRedefinirSenha');
+$routes->get('acesso-negado', 'AuthController::acessoNegado');
+
 $routes->get('/home', 'Home::index');
 
 // Rotas de configuração (apenas admin)
@@ -45,5 +54,16 @@ $routes->get('categorias/cep', 'CategoriaController::consultarCep');
 $routes->get('categorias/list', 'CategoriaController::list');
 $routes->resource('categorias', [
     'controller' => 'CategoriaController',
+    'except' => ['new', 'edit']
+]);
+
+// Rotas para gerenciamento de garantias
+$routes->get('garantias', 'GarantiaController::index');
+$routes->get('garantias/estatisticas', 'GarantiaController::estatisticas');
+$routes->get('garantias/buscar', 'GarantiaController::buscar');
+$routes->get('garantias/cep', 'GarantiaController::consultarCep');
+$routes->get('garantias/list', 'GarantiaController::list');
+$routes->resource('garantias', [
+    'controller' => 'GarantiaController',
     'except' => ['new', 'edit']
 ]);

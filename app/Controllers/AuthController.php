@@ -142,7 +142,7 @@ class AuthController extends BaseController
 
         switch ($permissao) {
             case UsuarioModel::PERMISSAO_ADMIN:
-                $redirectUrl = '/admin/dashboard';
+                $redirectUrl = 'home';
                 $message = 'Bem-vindo à área administrativa!';
                 break;
             

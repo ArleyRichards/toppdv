@@ -29,7 +29,7 @@ class CategoriaController extends ResourceController
     public function index()
     {
         $data = [
-            'title' => 'Gerenciamento de categorias',           
+            'title' => 'Gerenciamento de categorias',
         ];
 
         return view('categorias', $data);
@@ -41,7 +41,7 @@ class CategoriaController extends ResourceController
      * @return 
      * @author Arley Richards <arleyrichards@gmail.com>
      */
-    public function list()    
+    public function list()
     {
         // Permitir requisições GET
         $request = service('request');
@@ -59,7 +59,7 @@ class CategoriaController extends ResourceController
         }
 
         return $this->respond($data);
-    }    
+    }
 
     /**
      * Retorna os dados de uma categoria pelo ID.
@@ -68,7 +68,8 @@ class CategoriaController extends ResourceController
      * @return 
      * @author Arley Richards <arleyrichards@gmail.com>
      */
-    public function show($id = null){
+    public function show($id = null)
+    {
         $categoria = $this->model->find($id);
 
         if ($categoria) {
@@ -84,7 +85,7 @@ class CategoriaController extends ResourceController
      * @return 
      * @author Arley Richards <arleyrichards@gmail.com>
      */
-    public function create()    
+    public function create()
     {
         $rules = $this->model->getValidationRules();
         $messages = $this->model->getValidationMessages();
@@ -116,7 +117,7 @@ class CategoriaController extends ResourceController
      * @return 
      * @author Arley Richards <arleyrichards@gmail.com>
      */
-    public function update($id = null)    
+    public function update($id = null)
     {
         // Verificar se a categoria existe
         $categoria = $this->model->find($id);
@@ -154,167 +155,28 @@ class CategoriaController extends ResourceController
     }
 
     /**
-     * Exclui um cliente pelo ID.
+     * Exclui uma categoria pelo ID.
      * Método DELETE: /categorias/{id}
      * @param int $id
      * @return 
      * @author Arley Richards <arleyrichards@gmail.com>
      */
-    public function delete($id = null){
+    public function delete($id = null)
+    {
         // Verificar se o cliente existe
-        $cliente = $this->model->find($id);
-        if (!$cliente) {
-            return $this->failNotFound('Cliente não encontrado');
+        $categoria = $this->model->find($id);
+        if (!$categoria) {
+            return $this->failNotFound('Categoria não encontrada');
         }
 
         try {
             if ($this->model->delete($id)) {
-                return $this->respondDeleted(['id' => $id], 'Cliente excluído com sucesso');
+                return $this->respondDeleted(['id' => $id], 'Categoria excluída com sucesso');
             }
 
-            return $this->fail('Falha ao excluir cliente');
+            return $this->fail('Falha ao excluir categoria');
         } catch (\Exception $e) {
             return $this->failServerError('Erro no servidor: ' . $e->getMessage());
         }
-    }
-
-    /**
-     * Busca categorias por termo (para autocomplete)
-     */
-    public function buscar()
-    {
-        $termo = $this->request->getVar('term');
-
-        if (empty($termo)) {
-            return $this->respond([]);
-        }
-
-        $categorias = $this->model->buscarPorNome($termo, 10);
-
-        $resultados = [];
-        foreach ($categorias as $cliente) {
-            $resultados[] = [
-                'id' => $cliente->c2_id,
-                'text' => "{$cliente->c2_nome} - {$this->formatarCpf($cliente->c2_cpf)}"
-            ];
-        }
-
-        return $this->respond($resultados);
-    }
-
-    /**
-     * Busca informações de CEP via API
-     */
-    public function consultarCep()
-    {
-        $cep = $this->request->getVar('cep');
-        $cep = preg_replace('/[^0-9]/', '', $cep);
-
-        if (strlen($cep) !== 8) {
-            return $this->fail('CEP inválido');
-        }
-
-        // Consulta à API ViaCEP
-        $url = "https://viacep.com.br/ws/{$cep}/json/";
-
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-
-        $response = curl_exec($ch);
-        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        curl_close($ch);
-
-        if ($httpCode === 200 && $response) {
-            $endereco = json_decode($response);
-
-            if (isset($endereco->erro)) {
-                return $this->fail('CEP não encontrado');
-            }
-
-            return $this->respond([
-                'c2_cep' => $cep,
-                'c2_endereco' => $endereco->logradouro,
-                'c2_bairro' => $endereco->bairro,
-                'c2_cidade' => $endereco->localidade,
-                'c2_uf' => $endereco->uf
-            ]);
-        }
-
-        return $this->failServerError('Erro ao consultar CEP');
-    }
-
-    /**
-     * Retorna estatísticas de categorias
-     */
-    public function estatisticas()
-    {
-        $estatisticas = $this->model->getEstatisticas();
-        return $this->respond($estatisticas);
-    }
-
-    /**
-     * Formata CPF para exibição
-     */
-    private function formatarCpf($cpf)
-    {
-        $cpf = preg_replace('/[^0-9]/', '', $cpf);
-
-        if (strlen($cpf) === 11) {
-            return preg_replace('/(\d{3})(\d{3})(\d{3})(\d{2})/', '$1.$2.$3-$4', $cpf);
-        }
-
-        return $cpf;
-    }
-
-    /**
-     * Formata telefone para exibição
-     */
-    private function formatarTelefone($telefone)
-    {
-        $telefone = preg_replace('/[^0-9]/', '', $telefone);
-
-        if (strlen($telefone) === 11) {
-            return preg_replace('/(\d{2})(\d{5})(\d{4})/', '($1) $2-$3', $telefone);
-        } elseif (strlen($telefone) === 10) {
-            return preg_replace('/(\d{2})(\d{4})(\d{4})/', '($1) $2-$3', $telefone);
-        }
-
-        return $telefone;
-    }
-
-    /**
-     * Retorna badge HTML para situação
-     */
-    private function getBadgeSituacao($situacao)
-    {
-        $classes = [
-            ClienteModel::SITUACAO_ATIVO => 'bg-success',
-            ClienteModel::SITUACAO_INATIVO => 'bg-secondary',
-            ClienteModel::SITUACAO_PENDENTE => 'bg-warning',
-            ClienteModel::SITUACAO_BLOQUEADO => 'bg-danger'
-        ];
-
-        $classe = $classes[$situacao] ?? 'bg-secondary';
-
-        return "<span class='badge {$classe}'>{$situacao}</span>";
-    }
-
-    /**
-     * Retorna botões de ação para DataTables
-     */
-    private function getBotoesAcao($id)
-    {
-        return "
-            <div class='btn-group'>
-                <button class='btn btn-sm btn-primary btn-editar' data-id='{$id}' title='Editar'>
-                    <i class='bi bi-pencil'></i>
-                </button>
-                <button class='btn btn-sm btn-danger btn-excluir' data-id='{$id}' title='Excluir'>
-                    <i class='bi bi-trash'></i>
-                </button>
-            </div>
-        ";
-    }
+    }    
 }
