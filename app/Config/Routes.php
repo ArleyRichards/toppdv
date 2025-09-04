@@ -21,8 +21,8 @@ $routes->get('acesso-negado', 'AuthController::acessoNegado');
 $routes->get('/home', 'Home::index');
 
 // Rotas de configuração (apenas admin)
-$routes->get('admin/configuracoes', 'ConfiguracaoController::index');
-$routes->post('admin/configuracoes/salvar', 'ConfiguracaoController::salvar');
+$routes->get('configuracoes', 'ConfiguracaoController::index');
+$routes->post('configuracoes/salvar', 'ConfiguracaoController::salvar');
 
 // Rotas para gerenciamento de clientes
 $routes->get('clientes', 'ClienteController::index');
@@ -76,5 +76,16 @@ $routes->get('fornecedores/cep', 'FornecedorController::consultarCep');
 $routes->get('fornecedores/list', 'FornecedorController::list');
 $routes->resource('fornecedores', [
     'controller' => 'FornecedorController',
+    'except' => ['new', 'edit']
+]);
+
+// Rotas para gerenciamento de usuarios
+$routes->get('usuarios', 'UsuarioController::index');
+$routes->get('usuarios/estatisticas', 'UsuarioController::estatisticas');
+$routes->get('usuarios/buscar', 'UsuarioController::buscar');
+$routes->get('usuarios/cep', 'UsuarioController::consultarCep');
+$routes->get('usuarios/list', 'UsuarioController::list');
+$routes->resource('usuarios', [
+    'controller' => 'UsuarioController',
     'except' => ['new', 'edit']
 ]);

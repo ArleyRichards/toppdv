@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Helpers\ConfigHelper;
 use App\Models\CategoriaModel;
 use App\Models\FornecedorModel;
 use App\Models\GarantiaModel;
@@ -82,6 +83,9 @@ class ProdutoController extends ResourceController{
             'categorias' => $categorias,
             'fornecedores' => $fornecedores,
             'garantias' => $garantias,
+            'appName' => ConfigHelper::appName(),
+            'empresa' => ConfigHelper::empresa(),
+            'logo'    => ConfigHelper::get('c3_logo_path') ?? IMG_PATH . 'logo.png',
         ];
 
         return view('produtos', $data);

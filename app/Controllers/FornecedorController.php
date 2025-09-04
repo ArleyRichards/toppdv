@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Helpers\ConfigHelper;
 use CodeIgniter\API\ResponseTrait;
 use CodeIgniter\RESTful\ResourceController;
 
@@ -20,6 +21,9 @@ class FornecedorController extends ResourceController
     {
         $data = [
             'title' => 'Gerenciamento de fornecedores',
+            'appName' => ConfigHelper::appName(),
+            'empresa' => ConfigHelper::empresa(),
+            'logo'    => ConfigHelper::get('c3_logo_path') ?? IMG_PATH . 'logo.png',
         ];
 
         return view('fornecedores', $data);

@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Helpers\ConfigHelper;
 use App\Models\ClienteModel;
 use CodeIgniter\API\ResponseTrait;
 use CodeIgniter\RESTful\ResourceController;
@@ -35,7 +36,10 @@ class ClienteController extends ResourceController
                 ClienteModel::SITUACAO_INATIVO,
                 ClienteModel::SITUACAO_PENDENTE,
                 ClienteModel::SITUACAO_BLOQUEADO
-            ]
+            ],
+            'appName' => ConfigHelper::appName(),
+            'empresa' => ConfigHelper::empresa(),
+            'logo'    => ConfigHelper::get('c3_logo_path') ?? IMG_PATH . 'logo.png',
         ];
 
         return view('clientes', $data);

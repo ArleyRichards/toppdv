@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Helpers\ConfigHelper;
 use App\Models\GarantiaModel;
 use CodeIgniter\API\ResponseTrait;
 use CodeIgniter\RESTful\ResourceController;
@@ -21,6 +22,9 @@ class GarantiaController extends ResourceController
     {
         $data = [
             'title' => 'Gerenciamento de garantias',
+            'appName' => ConfigHelper::appName(),
+            'empresa' => ConfigHelper::empresa(),
+            'logo'    => ConfigHelper::get('c3_logo_path') ?? IMG_PATH . 'logo.png',
         ];
 
         return view('garantias', $data);
