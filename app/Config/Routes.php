@@ -19,6 +19,8 @@ $routes->post('auth/redefinir-senha', 'AuthController::processRedefinirSenha');
 $routes->get('acesso-negado', 'AuthController::acessoNegado');
 
 $routes->get('/home', 'Home::index');
+// Licença
+$routes->get('licenca', 'LicencaController::index');
 
 // Rotas de configuração (apenas admin)
 $routes->get('configuracoes', 'ConfiguracaoController::index');
@@ -85,6 +87,8 @@ $routes->get('usuarios/estatisticas', 'UsuarioController::estatisticas');
 $routes->get('usuarios/buscar', 'UsuarioController::buscar');
 $routes->get('usuarios/cep', 'UsuarioController::consultarCep');
 $routes->get('usuarios/list', 'UsuarioController::list');
+// Allow POST with X-HTTP-Method-Override for update (some servers block PUT)
+$routes->post('usuarios/(:num)', 'UsuarioController::update/$1');
 $routes->resource('usuarios', [
     'controller' => 'UsuarioController',
     'except' => ['new', 'edit']

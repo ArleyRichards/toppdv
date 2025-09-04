@@ -67,8 +67,9 @@ class UsuarioModel extends Model
     const PERMISSAO_USUARIO = 'usuario';
     
     // Callback para hash da senha antes de inserir/atualizar
-    protected $beforeInsert = ['hashPassword', 'formatarCpf'];
-    protected $beforeUpdate = ['hashPassword', 'formatarCpf'];
+    // Preserve punctuation in CPF: removed automatic formatting callback
+    protected $beforeInsert = ['hashPassword'];
+    protected $beforeUpdate = ['hashPassword'];
     
     /**
      * Aplica hash na senha antes de salvar
@@ -89,12 +90,13 @@ class UsuarioModel extends Model
      */
     protected function formatarCpf(array $data)
     {
-        if (!empty($data['data']['u1_cpf'])) {
-            // Remove qualquer formatação existente do CPF
-            $cpf = preg_replace('/[^0-9]/', '', $data['data']['u1_cpf']);
-            $data['data']['u1_cpf'] = $cpf;
-        }
-        return $data;
+    // Intencional: manter formatação do CPF conforme fornecida.
+    // Se no futuro desejar normalizar (remover pontos/traço), reativar a limpeza abaixo.
+    // if (!empty($data['data']['u1_cpf'])) {
+    //     $cpf = preg_replace('/[^0-9]/', '', $data['data']['u1_cpf']);
+    //     $data['data']['u1_cpf'] = $cpf;
+    // }
+    return $data;
     }
     
     /**
