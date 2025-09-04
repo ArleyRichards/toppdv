@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 31/08/2025 às 15:41
+-- Tempo de geração: 04/09/2025 às 22:12
 -- Versão do servidor: 10.4.32-MariaDB
 -- Versão do PHP: 8.2.12
 
@@ -36,6 +36,18 @@ CREATE TABLE `c1_categorias` (
   `c1_deleted_at` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Despejando dados para a tabela `c1_categorias`
+--
+
+INSERT INTO `c1_categorias` (`c1_id`, `c1_categoria`, `c1_comissao`, `c1_created_at`, `c1_updated_at`, `c1_deleted_at`) VALUES
+(1, 'Celulares kkk', 5.00, '2025-09-01 08:56:47', '2025-09-02 09:56:23', '2025-09-02 09:56:23'),
+(2, 'Informática', 6.00, '2025-09-01 08:56:47', NULL, NULL),
+(3, 'Acessórios', 8.00, '2025-09-01 08:56:47', NULL, NULL),
+(4, 'Áudio e Multimídia', 7.50, '2025-09-01 08:56:47', NULL, NULL),
+(5, 'Periféricos', 6.50, '2025-09-01 08:56:47', NULL, NULL),
+(6, 'Teste 1234', 6.00, '2025-09-02 09:48:07', '2025-09-02 09:48:14', '2025-09-02 09:48:14');
+
 -- --------------------------------------------------------
 
 --
@@ -65,6 +77,38 @@ CREATE TABLE `c2_clientes` (
   `c2_updated_at` datetime DEFAULT NULL,
   `c2_deleted_at` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Despejando dados para a tabela `c2_clientes`
+--
+
+INSERT INTO `c2_clientes` (`c2_id`, `c2_nome`, `c2_cpf`, `c2_rg`, `c2_data_nascimento`, `c2_idade`, `c2_cep`, `c2_cidade`, `c2_uf`, `c2_endereco`, `c2_bairro`, `c2_complemento`, `c2_numero`, `c2_ponto_referencia`, `c2_telefone`, `c2_celular`, `c2_email`, `c2_situacao`, `c2_created_at`, `c2_updated_at`, `c2_deleted_at`) VALUES
+(150, 'João Silva', '123.456.789-00', 'MG1234567', '1985-03-15', 40, '30110-010', 'Belo Horizonte', 'MG', 'Rua das Flores', 'Centro', NULL, '100', 'Próx. ao Mercado Central', '(31) 3221-1234', '(31) 98888-1111', 'joao.silva@email.com', 'Ativo', '2025-08-31 14:43:26', '2025-08-31 17:34:10', '2025-08-31 17:34:10'),
+(151, 'Maria Oliveira', '987.654.321-00', 'SP7654321', '1990-07-22', 35, '01001-000', 'São Paulo', 'SP', 'Av. Paulista', 'Bela Vista', 'Apto 101', '200', 'Próx. ao MASP', '(11) 3333-2222', '(11) 97777-2222', 'maria.oliveira@email.com', 'Ativo', '2025-08-31 14:43:26', '2025-08-31 14:43:26', NULL),
+(152, 'Carlos Souza', '456.789.123-00', 'RJ4567891', '1978-12-05', 46, '22041-001', 'Rio de Janeiro', 'RJ', 'Rua Atlântica', 'Copacabana', NULL, '300', 'Em frente à praia', '(21) 3444-3333', '(21) 96666-3333', 'carlos.souza@email.com', 'Ativo', '2025-08-31 14:43:26', '2025-08-31 14:43:26', NULL),
+(153, 'Ana Paula', '321.654.987-00', 'RS3216549', '1995-05-10', 30, '90010-320', 'Porto Alegre', 'RS', 'Av. Independência', 'Centro', 'Bloco B', '400', 'Próx. ao Hospital Moinhos', '(51) 3555-4444', '(51) 95555-4444', 'ana.paula@email.com', 'Ativo', '2025-08-31 14:43:26', '2025-08-31 14:43:26', NULL),
+(154, 'Pedro Santos', '789.123.456-00', 'PR7891234', '1982-09-18', 42, '80010-150', 'Curitiba', 'PR', 'Rua XV de Novembro', 'Centro', NULL, '500', 'Próx. ao Teatro Guaíra', '(41) 3666-5555', '(41) 94444-5555', 'pedro.santos@email.com', 'Ativo', '2025-08-31 14:43:26', '2025-08-31 14:43:26', NULL),
+(155, 'Juliana Costa', '654.321.987-00', 'BA6543219', '1988-11-30', 36, '40020-160', 'Salvador', 'BA', 'Av. Sete de Setembro', 'Barra', 'Casa 2', '600', 'Próx. ao Farol da Barra', '(71) 3777-6666', '(71) 93333-6666', 'juliana.costa@email.com', 'Ativo', '2025-08-31 14:43:26', '2025-08-31 14:43:26', NULL),
+(156, 'Lucas Pereira', '159.753.486-00', 'PE1597534', '1992-02-14', 33, '50010-000', 'Recife', 'PE', 'Rua da Aurora', 'Boa Vista', NULL, '700', 'Próx. ao Parque 13 de Maio', '(81) 3888-7777', '(81) 92222-7777', 'lucas.pereira@email.com', 'Ativo', '2025-08-31 14:43:26', '2025-08-31 14:43:26', NULL),
+(157, 'Fernanda Lima', '258.369.147-00', 'CE2583691', '1986-08-25', 39, '60110-000', 'Fortaleza', 'CE', 'Av. Beira Mar', 'Meireles', 'Cobertura', '800', 'Próx. ao Hotel', '(85) 3999-8888', '(85) 91111-8888', 'fernanda.lima@email.com', 'Ativo', '2025-08-31 14:43:26', '2025-08-31 14:43:26', NULL),
+(158, 'Rafael Almeida', '369.258.147-00', 'DF3692581', '1980-04-02', 45, '70040-010', 'Brasília', 'DF', 'SQS 308', 'Asa Sul', NULL, '10', 'Próx. ao Supermercado', '(61) 4000-9999', '(61) 90000-9999', 'rafael.almeida@email.com', 'Ativo', '2025-08-31 14:43:26', '2025-08-31 14:43:26', NULL),
+(159, 'Patrícia Mendes', '741.852.963-00', 'GO7418529', '1993-06-19', 32, '74000-010', 'Goiânia', 'GO', 'Rua 3', 'Setor Central', 'Sala 5', '1100', 'Próx. ao Shopping', '(62) 4111-0000', '(62) 98888-0000', 'patricia.mendes@email.com', 'Ativo', '2025-08-31 14:43:26', '2025-08-31 14:43:26', NULL),
+(160, 'Ana Paula Souza', '123.456.789-01', 'MG123456', '1990-05-12', 35, '30140-071', 'Belo Horizonte', 'MG', 'Rua das Flores', 'Centro', NULL, '100', 'Próx. padaria', '(31) 3322-1100', '(31) 99999-0001', 'ana.souza@email.com', 'Ativo', '2025-08-31 17:37:35', NULL, NULL),
+(161, 'Carlos Eduardo Lima', '234.567.890-12', 'SP234567', '1985-08-23', 40, '01001-000', 'São Paulo', 'SP', 'Av. Paulista', 'Bela Vista', 'Apto 101', '2000', 'Próx. metrô', '(11) 3322-2200', '(11) 98888-0002', 'carlos.lima@email.com', 'Inativo', '2025-08-31 17:37:35', NULL, NULL),
+(162, 'Fernanda Oliveira', '345.678.901-23', 'RJ345678', '1992-11-30', 32, '22041-001', 'Rio de Janeiro', 'RJ', 'Rua do Catete', 'Catete', NULL, '50', NULL, '(21) 3322-3300', '(21) 97777-0003', 'fernanda.oliveira@email.com', 'Pendente', '2025-08-31 17:37:35', NULL, NULL),
+(163, 'João Pedro Silva', '456.789.012-34', 'RS456789', '1988-03-15', 37, '90010-000', 'Porto Alegre', 'RS', 'Av. Independência', 'Centro', NULL, '500', 'Próx. hospital', '(51) 3322-4400', '(51) 96666-0004', 'joao.silva@email.com', 'Ativo', '2025-08-31 17:37:35', NULL, NULL),
+(164, 'Mariana Costa', '567.890.123-45', 'BA567890', '1995-07-20', 30, '40010-000', 'Salvador', 'BA', 'Rua da Bahia', 'Barra', NULL, '120', NULL, '(71) 3322-5500', '(71) 95555-0005', 'mariana.costa@email.com', 'Bloqueado', '2025-08-31 17:37:35', NULL, NULL),
+(165, 'Pedro Henrique Santos', '678.901.234-56', 'PE678901', '1983-12-05', 41, '50010-000', 'Recife', 'PE', 'Av. Recife', 'Boa Viagem', NULL, '300', 'Próx. shopping', '(81) 3322-6600', '(81) 94444-0006', 'pedro.santos@email.com', 'Ativo', '2025-08-31 17:37:35', NULL, NULL),
+(166, 'Juliana Martins', '789.012.345-67', 'PR789012', '1998-02-28', 27, '80010-000', 'Curitiba', 'PR', 'Rua XV de Novembro', 'Centro', NULL, '80', NULL, '(41) 3322-7700', '(41) 93333-0007', 'juliana.martins@email.com', 'Inativo', '2025-08-31 17:37:35', NULL, NULL),
+(167, 'Lucas Almeida', '890.123.456-78', 'SC890123', '1991-09-10', 33, '88010-000', 'Florianópolis', 'SC', 'Av. Beira Mar', 'Centro', NULL, '150', 'Próx. mercado', '(48) 3322-8800', '(48) 92222-0008', 'lucas.almeida@email.com', 'Ativo', '2025-08-31 17:37:35', NULL, NULL),
+(168, 'Patrícia Ramos', '901.234.567-89', 'GO901234', '1986-06-18', 39, '74010-000', 'Goiânia', 'GO', 'Rua Goiás', 'Setor Central', NULL, '60', NULL, '(62) 3322-9900', '(62) 91111-0009', 'patricia.ramos@email.com', 'Pendente', '2025-08-31 17:37:35', NULL, NULL),
+(169, 'Rafael Borges', '012.345.678-90', 'DF012345', '1993-04-25', 32, '70040-000', 'Brasília', 'DF', 'SQS 308', 'Asa Sul', NULL, '308', 'Próx. escola', '(61) 3323-0000', '(61) 90000-0010', 'rafael.borges@email.com', 'Ativo', '2025-08-31 17:37:35', NULL, NULL),
+(170, 'Sofia Mendes', '112.233.445-56', 'ES112233', '1997-10-02', 27, '29010-000', 'Vitória', 'ES', 'Rua Sete', 'Praia do Canto', NULL, '77', NULL, '(27) 3323-1100', '(27) 98888-0011', 'sofia.mendes@email.com', 'Inativo', '2025-08-31 17:37:35', NULL, NULL),
+(171, 'Gabriel Ferreira', '223.344.556-67', 'AM223344', '1989-01-19', 36, '69010-000', 'Manaus', 'AM', 'Av. Amazonas', 'Centro', NULL, '200', NULL, '(92) 3323-2200', '(92) 97777-0012', 'gabriel.ferreira@email.com', 'Ativo', '2025-08-31 17:37:35', NULL, NULL),
+(172, 'Beatriz Rocha', '334.455.667-78', 'PA334455', '1994-12-11', 30, '66010-000', 'Belém', 'PA', 'Rua dos Caripunas', 'Nazaré', NULL, '45', NULL, '(91) 3323-3300', '(91) 96666-0013', 'beatriz.rocha@email.com', 'Pendente', '2025-08-31 17:37:35', NULL, NULL),
+(173, 'Rodrigo Lima', '445.566.778-89', 'CE445566', '1987-07-07', 38, '60010-000', 'Fortaleza', 'CE', 'Av. Domingos Olímpio', 'Centro', NULL, '500', NULL, '(85) 3323-4400', '(85) 95555-0014', 'rodrigo.lima@email.com', 'Bloqueado', '2025-08-31 17:37:35', NULL, NULL),
+(174, 'Camila Pires', '556.677.889-90', 'MT556677', '1996-03-22', 29, '78010-000', 'Cuiabá', 'MT', 'Rua das Palmeiras', 'Centro', NULL, '33', NULL, '(65) 3323-5500', '(65) 94444-0015', 'camila.pires@email.com', 'Ativo', '2025-08-31 17:37:35', NULL, NULL),
+(175, 'Nicollas Carmoriz Bonimo', '39168671806', '11847652X', '2019-06-29', 6, '08766025', 'Mogi das Cruzes', 'SP', 'Rua Quatro', 'Conjunto Bom Pastor', '', '100', 'teste', '1998138531', '19981385316', 'nicollas.bonimo@geradornv.com.br', 'Pendente', '2025-08-31 17:48:02', '2025-08-31 17:48:02', NULL);
 
 -- --------------------------------------------------------
 
@@ -111,7 +155,7 @@ CREATE TABLE `c3_configuracoes` (
 --
 
 INSERT INTO `c3_configuracoes` (`c3_id`, `c3_nome_app`, `c3_versao_app`, `c3_nome_empresa`, `c3_cnpj_empresa`, `c3_email_contato`, `c3_telefone_empresa`, `c3_site_empresa`, `c3_endereco_empresa`, `c3_logo_path`, `c3_favicon_path`, `c3_timezone`, `c3_idioma`, `c3_moeda`, `c3_simbolo_moeda`, `c3_casas_decimais`, `c3_separador_decimal`, `c3_separador_milhar`, `c3_tema`, `c3_limite_backup`, `c3_email_notificacoes`, `c3_smtp_host`, `c3_smtp_port`, `c3_smtp_usuario`, `c3_smtp_senha`, `c3_smtp_criptografia`, `c3_status_loja`, `c3_mensagem_manutencao`, `c3_created_at`, `c3_updated_at`, `c3_deleted_at`) VALUES
-(1, 'Sistema PDV', '1.0.0', 'Sua Empresa', NULL, 'contato@empresa.com', NULL, NULL, NULL, 'logo.png', 'favicon.ico', 'America/Sao_Paulo', 'pt-BR', 'BRL', 'R$', 2, ',', '.', 'dark', 30, NULL, NULL, NULL, NULL, NULL, 'ssl', 'aberta', NULL, '2025-08-30 19:11:02', '2025-08-30 19:11:02', NULL);
+(1, 'Nome do Sistema 1234', '1.0.0', 'Sua Empresa', '', 'contato@empresa.com', '', '', '', 'logo.png', 'favicon.ico', 'America/Sao_Paulo', 'pt-BR', 'BRL', 'R$', 2, ',', '.', 'dark', 30, '', '', 0, '', '', 'ssl', 'aberta', '', '2025-08-30 19:11:02', '2025-09-04 11:41:49', NULL);
 
 -- --------------------------------------------------------
 
@@ -140,6 +184,21 @@ CREATE TABLE `f1_fornecedores` (
   `f1_deleted_at` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Despejando dados para a tabela `f1_fornecedores`
+--
+
+INSERT INTO `f1_fornecedores` (`f1_id`, `f1_razao_social`, `f1_nome_fantasia`, `f1_cnpj`, `f1_cep`, `f1_cidade`, `f1_uf`, `f1_endereco`, `f1_bairro`, `f1_complemento`, `f1_numero`, `f1_ponto_referencia`, `f1_telefone`, `f1_celular`, `f1_email`, `f1_created_at`, `f1_updated_at`, `f1_deleted_at`) VALUES
+(1, 'Tech Distribuição Ltda', 'Tech', '12.345.678/0001-90', '01001000', 'São Paulo', 'SP', 'Av. Paulista, 1000', 'Bela Vista', 'Próximo ao metrô', '1000', 'Entrada lateral', '1131000000', '11999990001', 'contato@techdistrib.com.br', '2025-09-01 09:06:32', '2025-09-03 16:56:58', NULL),
+(2, 'Global Eletrônicos S/A', 'GlobalEletron', '23.456.789/0001-81', '29010000', 'Vitória', 'ES', 'Rua do Comércio, 250', 'Centro', '', '250', 'Próximo ao fórum', '2732222222', '27999990002', 'vendas@globaleletron.com', '2025-09-01 09:06:32', '2025-09-03 16:57:01', NULL),
+(3, 'Inova Components ME', 'InovaComp', '34.567.890/0001-70', '70040-010', 'Brasília', 'DF', 'Setor Comercial Norte, Bloco A, 45', 'Asa Norte', 'Sala 12', '45', 'Em frente ao estacionamento', '(61) 3300-3300', '(61) 99999-0003', 'comercial@inovacomp.com.br', '2025-09-01 09:06:32', NULL, NULL),
+(4, 'Accs Solutions Ltda', 'AccsSol', '45.678.901/0001-60', '30110-012', 'Belo Horizonte', 'MG', 'Av. Augusto de Lima, 500', 'Centro', NULL, '500', 'Próximo à praça', '(31) 3333-3333', '(31) 99999-0004', 'suporte@accssol.com.br', '2025-09-01 09:06:32', NULL, NULL),
+(5, 'MobileWare Comércio', 'MobileWare', '56.789.012/0001-50', '40020-000', 'Salvador', 'BA', 'Rua das Flores, 120', 'Barra', 'Loja 2', '120', 'Ao lado do café', '(71) 3456-3456', '(71) 99999-0005', 'contato@mobileware.com.br', '2025-09-01 09:06:32', NULL, NULL),
+(6, 'NetPeriféricos Ltda', 'NetPerif', '67.890.123/0001-40', '80010-000', 'Curitiba', 'PR', 'Av. Batel, 2000', 'Batel', NULL, '2000', 'Próximo ao shopping', '(41) 4000-4000', '(41) 99999-0006', 'vendas@netperif.com.br', '2025-09-01 09:06:32', NULL, NULL),
+(7, 'StorageTech Comércio', 'StorageTech', '78.901.234/0001-30', '30120-020', 'Belo Horizonte', 'MG', 'Rua dos Inconfidentes, 78', 'Savassi', NULL, '78', 'Próximo à faculdade', '(31) 3555-5555', '(31) 99999-0007', 'financeiro@storagetech.com.br', '2025-09-01 09:06:32', NULL, NULL),
+(8, 'AudioMax Importadora', 'AudioMax', '89.012.345/0001-20', '90420-080', 'Porto Alegre', 'RS', 'Av. Ipiranga, 1500', 'Centro', 'Andar 3', '1500', 'Em frente ao teatro', '(51) 3333-4444', '(51) 99999-0008', 'contato@audiomax.com.br', '2025-09-01 09:06:32', NULL, NULL),
+(20, 'Razão Teste ', 'Nome da espresa', '12345645698798', '68420000', 'Mocajuba', 'PA', 'Rua João Procópio', 'Cidade Nova', 'Teste 23', '500', 'Codica', '9819819819', '98498498198', 'razao@gmail.com', '2025-09-03 16:21:17', '2025-09-03 16:43:30', '2025-09-03 16:43:30');
+
 -- --------------------------------------------------------
 
 --
@@ -157,6 +216,44 @@ CREATE TABLE `g1_garantias` (
   `g1_updated_at` datetime DEFAULT NULL,
   `g1_deleted_at` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Despejando dados para a tabela `g1_garantias`
+--
+
+INSERT INTO `g1_garantias` (`g1_id`, `g1_data_garantia`, `g1_nome`, `g1_observacao`, `g1_data`, `g1_descricao`, `g1_created_at`, `g1_updated_at`, `g1_deleted_at`) VALUES
+(1, '2025-09-01 08:56:00', 'Garantia Padrão 1 ano 1234', 'Cobertura contra defeitos de fabricação', '2026-09-01', 'Garantia oficial do fabricante por 12 meses a partir da compra.', '2025-09-01 08:56:59', '2025-09-03 15:19:37', NULL),
+(2, '2025-09-01 08:56:00', 'Garantia Estendida 2 anos klllllllll', 'Extensão opcional de garantia', '2027-09-01', 'Garantia estendida que cobre componentes e reparos por 24 meses.', '2025-09-01 08:56:59', '2025-09-03 15:19:45', NULL),
+(3, '2025-09-01 08:56:59', 'Garantia Premium (Troca Rápida)', 'Troca rápida do equipamento', '2026-12-31', 'Serviço premium com troca por novo dentro do período contratado.', '2025-09-01 08:56:59', NULL, NULL),
+(4, '2025-09-01 08:56:59', 'Garantia Acessórios 6 meses', 'Cobertura limitada para acessórios', '2026-03-01', 'Garantia para cabos, capas e periféricos por 6 meses.', '2025-09-01 08:56:59', NULL, NULL),
+(5, '2025-09-01 08:56:59', 'Garantia Comercial 3 meses', 'Garantia curta para estoque/mostruário', '2026-01-01', 'Garantia comercial curta para produtos promocionais ou de demonstração.', '2025-09-01 08:56:59', NULL, NULL),
+(6, '2025-09-03 12:45:00', 'teste123', 'teste ', '2025-09-03', 'twwerwer werwerwer', '2025-09-03 12:45:42', '2025-09-03 15:20:29', '2025-09-03 15:20:29');
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura para tabela `l2_licencas`
+--
+
+CREATE TABLE `l2_licencas` (
+  `l2_id` bigint(20) UNSIGNED NOT NULL,
+  `l2_user_id` bigint(20) UNSIGNED NOT NULL,
+  `l2_data_ativacao_sistema` datetime DEFAULT NULL,
+  `l2_data_ultima_renovacao` datetime DEFAULT NULL,
+  `l2_data_proxima_renovacao` datetime DEFAULT NULL,
+  `l2_chave_pix` varchar(255) DEFAULT NULL,
+  `l2_created_at` datetime DEFAULT NULL,
+  `l2_updated_at` datetime DEFAULT NULL ON UPDATE current_timestamp(),
+  `l2_deleted_at` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Despejando dados para a tabela `l2_licencas`
+--
+
+INSERT INTO `l2_licencas` (`l2_id`, `l2_user_id`, `l2_data_ativacao_sistema`, `l2_data_ultima_renovacao`, `l2_data_proxima_renovacao`, `l2_chave_pix`, `l2_created_at`, `l2_updated_at`, `l2_deleted_at`) VALUES
+(1, 1, '2024-09-01 10:00:00', '2025-08-30 12:00:00', '2026-08-30 12:00:00', 'PIX:00011122233', '2025-09-04 17:06:11', NULL, NULL),
+(2, 2, '2025-01-15 09:30:00', '2025-07-01 15:00:00', '2026-07-01 15:00:00', 'PIX:99988877766', '2025-09-04 17:06:11', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -182,6 +279,20 @@ CREATE TABLE `l2_logs` (
   `l2_deleted_at` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='Tabela para registrar logs de atividades do sistema PDV';
 
+--
+-- Despejando dados para a tabela `l2_logs`
+--
+
+INSERT INTO `l2_logs` (`l2_id`, `l2_id_usuario`, `l2_tipo_log`, `l2_acao`, `l2_detalhes`, `l2_valor_envolvido`, `l2_id_referencia`, `l2_ip_address`, `l2_user_agent`, `l2_status`, `l2_data_hora`, `l2_sessao_id`, `l2_created_at`, `l2_updated_at`, `l2_deleted_at`) VALUES
+(4, 7, 'login', 'Login realizado com sucesso', 'Usuário: admin', NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:143.0) Gecko/20100101 Firefox/143.0', 'sucesso', '2025-09-03 14:24:44', '507b8f0c293468c92afc0120471d8d0c', '2025-09-03 11:24:44', '2025-09-03 11:24:44', NULL),
+(5, 7, 'login', 'Login realizado com sucesso', 'Usuário: admin', NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:143.0) Gecko/20100101 Firefox/143.0', 'sucesso', '2025-09-03 14:25:29', 'dcff209db0cb34b212ca0e486a213c47', '2025-09-03 11:25:29', '2025-09-03 11:25:29', NULL),
+(6, 7, 'login', 'Login realizado com sucesso', 'Usuário: admin', NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:143.0) Gecko/20100101 Firefox/143.0', 'sucesso', '2025-09-03 14:25:44', 'dcff209db0cb34b212ca0e486a213c47', '2025-09-03 11:25:44', '2025-09-03 11:25:44', NULL),
+(7, 7, 'logout', 'Logout realizado', 'Usuário: admin', NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:143.0) Gecko/20100101 Firefox/143.0', 'sucesso', '2025-09-03 14:25:47', 'dcff209db0cb34b212ca0e486a213c47', '2025-09-03 11:25:47', '2025-09-03 11:25:47', NULL),
+(8, 7, 'login', 'Login realizado com sucesso', 'Usuário: admin', NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:143.0) Gecko/20100101 Firefox/143.0', 'sucesso', '2025-09-03 14:25:50', '6e4108f4730d05141e5d49ba3aed46d1', '2025-09-03 11:25:50', '2025-09-03 11:25:50', NULL),
+(9, 7, 'login', 'Login realizado com sucesso', 'Usuário: admin', NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:143.0) Gecko/20100101 Firefox/143.0', 'sucesso', '2025-09-04 11:23:43', '4289974098b8ffc4c5a1fa72ac6b666d', '2025-09-04 08:23:43', '2025-09-04 08:23:43', NULL),
+(10, 7, 'logout', 'Logout realizado', 'Usuário: admin', NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:143.0) Gecko/20100101 Firefox/143.0', 'sucesso', '2025-09-04 11:47:12', '4d7f0e71203de77eaa73676a2ac236da', '2025-09-04 08:47:12', '2025-09-04 08:47:12', NULL),
+(11, 7, 'login', 'Login realizado com sucesso', 'Usuário: admin', NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:143.0) Gecko/20100101 Firefox/143.0', 'sucesso', '2025-09-04 11:48:40', 'a513c695b6ce29a63fb1c13fe2ab2f1b', '2025-09-04 08:48:40', '2025-09-04 08:48:40', NULL);
+
 -- --------------------------------------------------------
 
 --
@@ -205,6 +316,38 @@ CREATE TABLE `p1_produtos` (
   `p1_updated_at` datetime DEFAULT NULL,
   `p1_deleted_at` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Despejando dados para a tabela `p1_produtos`
+--
+
+INSERT INTO `p1_produtos` (`p1_id`, `p1_imagem_produto`, `p1_nome_produto`, `p1_codigo_produto`, `p1_fornecedor_id`, `p1_categoria_id`, `p1_garantia_id`, `p1_quantidade_produto`, `p1_preco_unitario_produto`, `p1_preco_compra_produto`, `p1_preco_venda_produto`, `p1_preco_total_em_produto`, `p1_created_at`, `p1_updated_at`, `p1_deleted_at`) VALUES
+(6, '1756813654_892cf61b69dca7871e8b.webp', 'Smartphone X100 128GB Preto', '1110000000001', 1, 1, 1, 20, 125000.00, 95.00, 129.90, 2500000.00, '2025-09-01 08:54:54', '2025-09-02 08:47:34', NULL),
+(7, '1756813884_a787c0f7755873aceadc.jpg', 'Smartphone X100 256GB Azul', '1000000000002', 1, 1, 1, 12, 1450.00, 1100.00, 1499.00, 17400.00, '2025-09-01 08:54:54', '2025-09-02 08:51:24', NULL),
+(8, NULL, 'Carregador Turbo 20W USB-C', '1000000000003', 2, 3, 1, 50, 45.00, 30.00, 49.90, 2495.00, '2025-09-01 08:54:54', NULL, NULL),
+(9, NULL, 'Cabo USB-C Nylon 1m', '1000000000004', 2, 3, 1, 80, 15.00, 6.00, 19.90, 1592.00, '2025-09-01 08:54:54', NULL, NULL),
+(10, NULL, 'Fone Bluetooth True Wireless', '1000000000005', 3, 3, 2, 35, 180.00, 120.00, 199.90, 6996.50, '2025-09-01 08:54:54', NULL, NULL),
+(11, NULL, 'Capinha Silicone Samsung S21', '1000000000006', 4, 3, 1, 100, 25.00, 10.00, 29.90, 2990.00, '2025-09-01 08:54:54', NULL, NULL),
+(12, NULL, 'Película de Vidro Temperado', '1000000000007', 4, 3, 1, 150, 12.00, 3.50, 14.90, 2235.00, '2025-09-01 08:54:54', NULL, NULL),
+(13, NULL, 'Power Bank 10000mAh', '1000000000008', 3, 3, 2, 40, 85.00, 60.00, 99.90, 3996.00, '2025-09-01 08:54:54', NULL, NULL),
+(14, NULL, 'Cartão SD 128GB', '1000000000009', 2, 2, 1, 60, 55.00, 35.00, 59.90, 3594.00, '2025-09-01 08:54:54', NULL, NULL),
+(15, NULL, 'Adaptador HDMI para USB-C', '1000000000010', 5, 2, 1, 30, 65.00, 40.00, 74.90, 2247.00, '2025-09-01 08:54:54', NULL, NULL),
+(16, NULL, 'Suporte Veicular Magnético', '1000000000011', 4, 3, 1, 45, 39.00, 18.00, 44.90, 2020.50, '2025-09-01 08:54:54', NULL, NULL),
+(17, NULL, 'Teclado Mecânico Compacto', '1000000000012', 3, 2, 2, 18, 320.00, 220.00, 349.90, 6298.20, '2025-09-01 08:54:54', NULL, NULL),
+(18, NULL, 'Mouse Gamer Óptico', '1000000000013', 3, 2, 2, 25, 120.00, 80.00, 139.90, 3497.50, '2025-09-01 08:54:54', NULL, NULL),
+(19, NULL, 'Webcam Full HD 30fps', '1000000000014', 5, 2, 1, 22, 150.00, 95.00, 169.90, 3737.80, '2025-09-01 08:54:54', NULL, NULL),
+(20, NULL, 'Headset Gamer com Microfone', '1000000000015', 3, 2, 2, 16, 220.00, 150.00, 249.90, 3998.40, '2025-09-01 08:54:54', NULL, NULL),
+(21, NULL, 'Base Refrigerada para Notebook', '1000000000016', 4, 2, 1, 20, 98.00, 60.00, 109.90, 2198.00, '2025-09-01 08:54:54', NULL, NULL),
+(22, NULL, 'SSD NVMe 500GB', '1000000000017', 2, 2, 2, 14, 420.00, 300.00, 449.90, 6298.60, '2025-09-01 08:54:54', NULL, NULL),
+(23, NULL, 'HD Externo 1TB', '1000000000018', 2, 2, 2, 10, 380.00, 260.00, 419.90, 4199.00, '2025-09-01 08:54:54', NULL, NULL),
+(24, NULL, 'Roteador Wi‑Fi AC1200', '1000000000019', 5, 2, 1, 12, 210.00, 145.00, 229.90, 2758.80, '2025-09-01 08:54:54', NULL, NULL),
+(25, NULL, 'Cartucho Impressora (preto)', '1000000000020', 4, 3, 1, 40, 55.00, 28.00, 64.90, 2596.00, '2025-09-01 08:54:54', NULL, NULL),
+(26, NULL, 'Microfone USB Condensador', '1000000000021', 3, 2, 2, 15, 170.00, 95.00, 189.90, 2848.50, '2025-09-01 08:54:54', NULL, NULL),
+(27, NULL, 'Cabo Lightning 1m', '1000000000022', 1, 3, 1, 70, 29.00, 10.00, 34.90, 2443.00, '2025-09-01 08:54:54', NULL, NULL),
+(28, NULL, 'Carregador Veicular QC3.0', '1000000000023', 2, 3, 1, 38, 59.00, 32.00, 69.90, 2656.20, '2025-09-01 08:54:54', NULL, NULL),
+(29, NULL, 'Case para AirPods (silicone)', '1000000000024', 4, 3, 1, 55, 22.00, 8.00, 24.90, 1369.50, '2025-09-01 08:54:54', NULL, NULL),
+(30, NULL, 'Filtro de Linha 4 Tomadas', '1000000000025', 5, 3, 1, 26, 48.00, 20.00, 54.90, 1427.40, '2025-09-01 08:54:54', '2025-09-02 08:47:00', '2025-09-02 08:47:00'),
+(31, '1756758624_b8872d52aecb90c883ec.webp', 'Fone de Ouvido', '010203040506', 7, 4, 5, 5, 50.00, 50.00, 185.00, 250.00, '2025-09-01 17:30:23', '2025-09-02 08:44:26', '2025-09-02 08:44:26');
 
 -- --------------------------------------------------------
 
@@ -247,6 +390,17 @@ CREATE TABLE `u1_usuarios` (
   `u1_updated_at` datetime DEFAULT NULL ON UPDATE current_timestamp(),
   `u1_deleted_at` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Despejando dados para a tabela `u1_usuarios`
+--
+
+INSERT INTO `u1_usuarios` (`u1_id`, `u1_cpf`, `u1_nome`, `u1_email`, `u1_usuario_acesso`, `u1_senha_usuario`, `u1_tipo_permissao`, `u1_data_ultimo_acesso`, `u1_horario_geracao_token`, `u1_token_reset_senha_acesso`, `u1_created_at`, `u1_updated_at`, `u1_deleted_at`) VALUES
+(7, '123.456.789-00', 'Administrador Sistema', 'admin@sistema.com', 'admin', '$2y$10$bsuRIaYh/5aEbDe10ZeKcuAgmbWhcER02mjIBPjcYlA8DVBKIyN1S', 'administrador', '2025-09-04 11:48:40', NULL, NULL, '2025-09-03 11:22:57', '2025-09-04 08:48:40', NULL),
+(8, '987.654.321-00', 'João Vendedor', 'joao.vendedor@sistema.com', 'joao.vendas', '$2y$10$bsuRIaYh/5aEbDe10ZeKcuAgmbWhcER02mjIBPjcYlA8DVBKIyN1S', 'venda', '2025-09-03 14:22:57', NULL, NULL, '2025-09-03 11:22:57', '2025-09-03 11:23:49', NULL),
+(9, '456.789.123-00', 'Maria Cadastro', 'maria.cadastro@sistema.com', 'maria.cad', '$2y$10$bsuRIaYh/5aEbDe10ZeKcuAgmbWhcER02mjIBPjcYlA8DVBKIyN1S', 'cadastro', '2025-09-03 14:22:57', NULL, NULL, '2025-09-03 11:22:57', '2025-09-04 15:31:51', '2025-09-04 15:31:51'),
+(10, '32132116544', 'Isaías Oliveira', 'visaotec@gmail.com', 'visaotec10', '$2y$10$aDb5PqIxXVj8uruevvyCwem29GDxwq81vaKi8yoUG68m0Uw62bNZO', 'administrador', '2025-09-04 18:38:00', NULL, NULL, '2025-09-04 15:38:00', '2025-09-04 15:50:59', NULL),
+(11, '12345678900', 'Júnior Neves 10', 'juniorneves@gmail.com', 'juniorneves', '$2y$10$ox47HtkxbWx5pwhvAT1yqex/uxso74vivfYypR2cDFp9OIICxLYmC', 'venda', '2025-09-04 18:54:48', NULL, NULL, '2025-09-04 15:54:48', '2025-09-04 16:37:06', NULL);
 
 -- --------------------------------------------------------
 
@@ -311,6 +465,13 @@ ALTER TABLE `g1_garantias`
   ADD PRIMARY KEY (`g1_id`) USING BTREE;
 
 --
+-- Índices de tabela `l2_licencas`
+--
+ALTER TABLE `l2_licencas`
+  ADD PRIMARY KEY (`l2_id`),
+  ADD KEY `idx_l2_user` (`l2_user_id`);
+
+--
 -- Índices de tabela `l2_logs`
 --
 ALTER TABLE `l2_logs`
@@ -366,13 +527,13 @@ ALTER TABLE `v1_vendas`
 -- AUTO_INCREMENT de tabela `c1_categorias`
 --
 ALTER TABLE `c1_categorias`
-  MODIFY `c1_id` bigint(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `c1_id` bigint(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT de tabela `c2_clientes`
 --
 ALTER TABLE `c2_clientes`
-  MODIFY `c2_id` bigint(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=150;
+  MODIFY `c2_id` bigint(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=176;
 
 --
 -- AUTO_INCREMENT de tabela `c3_configuracoes`
@@ -384,25 +545,31 @@ ALTER TABLE `c3_configuracoes`
 -- AUTO_INCREMENT de tabela `f1_fornecedores`
 --
 ALTER TABLE `f1_fornecedores`
-  MODIFY `f1_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `f1_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT de tabela `g1_garantias`
 --
 ALTER TABLE `g1_garantias`
-  MODIFY `g1_id` bigint(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `g1_id` bigint(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
+-- AUTO_INCREMENT de tabela `l2_licencas`
+--
+ALTER TABLE `l2_licencas`
+  MODIFY `l2_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de tabela `l2_logs`
 --
 ALTER TABLE `l2_logs`
-  MODIFY `l2_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `l2_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT de tabela `p1_produtos`
 --
 ALTER TABLE `p1_produtos`
-  MODIFY `p1_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `p1_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
 
 --
 -- AUTO_INCREMENT de tabela `p2_produtos_venda`
@@ -414,7 +581,7 @@ ALTER TABLE `p2_produtos_venda`
 -- AUTO_INCREMENT de tabela `u1_usuarios`
 --
 ALTER TABLE `u1_usuarios`
-  MODIFY `u1_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `u1_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT de tabela `v1_vendas`

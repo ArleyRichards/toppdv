@@ -56,7 +56,7 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">                    
                     <li class="nav-item">
-                        <a class="nav-link" href="#">
+                        <a class="nav-link" href="<?= base_url('configuracoes') ?>">
                             <i class="bi bi-gear me-1"></i>                            
                         </a>
                     </li>

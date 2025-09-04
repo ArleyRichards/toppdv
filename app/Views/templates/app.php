@@ -52,6 +52,8 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>    
     <!-- jQuery (necessário para algumas funcionalidades) -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <!-- jQuery Mask Plugin (used for CPF/phone/CEP masks) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
 
     <!-- Conteúdo Principal -->
     <?= $this->renderSection('pagescript') ?>
