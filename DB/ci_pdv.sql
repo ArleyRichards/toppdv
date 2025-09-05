@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 04/09/2025 às 22:12
+-- Tempo de geração: 05/09/2025 às 12:45
 -- Versão do servidor: 10.4.32-MariaDB
 -- Versão do PHP: 8.2.12
 
@@ -291,7 +291,47 @@ INSERT INTO `l2_logs` (`l2_id`, `l2_id_usuario`, `l2_tipo_log`, `l2_acao`, `l2_d
 (8, 7, 'login', 'Login realizado com sucesso', 'Usuário: admin', NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:143.0) Gecko/20100101 Firefox/143.0', 'sucesso', '2025-09-03 14:25:50', '6e4108f4730d05141e5d49ba3aed46d1', '2025-09-03 11:25:50', '2025-09-03 11:25:50', NULL),
 (9, 7, 'login', 'Login realizado com sucesso', 'Usuário: admin', NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:143.0) Gecko/20100101 Firefox/143.0', 'sucesso', '2025-09-04 11:23:43', '4289974098b8ffc4c5a1fa72ac6b666d', '2025-09-04 08:23:43', '2025-09-04 08:23:43', NULL),
 (10, 7, 'logout', 'Logout realizado', 'Usuário: admin', NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:143.0) Gecko/20100101 Firefox/143.0', 'sucesso', '2025-09-04 11:47:12', '4d7f0e71203de77eaa73676a2ac236da', '2025-09-04 08:47:12', '2025-09-04 08:47:12', NULL),
-(11, 7, 'login', 'Login realizado com sucesso', 'Usuário: admin', NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:143.0) Gecko/20100101 Firefox/143.0', 'sucesso', '2025-09-04 11:48:40', 'a513c695b6ce29a63fb1c13fe2ab2f1b', '2025-09-04 08:48:40', '2025-09-04 08:48:40', NULL);
+(11, 7, 'login', 'Login realizado com sucesso', 'Usuário: admin', NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:143.0) Gecko/20100101 Firefox/143.0', 'sucesso', '2025-09-04 11:48:40', 'a513c695b6ce29a63fb1c13fe2ab2f1b', '2025-09-04 08:48:40', '2025-09-04 08:48:40', NULL),
+(12, 7, 'login', 'Login realizado com sucesso', 'Usuário: admin', NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:143.0) Gecko/20100101 Firefox/143.0', 'sucesso', '2025-09-04 20:20:03', 'c14c71b374d6ecc9fdd29e38f3ad91bc', '2025-09-04 17:20:03', '2025-09-04 17:20:03', NULL),
+(13, 7, 'login', 'Login realizado com sucesso', 'Usuário: admin', NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:142.0) Gecko/20100101 Firefox/142.0', 'sucesso', '2025-09-05 10:30:14', '8454923dac465d8550b0c6b4ed13d5bb', '2025-09-05 07:30:14', '2025-09-05 07:30:14', NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura para tabela `o1_ordens`
+--
+
+CREATE TABLE `o1_ordens` (
+  `o1_id` bigint(20) NOT NULL,
+  `o1_numero_ordem` varchar(20) NOT NULL,
+  `o1_cliente_id` bigint(20) NOT NULL,
+  `o1_equipamento` varchar(255) NOT NULL,
+  `o1_marca` varchar(100) DEFAULT NULL,
+  `o1_modelo` varchar(100) DEFAULT NULL,
+  `o1_numero_serie` varchar(100) DEFAULT NULL,
+  `o1_defeito_relatado` text NOT NULL,
+  `o1_observacoes_entrada` text DEFAULT NULL,
+  `o1_acessorios_entrada` text DEFAULT NULL,
+  `o1_estado_aparente` enum('Bom','Regular','Ruim') DEFAULT 'Bom',
+  `o1_tecnico_id` bigint(20) UNSIGNED NOT NULL,
+  `o1_status` enum('Aguardando','Em Andamento','Aguardando Peças','Concluído','Entregue','Cancelado') DEFAULT 'Aguardando',
+  `o1_prioridade` enum('Baixa','Média','Alta','Urgente') DEFAULT 'Média',
+  `o1_data_entrada` datetime NOT NULL,
+  `o1_data_previsao` date DEFAULT NULL,
+  `o1_data_conclusao` datetime DEFAULT NULL,
+  `o1_data_entrega` datetime DEFAULT NULL,
+  `o1_valor_servicos` decimal(10,2) DEFAULT 0.00,
+  `o1_valor_produtos` decimal(10,2) DEFAULT 0.00,
+  `o1_valor_total` decimal(10,2) DEFAULT 0.00,
+  `o1_desconto` decimal(10,2) DEFAULT 0.00,
+  `o1_valor_final` decimal(10,2) DEFAULT 0.00,
+  `o1_laudo_tecnico` text DEFAULT NULL,
+  `o1_observacoes_conclusao` text DEFAULT NULL,
+  `o1_garantia_servico` int(11) DEFAULT 0 COMMENT 'Dias de garantia do serviço',
+  `o1_created_at` datetime DEFAULT NULL,
+  `o1_updated_at` datetime DEFAULT NULL,
+  `o1_deleted_at` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -372,6 +412,69 @@ CREATE TABLE `p2_produtos_venda` (
 -- --------------------------------------------------------
 
 --
+-- Estrutura para tabela `p3_produtos_ordem`
+--
+
+CREATE TABLE `p3_produtos_ordem` (
+  `p3_id` bigint(20) NOT NULL,
+  `p3_ordem_id` bigint(20) NOT NULL,
+  `p3_produto_id` bigint(20) NOT NULL,
+  `p3_quantidade` int(11) NOT NULL,
+  `p3_valor_unitario` decimal(10,2) NOT NULL,
+  `p3_valor_total` decimal(10,2) NOT NULL,
+  `p3_observacoes` text DEFAULT NULL,
+  `p3_created_at` datetime DEFAULT NULL,
+  `p3_updated_at` datetime DEFAULT NULL,
+  `p3_deleted_at` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura para tabela `s1_servicos`
+--
+
+CREATE TABLE `s1_servicos` (
+  `s1_id` bigint(20) NOT NULL,
+  `s1_codigo_servico` varchar(50) NOT NULL,
+  `s1_nome_servico` varchar(255) NOT NULL,
+  `s1_descricao` text DEFAULT NULL,
+  `s1_valor` decimal(10,2) NOT NULL DEFAULT 0.00,
+  `s1_tempo_medio` int(11) DEFAULT NULL COMMENT 'Tempo médio em minutos',
+  `s1_categoria` varchar(100) DEFAULT NULL,
+  `s1_garantia` int(11) DEFAULT 0 COMMENT 'Dias de garantia padrão',
+  `s1_status` enum('Ativo','Inativo') DEFAULT 'Ativo',
+  `s1_created_at` datetime DEFAULT NULL,
+  `s1_updated_at` datetime DEFAULT NULL,
+  `s1_deleted_at` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura para tabela `s2_servicos_ordem`
+--
+
+CREATE TABLE `s2_servicos_ordem` (
+  `s2_id` bigint(20) NOT NULL,
+  `s2_ordem_id` bigint(20) NOT NULL,
+  `s2_servico_id` bigint(20) NOT NULL,
+  `s2_quantidade` int(11) NOT NULL DEFAULT 1,
+  `s2_valor_unitario` decimal(10,2) NOT NULL,
+  `s2_valor_total` decimal(10,2) NOT NULL,
+  `s2_observacoes` text DEFAULT NULL,
+  `s2_status` enum('Pendente','Executando','Concluído','Cancelado') DEFAULT 'Pendente',
+  `s2_tecnico_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `s2_data_inicio` datetime DEFAULT NULL,
+  `s2_data_conclusao` datetime DEFAULT NULL,
+  `s2_created_at` datetime DEFAULT NULL,
+  `s2_updated_at` datetime DEFAULT NULL,
+  `s2_deleted_at` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Estrutura para tabela `u1_usuarios`
 --
 
@@ -396,7 +499,7 @@ CREATE TABLE `u1_usuarios` (
 --
 
 INSERT INTO `u1_usuarios` (`u1_id`, `u1_cpf`, `u1_nome`, `u1_email`, `u1_usuario_acesso`, `u1_senha_usuario`, `u1_tipo_permissao`, `u1_data_ultimo_acesso`, `u1_horario_geracao_token`, `u1_token_reset_senha_acesso`, `u1_created_at`, `u1_updated_at`, `u1_deleted_at`) VALUES
-(7, '123.456.789-00', 'Administrador Sistema', 'admin@sistema.com', 'admin', '$2y$10$bsuRIaYh/5aEbDe10ZeKcuAgmbWhcER02mjIBPjcYlA8DVBKIyN1S', 'administrador', '2025-09-04 11:48:40', NULL, NULL, '2025-09-03 11:22:57', '2025-09-04 08:48:40', NULL),
+(7, '123.456.789-00', 'Administrador Sistema', 'admin@sistema.com', 'admin', '$2y$10$bsuRIaYh/5aEbDe10ZeKcuAgmbWhcER02mjIBPjcYlA8DVBKIyN1S', 'administrador', '2025-09-05 10:30:14', NULL, NULL, '2025-09-03 11:22:57', '2025-09-05 07:33:48', NULL),
 (8, '987.654.321-00', 'João Vendedor', 'joao.vendedor@sistema.com', 'joao.vendas', '$2y$10$bsuRIaYh/5aEbDe10ZeKcuAgmbWhcER02mjIBPjcYlA8DVBKIyN1S', 'venda', '2025-09-03 14:22:57', NULL, NULL, '2025-09-03 11:22:57', '2025-09-03 11:23:49', NULL),
 (9, '456.789.123-00', 'Maria Cadastro', 'maria.cadastro@sistema.com', 'maria.cad', '$2y$10$bsuRIaYh/5aEbDe10ZeKcuAgmbWhcER02mjIBPjcYlA8DVBKIyN1S', 'cadastro', '2025-09-03 14:22:57', NULL, NULL, '2025-09-03 11:22:57', '2025-09-04 15:31:51', '2025-09-04 15:31:51'),
 (10, '32132116544', 'Isaías Oliveira', 'visaotec@gmail.com', 'visaotec10', '$2y$10$aDb5PqIxXVj8uruevvyCwem29GDxwq81vaKi8yoUG68m0Uw62bNZO', 'administrador', '2025-09-04 18:38:00', NULL, NULL, '2025-09-04 15:38:00', '2025-09-04 15:50:59', NULL),
@@ -485,6 +588,17 @@ ALTER TABLE `l2_logs`
   ADD KEY `idx_l2_tipo_data` (`l2_tipo_log`,`l2_data_hora`) USING BTREE;
 
 --
+-- Índices de tabela `o1_ordens`
+--
+ALTER TABLE `o1_ordens`
+  ADD PRIMARY KEY (`o1_id`),
+  ADD UNIQUE KEY `o1_numero_ordem` (`o1_numero_ordem`),
+  ADD KEY `o1_cliente_id` (`o1_cliente_id`),
+  ADD KEY `o1_tecnico_id` (`o1_tecnico_id`),
+  ADD KEY `idx_o1_status` (`o1_status`),
+  ADD KEY `idx_o1_data_entrada` (`o1_data_entrada`);
+
+--
 -- Índices de tabela `p1_produtos`
 --
 ALTER TABLE `p1_produtos`
@@ -500,6 +614,31 @@ ALTER TABLE `p2_produtos_venda`
   ADD PRIMARY KEY (`p2_id`) USING BTREE,
   ADD KEY `p2_venda_id` (`p2_venda_id`) USING BTREE,
   ADD KEY `p2_produto_id` (`p2_produto_id`) USING BTREE;
+
+--
+-- Índices de tabela `p3_produtos_ordem`
+--
+ALTER TABLE `p3_produtos_ordem`
+  ADD PRIMARY KEY (`p3_id`),
+  ADD KEY `p3_ordem_id` (`p3_ordem_id`),
+  ADD KEY `p3_produto_id` (`p3_produto_id`);
+
+--
+-- Índices de tabela `s1_servicos`
+--
+ALTER TABLE `s1_servicos`
+  ADD PRIMARY KEY (`s1_id`),
+  ADD UNIQUE KEY `s1_codigo_servico` (`s1_codigo_servico`),
+  ADD KEY `idx_s1_status` (`s1_status`);
+
+--
+-- Índices de tabela `s2_servicos_ordem`
+--
+ALTER TABLE `s2_servicos_ordem`
+  ADD PRIMARY KEY (`s2_id`),
+  ADD KEY `s2_ordem_id` (`s2_ordem_id`),
+  ADD KEY `s2_servico_id` (`s2_servico_id`),
+  ADD KEY `s2_tecnico_id` (`s2_tecnico_id`);
 
 --
 -- Índices de tabela `u1_usuarios`
@@ -563,7 +702,13 @@ ALTER TABLE `l2_licencas`
 -- AUTO_INCREMENT de tabela `l2_logs`
 --
 ALTER TABLE `l2_logs`
-  MODIFY `l2_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `l2_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+
+--
+-- AUTO_INCREMENT de tabela `o1_ordens`
+--
+ALTER TABLE `o1_ordens`
+  MODIFY `o1_id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de tabela `p1_produtos`
@@ -576,6 +721,24 @@ ALTER TABLE `p1_produtos`
 --
 ALTER TABLE `p2_produtos_venda`
   MODIFY `p2_id` bigint(20) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de tabela `p3_produtos_ordem`
+--
+ALTER TABLE `p3_produtos_ordem`
+  MODIFY `p3_id` bigint(20) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de tabela `s1_servicos`
+--
+ALTER TABLE `s1_servicos`
+  MODIFY `s1_id` bigint(20) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de tabela `s2_servicos_ordem`
+--
+ALTER TABLE `s2_servicos_ordem`
+  MODIFY `s2_id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de tabela `u1_usuarios`
@@ -600,6 +763,13 @@ ALTER TABLE `l2_logs`
   ADD CONSTRAINT `fk_l2_logs_usuario` FOREIGN KEY (`l2_id_usuario`) REFERENCES `u1_usuarios` (`u1_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
+-- Restrições para tabelas `o1_ordens`
+--
+ALTER TABLE `o1_ordens`
+  ADD CONSTRAINT `fk_o1_ordens_cliente` FOREIGN KEY (`o1_cliente_id`) REFERENCES `c2_clientes` (`c2_id`),
+  ADD CONSTRAINT `fk_o1_ordens_tecnico` FOREIGN KEY (`o1_tecnico_id`) REFERENCES `u1_usuarios` (`u1_id`);
+
+--
 -- Restrições para tabelas `p1_produtos`
 --
 ALTER TABLE `p1_produtos`
@@ -612,6 +782,21 @@ ALTER TABLE `p1_produtos`
 ALTER TABLE `p2_produtos_venda`
   ADD CONSTRAINT `fk_p2_produtos_venda_produto` FOREIGN KEY (`p2_produto_id`) REFERENCES `p1_produtos` (`p1_id`),
   ADD CONSTRAINT `fk_p2_produtos_venda_venda` FOREIGN KEY (`p2_venda_id`) REFERENCES `v1_vendas` (`v1_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Restrições para tabelas `p3_produtos_ordem`
+--
+ALTER TABLE `p3_produtos_ordem`
+  ADD CONSTRAINT `fk_p3_produtos_ordem_ordem` FOREIGN KEY (`p3_ordem_id`) REFERENCES `o1_ordens` (`o1_id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_p3_produtos_ordem_produto` FOREIGN KEY (`p3_produto_id`) REFERENCES `p1_produtos` (`p1_id`);
+
+--
+-- Restrições para tabelas `s2_servicos_ordem`
+--
+ALTER TABLE `s2_servicos_ordem`
+  ADD CONSTRAINT `fk_s2_servicos_ordem_ordem` FOREIGN KEY (`s2_ordem_id`) REFERENCES `o1_ordens` (`o1_id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_s2_servicos_ordem_servico` FOREIGN KEY (`s2_servico_id`) REFERENCES `s1_servicos` (`s1_id`),
+  ADD CONSTRAINT `fk_s2_servicos_ordem_tecnico` FOREIGN KEY (`s2_tecnico_id`) REFERENCES `u1_usuarios` (`u1_id`);
 
 --
 -- Restrições para tabelas `v1_vendas`
