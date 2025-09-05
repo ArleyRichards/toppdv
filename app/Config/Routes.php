@@ -22,6 +22,10 @@ $routes->get('/home', 'Home::index');
 // Licença
 $routes->get('licenca', 'LicencaController::index');
 
+// Perfil do usuário
+$routes->get('perfil', 'PerfilController::index');
+$routes->post('perfil/salvar', 'PerfilController::salvar');
+
 // Rotas de configuração (apenas admin)
 $routes->get('configuracoes', 'ConfiguracaoController::index');
 $routes->post('configuracoes/salvar', 'ConfiguracaoController::salvar');

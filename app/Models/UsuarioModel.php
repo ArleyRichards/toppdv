@@ -43,6 +43,9 @@ class UsuarioModel extends Model
         'u1_tipo_permissao' => 'required|in_list[administrador,cadastro,venda,usuario]',
         'u1_token_reset_senha_acesso' => 'permit_empty|max_length[255]',
         'u1_horario_geracao_token' => 'permit_empty|valid_date'
+    ,
+    // Placeholder field used by is_unique rules during update operations
+    'u1_id' => 'permit_empty'
     ];
     
     protected $validationMessages = [
