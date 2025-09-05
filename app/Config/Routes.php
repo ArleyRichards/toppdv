@@ -52,6 +52,17 @@ $routes->resource('produtos', [
     'except' => ['new', 'edit']
 ]);
 
+// Rotas para gerenciamento de servicos
+$routes->get('servico', 'ServicoController::index');
+$routes->get('servico/estatisticas', 'ServicoController::estatisticas');
+$routes->get('servico/buscar', 'ServicoController::buscar');
+$routes->get('servico/cep', 'ServicoController::consultarCep');
+$routes->get('servico/list', 'ServicoController::list');
+$routes->resource('servico', [
+    'controller' => 'ServicoController',
+    'except' => ['new', 'edit']
+]);
+
 // Rotas para gerenciamento de categorias
 $routes->get('categorias', 'CategoriaController::index');
 $routes->get('categorias/estatisticas', 'CategoriaController::estatisticas');

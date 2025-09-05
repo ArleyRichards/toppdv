@@ -110,12 +110,12 @@
     </div>
     
     <div class="col-md-4 col-lg-2">
-        <a href="<?= base_url('licenca') ?>" class="text-decoration-none">
+        <a href="<?= base_url('servico') ?>" class="text-decoration-none">
             <div class="card h-100 text-center">
                 <div class="card-body">
-                    <i class="bi bi-award display-4 text-warning mb-3"></i>
-                    <h5 class="card-title">Licença</h5>
-                    <p class="card-text text-muted">Detalhes da Licença</p>
+                    <i class="bi bi-tools display-4 text-warning mb-3"></i>
+                    <h5 class="card-title">Serviços</h5>
+                    <p class="card-text text-muted">Relação dos Serviços</p>
                 </div>
             </div>
         </a>

@@ -54,20 +54,20 @@
             </button>
             
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">                    
-                    <li class="nav-item">
-                        <a class="nav-link" href="<?= base_url('configuracoes') ?>">
-                            <i class="bi bi-gear me-1"></i>                            
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-person-circle me-1"></i>
+                            <span class="d-none d-md-inline"><?= esc(session('user_nome') ?? session('user_usuario') ?? 'Usuário') ?></span>
                         </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                            <li><a class="dropdown-item" href="<?= base_url('configuracoes') ?>"><i class="bi bi-gear me-2"></i> Configurações</a></li>
+                            <li><a class="dropdown-item" href="<?= base_url('perfil') ?>"><i class="bi bi-person-circle me-2"></i> Perfil</a></li>
+                            <li><a class="dropdown-item" href="<?= base_url('licenca') ?>"><i class="bi bi-award me-2"></i> Licença</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item text-danger" href="<?= base_url('logout') ?>"><i class="bi bi-box-arrow-right me-2"></i> Sair</a></li>
+                        </ul>
                     </li>
-                                        
-                    <li class="nav-item">
-                        <a class="nav-link" href="<?= base_url('logout') ?>">
-                            <i class="bi bi-box-arrow-right me-1"></i>
-                            Sair
-                        </a>
-                    </li>
-                    
                 </ul>
             </div>
         </div>
