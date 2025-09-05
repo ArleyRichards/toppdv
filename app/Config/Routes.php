@@ -108,3 +108,16 @@ $routes->resource('usuarios', [
     'controller' => 'UsuarioController',
     'except' => ['new', 'edit']
 ]);
+
+// Rotas para gerenciamento de ordens de servico
+$routes->get('ordens', 'OrdemController::index');
+$routes->get('ordens/estatisticas', 'OrdemController::estatisticas');
+$routes->get('ordens/buscar', 'OrdemController::buscar');
+$routes->get('ordens/cep', 'OrdemController::consultarCep');
+$routes->get('ordens/list', 'OrdemController::list');
+// Allow POST with X-HTTP-Method-Override for update (some servers block PUT)
+$routes->post('ordens/(:num)', 'OrdemController::update/$1');
+$routes->resource('ordens', [
+    'controller' => 'OrdemController',
+    'except' => ['new', 'edit']
+]);
