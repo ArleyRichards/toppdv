@@ -84,7 +84,7 @@
 </div>
 
 <!-- Segunda Linha -->
-<div class="row g-3">
+<div class="row g-3 mb-4">
     <div class="col-md-4 col-lg-2">
         <a href="<?= base_url('relatorios') ?>" class="text-decoration-none">
             <div class="card h-100 text-center">
@@ -152,6 +152,20 @@
                     <i class="bi bi-cart-check display-4 text-secondary mb-3"></i>
                     <h5 class="card-title">Vendas</h5>
                     <p class="card-text text-muted">Gerenciar Vendas</p>
+                </div>
+            </div>
+        </a>
+    </div>
+</div>
+
+<div class="row g-3">
+    <div class="col-md-4 col-lg-2">
+        <a href="<?= base_url('tecnicos') ?>" class="text-decoration-none">
+            <div class="card h-100 text-center">
+                <div class="card-body">
+                    <i class="bi bi-tools display-4 text-primary mb-3"></i>
+                    <h5 class="card-title">Técnicos</h5>
+                    <p class="card-text text-muted">Visualizar técnicos</p>
                 </div>
             </div>
         </a>

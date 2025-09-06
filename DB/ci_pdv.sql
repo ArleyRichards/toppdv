@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 05/09/2025 às 12:45
+-- Tempo de geração: 06/09/2025 às 17:22
 -- Versão do servidor: 10.4.32-MariaDB
 -- Versão do PHP: 8.2.12
 
@@ -293,7 +293,9 @@ INSERT INTO `l2_logs` (`l2_id`, `l2_id_usuario`, `l2_tipo_log`, `l2_acao`, `l2_d
 (10, 7, 'logout', 'Logout realizado', 'Usuário: admin', NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:143.0) Gecko/20100101 Firefox/143.0', 'sucesso', '2025-09-04 11:47:12', '4d7f0e71203de77eaa73676a2ac236da', '2025-09-04 08:47:12', '2025-09-04 08:47:12', NULL),
 (11, 7, 'login', 'Login realizado com sucesso', 'Usuário: admin', NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:143.0) Gecko/20100101 Firefox/143.0', 'sucesso', '2025-09-04 11:48:40', 'a513c695b6ce29a63fb1c13fe2ab2f1b', '2025-09-04 08:48:40', '2025-09-04 08:48:40', NULL),
 (12, 7, 'login', 'Login realizado com sucesso', 'Usuário: admin', NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:143.0) Gecko/20100101 Firefox/143.0', 'sucesso', '2025-09-04 20:20:03', 'c14c71b374d6ecc9fdd29e38f3ad91bc', '2025-09-04 17:20:03', '2025-09-04 17:20:03', NULL),
-(13, 7, 'login', 'Login realizado com sucesso', 'Usuário: admin', NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:142.0) Gecko/20100101 Firefox/142.0', 'sucesso', '2025-09-05 10:30:14', '8454923dac465d8550b0c6b4ed13d5bb', '2025-09-05 07:30:14', '2025-09-05 07:30:14', NULL);
+(13, 7, 'login', 'Login realizado com sucesso', 'Usuário: admin', NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:142.0) Gecko/20100101 Firefox/142.0', 'sucesso', '2025-09-05 10:30:14', '8454923dac465d8550b0c6b4ed13d5bb', '2025-09-05 07:30:14', '2025-09-05 07:30:14', NULL),
+(14, 7, 'login', 'Login realizado com sucesso', 'Usuário: admin', NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:143.0) Gecko/20100101 Firefox/143.0', 'sucesso', '2025-09-05 22:06:46', 'a73d0c57f9e31c2d38cfd65ab9e08b9a', '2025-09-05 19:06:46', '2025-09-05 19:06:46', NULL),
+(15, 7, 'login', 'Login realizado com sucesso', 'Usuário: admin', NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:143.0) Gecko/20100101 Firefox/143.0', 'sucesso', '2025-09-06 13:46:17', 'd635816dad60700e55b9a98a04d4d9a9', '2025-09-06 10:46:17', '2025-09-06 10:46:17', NULL);
 
 -- --------------------------------------------------------
 
@@ -449,6 +451,14 @@ CREATE TABLE `s1_servicos` (
   `s1_deleted_at` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Despejando dados para a tabela `s1_servicos`
+--
+
+INSERT INTO `s1_servicos` (`s1_id`, `s1_codigo_servico`, `s1_nome_servico`, `s1_descricao`, `s1_valor`, `s1_tempo_medio`, `s1_categoria`, `s1_garantia`, `s1_status`, `s1_created_at`, `s1_updated_at`, `s1_deleted_at`) VALUES
+(1, 'SVC001', 'Troca de HD', 'teste de update', 25.02, 15, 'Informática', 7, 'Ativo', '2025-09-05 09:12:17', '2025-09-05 09:37:55', NULL),
+(2, 'SVC002', 'Formatação de HD', 'Instalação de Windows 10', 60.00, 90, 'Informática', 15, 'Ativo', '2025-09-05 09:25:27', '2025-09-05 09:38:04', NULL);
+
 -- --------------------------------------------------------
 
 --
@@ -471,6 +481,34 @@ CREATE TABLE `s2_servicos_ordem` (
   `s2_updated_at` datetime DEFAULT NULL,
   `s2_deleted_at` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura para tabela `t1_tecnicos`
+--
+
+CREATE TABLE `t1_tecnicos` (
+  `t1_id` bigint(20) NOT NULL,
+  `t1_nome` varchar(255) NOT NULL,
+  `t1_cpf` varchar(14) DEFAULT NULL,
+  `t1_telefone` varchar(15) DEFAULT NULL,
+  `t1_email` varchar(255) DEFAULT NULL,
+  `t1_observacao` text DEFAULT NULL,
+  `t1_created_at` datetime DEFAULT NULL,
+  `t1_updated_at` datetime DEFAULT NULL,
+  `t1_deleted_at` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Despejando dados para a tabela `t1_tecnicos`
+--
+
+INSERT INTO `t1_tecnicos` (`t1_id`, `t1_nome`, `t1_cpf`, `t1_telefone`, `t1_email`, `t1_observacao`, `t1_created_at`, `t1_updated_at`, `t1_deleted_at`) VALUES
+(1, 'João Técnico', '111.111.111-11', '(31) 99999-1111', 'joao.tecnico@empresa.com', 'Técnico generalista', '2025-09-05 19:13:19', '2025-09-05 19:13:19', NULL),
+(2, 'Maria Técnica', '222.222.222-22', '(11) 98888-2222', 'maria.tecnica@empresa.com', 'Especialista em celulares', '2025-09-05 19:13:19', '2025-09-05 19:13:19', NULL),
+(3, 'Carlos Técnico', '333.333.333-33', '(21) 97777-3333', 'carlos.tecnico@empresa.com', 'Suporte avançado', '2025-09-05 19:13:19', '2025-09-05 19:13:19', NULL),
+(4, 'Junio Rodrigues', '321.321.321-32', '(13) 2132-1321', 'juriorodrigues@gmail.com', 'teste 1234', '2025-09-06 11:21:40', '2025-09-06 12:19:23', '2025-09-06 12:19:23');
 
 -- --------------------------------------------------------
 
@@ -499,7 +537,7 @@ CREATE TABLE `u1_usuarios` (
 --
 
 INSERT INTO `u1_usuarios` (`u1_id`, `u1_cpf`, `u1_nome`, `u1_email`, `u1_usuario_acesso`, `u1_senha_usuario`, `u1_tipo_permissao`, `u1_data_ultimo_acesso`, `u1_horario_geracao_token`, `u1_token_reset_senha_acesso`, `u1_created_at`, `u1_updated_at`, `u1_deleted_at`) VALUES
-(7, '123.456.789-00', 'Administrador Sistema', 'admin@sistema.com', 'admin', '$2y$10$bsuRIaYh/5aEbDe10ZeKcuAgmbWhcER02mjIBPjcYlA8DVBKIyN1S', 'administrador', '2025-09-05 10:30:14', NULL, NULL, '2025-09-03 11:22:57', '2025-09-05 07:33:48', NULL),
+(7, '123.456.789-00', 'Administrador Sistema', 'admin@sistema.com', 'admin', '$2y$10$bsuRIaYh/5aEbDe10ZeKcuAgmbWhcER02mjIBPjcYlA8DVBKIyN1S', 'administrador', '2025-09-06 13:46:17', NULL, NULL, '2025-09-03 11:22:57', '2025-09-06 10:46:17', NULL),
 (8, '987.654.321-00', 'João Vendedor', 'joao.vendedor@sistema.com', 'joao.vendas', '$2y$10$bsuRIaYh/5aEbDe10ZeKcuAgmbWhcER02mjIBPjcYlA8DVBKIyN1S', 'venda', '2025-09-03 14:22:57', NULL, NULL, '2025-09-03 11:22:57', '2025-09-03 11:23:49', NULL),
 (9, '456.789.123-00', 'Maria Cadastro', 'maria.cadastro@sistema.com', 'maria.cad', '$2y$10$bsuRIaYh/5aEbDe10ZeKcuAgmbWhcER02mjIBPjcYlA8DVBKIyN1S', 'cadastro', '2025-09-03 14:22:57', NULL, NULL, '2025-09-03 11:22:57', '2025-09-04 15:31:51', '2025-09-04 15:31:51'),
 (10, '32132116544', 'Isaías Oliveira', 'visaotec@gmail.com', 'visaotec10', '$2y$10$aDb5PqIxXVj8uruevvyCwem29GDxwq81vaKi8yoUG68m0Uw62bNZO', 'administrador', '2025-09-04 18:38:00', NULL, NULL, '2025-09-04 15:38:00', '2025-09-04 15:50:59', NULL),
@@ -641,6 +679,13 @@ ALTER TABLE `s2_servicos_ordem`
   ADD KEY `s2_tecnico_id` (`s2_tecnico_id`);
 
 --
+-- Índices de tabela `t1_tecnicos`
+--
+ALTER TABLE `t1_tecnicos`
+  ADD PRIMARY KEY (`t1_id`),
+  ADD UNIQUE KEY `t1_cpf` (`t1_cpf`);
+
+--
 -- Índices de tabela `u1_usuarios`
 --
 ALTER TABLE `u1_usuarios`
@@ -702,13 +747,13 @@ ALTER TABLE `l2_licencas`
 -- AUTO_INCREMENT de tabela `l2_logs`
 --
 ALTER TABLE `l2_logs`
-  MODIFY `l2_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `l2_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT de tabela `o1_ordens`
 --
 ALTER TABLE `o1_ordens`
-  MODIFY `o1_id` bigint(20) NOT NULL AUTO_INCREMENT;
+  MODIFY `o1_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de tabela `p1_produtos`
@@ -732,13 +777,19 @@ ALTER TABLE `p3_produtos_ordem`
 -- AUTO_INCREMENT de tabela `s1_servicos`
 --
 ALTER TABLE `s1_servicos`
-  MODIFY `s1_id` bigint(20) NOT NULL AUTO_INCREMENT;
+  MODIFY `s1_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de tabela `s2_servicos_ordem`
 --
 ALTER TABLE `s2_servicos_ordem`
   MODIFY `s2_id` bigint(20) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de tabela `t1_tecnicos`
+--
+ALTER TABLE `t1_tecnicos`
+  MODIFY `t1_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de tabela `u1_usuarios`
@@ -766,8 +817,7 @@ ALTER TABLE `l2_logs`
 -- Restrições para tabelas `o1_ordens`
 --
 ALTER TABLE `o1_ordens`
-  ADD CONSTRAINT `fk_o1_ordens_cliente` FOREIGN KEY (`o1_cliente_id`) REFERENCES `c2_clientes` (`c2_id`),
-  ADD CONSTRAINT `fk_o1_ordens_tecnico` FOREIGN KEY (`o1_tecnico_id`) REFERENCES `u1_usuarios` (`u1_id`);
+  ADD CONSTRAINT `fk_o1_ordens_cliente` FOREIGN KEY (`o1_cliente_id`) REFERENCES `c2_clientes` (`c2_id`);
 
 --
 -- Restrições para tabelas `p1_produtos`

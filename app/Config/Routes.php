@@ -109,6 +109,19 @@ $routes->resource('usuarios', [
     'except' => ['new', 'edit']
 ]);
 
+// Rotas para gerenciamento de tecnicos
+$routes->get('tecnicos', 'TecnicoController::index');
+$routes->get('tecnicos/estatisticas', 'TecnicoController::estatisticas');
+$routes->get('tecnicos/buscar', 'TecnicoController::buscar');
+$routes->get('tecnicos/cep', 'TecnicoController::consultarCep');
+$routes->get('tecnicos/list', 'TecnicoController::list');
+// Allow POST with X-HTTP-Method-Override for update (some servers block PUT)
+$routes->post('tecnicos/(:num)', 'TecnicoController::update/$1');
+$routes->resource('tecnicos', [
+    'controller' => 'TecnicoController',
+    'except' => ['new', 'edit']
+]);
+
 // Rotas para gerenciamento de ordens de servico
 $routes->get('ordens', 'OrdemController::index');
 $routes->get('ordens/estatisticas', 'OrdemController::estatisticas');
