@@ -128,6 +128,7 @@ $routes->get('ordens/estatisticas', 'OrdemController::estatisticas');
 $routes->get('ordens/buscar', 'OrdemController::buscar');
 $routes->get('ordens/cep', 'OrdemController::consultarCep');
 $routes->get('ordens/list', 'OrdemController::list');
+$routes->post('ordens/(:num)/operacoes', 'OrdemController::saveOperacoes/$1');
 // Allow POST with X-HTTP-Method-Override for update (some servers block PUT)
 $routes->post('ordens/(:num)', 'OrdemController::update/$1');
 $routes->resource('ordens', [

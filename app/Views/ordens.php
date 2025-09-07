@@ -30,13 +30,62 @@
         </div>
         <div class="card-body">
             <div class="row g-3">
-                <div class="col-lg-6 col-md-6">
-                    <label for="filterSearch" class="form-label">Pesquisar</label>
-                    <input type="text" class="form-control" id="filterSearch" placeholder="Número da ordem, cliente ou equipamento...">
+                <!-- Primeira linha -->
+                <div class="col-lg-2 col-md-6">
+                    <label for="filterNumero" class="form-label">Número Ordem</label>
+                    <input type="text" class="form-control" id="filterNumero" placeholder="Ex: OR0001">
                 </div>
-                <div class="col-lg-2 col-md-2 d-flex align-items-end">
+                <div class="col-lg-2 col-md-6">
+                    <label for="filterCliente" class="form-label">Cliente</label>
+                    <input type="text" class="form-control" id="filterCliente" placeholder="Nome do cliente">
+                </div>
+                <div class="col-lg-2 col-md-6">
+                    <label for="filterEquipamento" class="form-label">Equipamento</label>
+                    <input type="text" class="form-control" id="filterEquipamento" placeholder="Tipo de equipamento">
+                </div>
+                <div class="col-lg-2 col-md-3">
+                    <label for="filterStatus" class="form-label">Status</label>
+                    <select class="form-select" id="filterStatus">
+                        <option value="">Todos</option>
+                        <option value="Aguardando">Aguardando</option>
+                        <option value="Em Andamento">Em Andamento</option>
+                        <option value="Aguardando Peças">Aguardando Peças</option>
+                        <option value="Concluído">Concluído</option>
+                        <option value="Entregue">Entregue</option>
+                        <option value="Cancelado">Cancelado</option>
+                    </select>
+                </div>
+                <div class="col-lg-2 col-md-3">
+                    <label for="filterPrioridade" class="form-label">Prioridade</label>
+                    <select class="form-select" id="filterPrioridade">
+                        <option value="">Todas</option>
+                        <option value="Baixa">Baixa</option>
+                        <option value="Média">Média</option>
+                        <option value="Alta">Alta</option>
+                        <option value="Urgente">Urgente</option>
+                    </select>
+                </div>
+                <div class="col-lg-2 col-md-6">
+                    <label for="filterMarca" class="form-label">Marca</label>
+                    <input type="text" class="form-control" id="filterMarca" placeholder="Filtrar por marca">
+                </div>
+
+                <!-- Segunda linha -->
+                <div class="col-lg-2 col-md-6">
+                    <label for="filterModelo" class="form-label">Modelo</label>
+                    <input type="text" class="form-control" id="filterModelo" placeholder="Filtrar por modelo">
+                </div>
+                <div class="col-lg-2 col-md-6">
+                    <label for="filterDataInicial" class="form-label">Data Inicial</label>
+                    <input type="date" class="form-control" id="filterDataInicial" value="<?= date('Y-m-d'); ?>">
+                </div>
+                <div class="col-lg-2 col-md-6">
+                    <label for="filterDataFinal" class="form-label">Data Final</label>
+                    <input type="date" class="form-control" id="filterDataFinal" value="<?= date('Y-m-d'); ?>">
+                </div>
+                <div class="col-lg-2 col-md-6 d-flex align-items-end">
                     <button class="btn btn-outline-danger btn-sm w-100" id="clearFilters">
-                        <i class="fa-solid fa-eraser"></i>
+                        <i class="fa-solid fa-eraser me-2"></i>Limpar
                     </button>
                 </div>
             </div>
@@ -54,7 +103,7 @@
                     <thead class="table-dark">
                         <tr>
                             <th>Número Ordem</th>
-                            <th>Cliente ID</th>
+                            <th>Cliente</th>
                             <th>Equipamento</th>
                             <th>Marca</th>
                             <th>Modelo</th>
@@ -170,7 +219,14 @@
                         </div>
                         <div class="col-md-4">
                             <label for="add-ordem-tecnico" class="form-label">Técnico</label>
-                            <input type="text" class="form-control" id="add-ordem-tecnico" name="tecnico_id">
+                            <select class="form-select" id="add-ordem-tecnico" name="tecnico_id">
+                                <option value="">Selecione um técnico...</option>
+                                <?php if (!empty($tecnicos) && is_array($tecnicos)): ?>
+                                    <?php foreach ($tecnicos as $tecnico): ?>
+                                        <option value="<?= esc($tecnico->t1_id) ?>"><?= esc($tecnico->t1_nome) ?> <?= !empty($tecnico->t1_cpf) ? '('.esc($tecnico->t1_cpf).')' : '' ?></option>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
+                            </select>
                         </div>
 
                         <div class="col-md-4">
@@ -185,7 +241,7 @@
                             <label for="add-ordem-prioridade" class="form-label">Prioridade</label>
                             <select class="form-select" id="add-ordem-prioridade" name="prioridade">
                                 <option value="Baixa">Baixa</option>
-                                <option value="Normal" selected>Normal</option>
+                                <option value="Média" selected>Média</option>
                                 <option value="Alta">Alta</option>
                             </select>
                         </div>
@@ -229,45 +285,102 @@
     </div>
 </div>
 
-<!-- Modal de Edição de Garantia -->
+<!-- Modal de Edição de Ordem -->
 <div class="modal fade" id="editgarantiaModal" tabindex="-1" aria-labelledby="editgarantiaModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="editgarantiaModalLabel">
-                    <i class="fa-solid fa-edit text-warning me-2"></i>Editar Garantia
+                    <i class="fa-solid fa-edit text-warning me-2"></i>Editar Ordem de Serviço
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="filter: invert(1);"></button>
             </div>
             <div class="modal-body">
-                    <form id="editGarantiaForm" class="needs-validation" novalidate>
+                <form id="editGarantiaForm" class="needs-validation" novalidate>
                     <input type="hidden" id="edit-garantia-id" name="id">
                     <input type="hidden" name="csrf_token" id="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
-                    <div class="mb-3">
-                        <label for="edit-garantia-nome" class="form-label">Nome da Garantia</label>
-                        <input type="text" class="form-control" id="edit-garantia-nome" name="nome" required>
-                        <div class="invalid-feedback" id="edit-garantia-nome-error"></div>
-                    </div>
-                    <div class="mb-3">
-                        <label for="edit-garantia-descricao" class="form-label">Descrição</label>
-                        <textarea class="form-control" id="edit-garantia-descricao" name="descricao" rows="2"></textarea>
-                        <div class="invalid-feedback" id="edit-garantia-descricao-error"></div>
-                    </div>
-                    <div class="mb-3">
-                        <label for="edit-garantia-observacao" class="form-label">Observação</label>
-                        <textarea class="form-control" id="edit-garantia-observacao" name="observacao" rows="2"></textarea>
-                        <div class="invalid-feedback" id="edit-garantia-observacao-error"></div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label for="edit-garantia-data" class="form-label">Data</label>
-                            <input type="date" class="form-control" id="edit-garantia-data" name="data">
-                            <div class="invalid-feedback" id="edit-garantia-data-error"></div>
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <label for="edit-ordem-cliente-id" class="form-label">Cliente <span class="text-danger">*</span></label>
+                            <select class="form-select" id="edit-ordem-cliente-id" name="cliente_id" required>
+                                <option value="">Selecione um cliente...</option>
+                                <?php if (!empty($clientes) && is_array($clientes)): ?>
+                                    <?php foreach ($clientes as $c): ?>
+                                        <option value="<?= esc($c->c2_id) ?>"><?= esc($c->c2_nome) ?> <?= !empty($c->c2_cpf) ? '('.esc($c->c2_cpf).')' : '' ?></option>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
+                            </select>
+                            <div class="invalid-feedback" id="edit-ordem-cliente-id-error">Informe o cliente.</div>
                         </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="edit-garantia-data-garantia" class="form-label">Data da Garantia</label>
-                            <input type="datetime-local" class="form-control" id="edit-garantia-data-garantia" name="data_garantia">
-                            <div class="invalid-feedback" id="edit-garantia-data-garantia-error"></div>
+                        <div class="col-md-4">
+                            <label for="edit-ordem-equipamento" class="form-label">Equipamento <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="edit-ordem-equipamento" name="equipamento" required>
+                            <div class="invalid-feedback" id="edit-ordem-equipamento-error">Informe o equipamento.</div>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="edit-ordem-marca" class="form-label">Marca</label>
+                            <input type="text" class="form-control" id="edit-ordem-marca" name="marca">
+                        </div>
+
+                        <div class="col-md-4">
+                            <label for="edit-ordem-modelo" class="form-label">Modelo</label>
+                            <input type="text" class="form-control" id="edit-ordem-modelo" name="modelo">
+                        </div>
+                        <div class="col-md-4">
+                            <label for="edit-ordem-numero-serie" class="form-label">Número de Série</label>
+                            <input type="text" class="form-control" id="edit-ordem-numero-serie" name="numero_serie">
+                        </div>
+                        <div class="col-md-4">
+                            <label for="edit-ordem-tecnico" class="form-label">Técnico</label>
+                            <select class="form-select" id="edit-ordem-tecnico" name="tecnico_id">
+                                <option value="">Selecione um técnico...</option>
+                                <?php if (!empty($tecnicos) && is_array($tecnicos)): ?>
+                                    <?php foreach ($tecnicos as $tecnico): ?>
+                                        <option value="<?= esc($tecnico->t1_id) ?>"><?= esc($tecnico->t1_nome) ?> <?= !empty($tecnico->t1_cpf) ? '('.esc($tecnico->t1_cpf).')' : '' ?></option>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
+                            </select>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label for="edit-ordem-data-entrada" class="form-label">Data Entrada <span class="text-danger">*</span></label>
+                            <input type="date" class="form-control" id="edit-ordem-data-entrada" name="data_entrada" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="edit-ordem-data-previsao" class="form-label">Data Prevista</label>
+                            <input type="date" class="form-control" id="edit-ordem-data-previsao" name="data_previsao">
+                        </div>
+                        <div class="col-md-4">
+                            <label for="edit-ordem-prioridade" class="form-label">Prioridade</label>
+                            <select class="form-select" id="edit-ordem-prioridade" name="prioridade">
+                                <option value="Baixa">Baixa</option>
+                                <option value="Média" selected>Média</option>
+                                <option value="Alta">Alta</option>
+                            </select>
+                        </div>
+
+                        <div class="col-12">
+                            <label for="edit-ordem-defeito" class="form-label">Defeito Relatado <span class="text-danger">*</span></label>
+                            <textarea class="form-control" id="edit-ordem-defeito" name="defeito_relatado" rows="3" required></textarea>
+                            <div class="invalid-feedback" id="edit-ordem-defeito-error">Descreva o defeito relatado.</div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <label for="edit-ordem-observacoes" class="form-label">Observações de Entrada</label>
+                            <textarea class="form-control" id="edit-ordem-observacoes" name="observacoes_entrada" rows="3"></textarea>
+                        </div>
+                        <div class="col-md-8">
+                            <label for="edit-ordem-acessorios" class="form-label">Acessórios</label>
+                            <input type="text" class="form-control" id="edit-ordem-acessorios" name="acessorios_entrada">
+                        </div>
+
+                        <div class="col-md-4">
+                            <label for="edit-ordem-estado" class="form-label">Estado Aparente</label>
+                            <select class="form-select" id="edit-ordem-estado" name="estado_aparente">
+                                <option value="Novo">Novo</option>
+                                <option value="Usado">Usado</option>
+                                <option value="Danificado">Danificado</option>
+                            </select>
                         </div>
                     </div>
                 </form>
@@ -276,8 +389,8 @@
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                     <i class="fa-solid fa-times me-1"></i>Cancelar
                 </button>
-                <button type="button" class="btn btn-primary" id="updateGarantiaBtn">
-                    <i class="fa-solid fa-save me-1"></i>Atualizar Garantia
+                <button type="button" class="btn btn-warning" id="updateGarantiaBtn">
+                    <i class="fa-solid fa-save me-1"></i>Atualizar Ordem
                 </button>
             </div>
         </div>
@@ -298,35 +411,138 @@
                             <form id="operacoesForm">
                                 <input type="hidden" id="operacoes-ordem-id" name="ordem_id" value="">
                                 <div class="mb-3">
-                                    <small class="text-muted">Adicione produtos e serviços à ordem. Você pode adicionar várias linhas de cada tipo.</small>
+                                    <small class="text-muted">Adicione produtos e serviços à ordem de serviço.</small>
                                 </div>
 
-                                <div class="table-responsive">
-                                    <table class="table table-sm" id="operacoesTable">
-                                        <thead class="table-dark">
-                                            <tr>
-                                                <th>Tipo</th>
-                                                <th>Descrição</th>
-                                                <th style="width:120px">Quantidade</th>
-                                                <th style="width:140px">Preço Unit.</th>
-                                                <th style="width:140px">Subtotal</th>
-                                                <th style="width:80px"></th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <!-- linhas serão adicionadas dinamicamente -->
-                                        </tbody>
-                                    </table>
+                                <!-- Card de Produtos -->
+                                <div class="card mb-4">
+                                    <div class="card-header">
+                                        <h6 class="mb-0"><i class="fa-solid fa-box text-primary me-2"></i>Produtos</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <!-- Formulário de adição de produto -->
+                                        <div class="row g-3 mb-3">
+                                            <div class="col-md-4">
+                                                <label for="produto-select" class="form-label">Produto</label>
+                                                <select class="form-select form-select-sm" id="produto-select">
+                                                    <option value="">Selecione um produto...</option>
+                                                    <?php if (!empty($produtos) && is_array($produtos)): ?>
+                                                        <?php foreach ($produtos as $produto): ?>
+                                                            <option value="<?= esc($produto->p1_id) ?>" data-preco="<?= esc($produto->p1_preco_venda_produto ?? 0) ?>">
+                                                                <?= esc($produto->p1_nome_produto) ?> - R$ <?= number_format($produto->p1_preco_venda_produto ?? 0, 2, ',', '.') ?>
+                                                            </option>
+                                                        <?php endforeach; ?>
+                                                    <?php endif; ?>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <label for="produto-quantidade" class="form-label">Qtd</label>
+                                                <input type="number" class="form-control form-control-sm" id="produto-quantidade" min="1" value="1">
+                                            </div>
+                                            <div class="col-md-2">
+                                                <label for="produto-preco" class="form-label">Preço Unit.</label>
+                                                <input type="text" class="form-control form-control-sm" id="produto-preco" value="0,00" disabled readonly>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <label for="produto-subtotal" class="form-label">Subtotal</label>
+                                                <input type="text" class="form-control form-control-sm" id="produto-subtotal" value="0,00" disabled readonly>
+                                            </div>
+                                            <div class="col-md-2 d-flex align-items-end">
+                                                <button type="button" class="btn btn-primary btn-sm w-100" id="addProdutoBtn">
+                                                    <i class="fa-solid fa-plus me-1"></i>Adicionar
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <!-- Tabela de produtos adicionados -->
+                                        <div class="table-responsive">
+                                            <table class="table table-sm table-striped" id="produtosTable">
+                                                <thead class="table-dark">
+                                                    <tr>
+                                                        <th>Produto</th>
+                                                        <th style="width:100px">Qtd</th>
+                                                        <th style="width:120px">Preço Unit.</th>
+                                                        <th style="width:120px">Subtotal</th>
+                                                        <th style="width:80px"></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <!-- linhas serão adicionadas dinamicamente -->
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
                                 </div>
 
+                                <!-- Card de Serviços -->
+                                <div class="card mb-4">
+                                    <div class="card-header">
+                                        <h6 class="mb-0"><i class="fa-solid fa-tools text-success me-2"></i>Serviços</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <!-- Formulário de adição de serviço -->
+                                        <div class="row g-3 mb-3">
+                                            <div class="col-md-4">
+                                                <label for="servico-select" class="form-label">Serviço</label>
+                                                <select class="form-select form-select-sm" id="servico-select">
+                                                    <option value="">Selecione um serviço...</option>
+                                                    <?php if (!empty($servicos) && is_array($servicos)): ?>
+                                                        <?php foreach ($servicos as $servico): ?>
+                                                            <option value="<?= esc($servico->s1_id) ?>" data-preco="<?= esc($servico->s1_valor ?? 0) ?>">
+                                                                <?= esc($servico->s1_nome_servico) ?> - R$ <?= number_format($servico->s1_valor ?? 0, 2, ',', '.') ?>
+                                                            </option>
+                                                        <?php endforeach; ?>
+                                                    <?php endif; ?>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <label for="servico-quantidade" class="form-label">Qtd</label>
+                                                <input type="number" class="form-control form-control-sm" id="servico-quantidade" min="1" value="1">
+                                            </div>
+                                            <div class="col-md-2">
+                                                <label for="servico-preco" class="form-label">Preço Unit.</label>
+                                                <input type="text" class="form-control form-control-sm" id="servico-preco" value="0,00" disabled readonly>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <label for="servico-subtotal" class="form-label">Subtotal</label>
+                                                <input type="text" class="form-control form-control-sm" id="servico-subtotal" value="0,00" disabled readonly>
+                                            </div>
+                                            <div class="col-md-2 d-flex align-items-end">
+                                                <button type="button" class="btn btn-success btn-sm w-100" id="addServicoBtn">
+                                                    <i class="fa-solid fa-plus me-1"></i>Adicionar
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <!-- Tabela de serviços adicionados -->
+                                        <div class="table-responsive">
+                                            <table class="table table-sm table-striped" id="servicosTable">
+                                                <thead class="table-dark">
+                                                    <tr>
+                                                        <th>Serviço</th>
+                                                        <th style="width:100px">Qtd</th>
+                                                        <th style="width:120px">Preço Unit.</th>
+                                                        <th style="width:120px">Subtotal</th>
+                                                        <th style="width:80px"></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <!-- linhas serão adicionadas dinamicamente -->
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Totais -->
                                 <div class="d-flex justify-content-between align-items-center">
-                                    <div>
-                                        <button type="button" class="btn btn-outline-primary btn-sm" id="addProdutoBtn"><i class="fa-solid fa-plus me-1"></i>Produto</button>
-                                        <button type="button" class="btn btn-outline-secondary btn-sm" id="addServicoBtn"><i class="fa-solid fa-plus me-1"></i>Serviço</button>
+                                    <div class="text-muted">
+                                        <small>Total Produtos: R$ <span id="produtosTotal">0.00</span></small><br>
+                                        <small>Total Serviços: R$ <span id="servicosTotal">0.00</span></small>
                                     </div>
                                     <div class="text-end">
-                                        <div><small class="text-muted">Total</small></div>
-                                        <h4 id="operacoesTotal">0.00</h4>
+                                        <div><small class="text-muted">Total Geral</small></div>
+                                        <h4>R$ <span id="operacoesTotal">0.00</span></h4>
                                     </div>
                                 </div>
                             </form>
@@ -389,6 +605,84 @@
 #addOrdemModal .select2-container .select2-selection__clear {
     color: #adb5bd;
 }
+
+/* Select2 dark theme overrides scoped to the edit order modal */
+#editgarantiaModal .select2-container--default .select2-selection--single {
+    background-color: #2b3035; /* dark gray */
+    color: #e9ecef; /* light text */
+    border: 1px solid #454d55;
+    padding: .375rem .75rem;
+    border-radius: .375rem;
+    height: auto;
+}
+#editgarantiaModal .select2-container--default .select2-selection__rendered {
+    color: #e9ecef;
+}
+#editgarantiaModal .select2-container--default .select2-selection__placeholder {
+    color: #adb5bd; /* muted */
+}
+#editgarantiaModal .select2-container--default .select2-selection__arrow b {
+    border-color: #e9ecef;
+}
+#editgarantiaModal .select2-dropdown {
+    background-color: #212529; /* modal darker bg */
+    color: #e9ecef;
+    border: 1px solid #343a40;
+}
+#editgarantiaModal .select2-results__option {
+    padding: .5rem .75rem;
+}
+#editgarantiaModal .select2-results__option--highlighted[aria-selected],
+#editgarantiaModal .select2-results__option[aria-selected='true'] {
+    background-color: #0d6efd; /* bootstrap primary */
+    color: #fff;
+}
+#editgarantiaModal .select2-container--open .select2-selection--single {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 .25rem rgba(13,110,253,.15);
+}
+#editgarantiaModal .select2-container .select2-selection__clear {
+    color: #adb5bd;
+}
+
+/* Select2 dark theme overrides scoped to the operations modal */
+#operacoesModal .select2-container--default .select2-selection--single {
+    background-color: #2b3035; /* dark gray */
+    color: #e9ecef; /* light text */
+    border: 1px solid #454d55;
+    padding: .375rem .75rem;
+    border-radius: .375rem;
+    height: auto;
+}
+#operacoesModal .select2-container--default .select2-selection__rendered {
+    color: #e9ecef;
+}
+#operacoesModal .select2-container--default .select2-selection__placeholder {
+    color: #adb5bd; /* muted */
+}
+#operacoesModal .select2-container--default .select2-selection__arrow b {
+    border-color: #e9ecef;
+}
+#operacoesModal .select2-dropdown {
+    background-color: #212529; /* modal darker bg */
+    color: #e9ecef;
+    border: 1px solid #343a40;
+}
+#operacoesModal .select2-results__option {
+    padding: .5rem .75rem;
+}
+#operacoesModal .select2-results__option--highlighted[aria-selected],
+#operacoesModal .select2-results__option[aria-selected='true'] {
+    background-color: #0d6efd; /* bootstrap primary */
+    color: #fff;
+}
+#operacoesModal .select2-container--open .select2-selection--single {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 .25rem rgba(13,110,253,.15);
+}
+#operacoesModal .select2-container .select2-selection__clear {
+    color: #adb5bd;
+}
 </style>
 
 <script>
@@ -412,8 +706,28 @@
             // se Select2 não carregar, ignora
         }
 
+        // Inicializa Select2 no select de técnicos (usa dropdownParent para modal)
+        try {
+            $('#add-ordem-tecnico').select2({
+                placeholder: 'Selecione um técnico...',
+                allowClear: true,
+                width: '100%',
+                dropdownParent: $('#addOrdemModal')
+            });
+        } catch (e) {
+            // se Select2 não carregar, ignora
+        }
+
         // remove classe de erro quando usuário muda seleção
         $(document).on('change', '#add-ordem-cliente-id', function() {
+            $(this).removeClass('is-invalid');
+            // também remover erro visual do select2 container se existir
+            const $container = $(this).data('select2') ? $(this).next('.select2-container') : $();
+            if ($container.length) $container.find('.select2-selection').removeClass('is-invalid');
+        });
+
+        // remove classe de erro quando usuário muda seleção do técnico
+        $(document).on('change', '#add-ordem-tecnico', function() {
             $(this).removeClass('is-invalid');
             // também remover erro visual do select2 container se existir
             const $container = $(this).data('select2') ? $(this).next('.select2-container') : $();
@@ -451,7 +765,15 @@
      */
     function setupEventListeners() {
         // Filtros: pesquisa
-        $('#filterSearch').on('input', applyFilters);
+        $('#filterNumero').on('input', applyFilters);
+        $('#filterCliente').on('input', applyFilters);
+        $('#filterEquipamento').on('input', applyFilters);
+        $('#filterStatus').on('change', applyFilters);
+        $('#filterPrioridade').on('change', applyFilters);
+        $('#filterDataInicial').on('change', applyFilters);
+        $('#filterDataFinal').on('change', applyFilters);
+        $('#filterMarca').on('input', applyFilters);
+        $('#filterModelo').on('input', applyFilters);
         $('#clearFilters').on('click', clearFilters);
 
         // Paginação
@@ -494,6 +816,7 @@
                     id: o.o1_id,
                     numero: o.o1_numero_ordem,
                     cliente_id: o.o1_cliente_id,
+                    cliente_nome: o.cliente_nome,
                     equipamento: o.o1_equipamento,
                     marca: o.o1_marca,
                     modelo: o.o1_modelo,
@@ -501,7 +824,9 @@
                     prioridade: o.o1_prioridade,
                     valor_final: o.o1_valor_final,
                     data_entrada: o.o1_data_entrada,
-                    defeito: o.o1_defeito_relatado
+                    defeito: o.o1_defeito_relatado,
+                    tecnico_id: o.o1_tecnico_id,
+                    tecnico_nome: o.tecnico_nome
                 }));
 
                 filteredOrdens = [...ordensData];
@@ -517,13 +842,51 @@
 
     // Aplicar filtros: nome e intervalo de comissão
     function applyFilters() {
-        const q = ($('#filterSearch').val() || '').toLowerCase();
+        const numeroFilter = ($('#filterNumero').val() || '').toLowerCase();
+        const clienteFilter = ($('#filterCliente').val() || '').toLowerCase();
+        const equipamentoFilter = ($('#filterEquipamento').val() || '').toLowerCase();
+        const statusFilter = $('#filterStatus').val() || '';
+        const prioridadeFilter = $('#filterPrioridade').val() || '';
+        const dataInicialFilter = $('#filterDataInicial').val() || '';
+        const dataFinalFilter = $('#filterDataFinal').val() || '';
+        const marcaFilter = ($('#filterMarca').val() || '').toLowerCase();
+        const modeloFilter = ($('#filterModelo').val() || '').toLowerCase();
 
         filteredOrdens = ordensData.filter(o => {
-            if (!q) return true;
-            return String(o.numero || '').toLowerCase().includes(q)
-                || String(o.cliente_id || '').toLowerCase().includes(q)
-                || String(o.equipamento || '').toLowerCase().includes(q);
+            // Filtro de número da ordem
+            const matchesNumero = !numeroFilter || String(o.numero || '').toLowerCase().includes(numeroFilter);
+
+            // Filtro de cliente
+            const matchesCliente = !clienteFilter || String(o.cliente_nome || '').toLowerCase().includes(clienteFilter);
+
+            // Filtro de equipamento
+            const matchesEquipamento = !equipamentoFilter || String(o.equipamento || '').toLowerCase().includes(equipamentoFilter);
+
+            // Filtro de status
+            const matchesStatus = !statusFilter || String(o.status || '').includes(statusFilter);
+
+            // Filtro de prioridade
+            const matchesPrioridade = !prioridadeFilter || String(o.prioridade || '').includes(prioridadeFilter);
+
+            // Filtro de período (data inicial e final)
+            let matchesPeriodo = true;
+            if (dataInicialFilter || dataFinalFilter) {
+                const dataOrdem = new Date(o.data_entrada);
+                const dataInicial = dataInicialFilter ? new Date(dataInicialFilter) : null;
+                const dataFinal = dataFinalFilter ? new Date(dataFinalFilter) : null;
+
+                if (dataInicial && dataOrdem < dataInicial) matchesPeriodo = false;
+                if (dataFinal && dataOrdem > dataFinal) matchesPeriodo = false;
+            }
+
+            // Filtro de marca
+            const matchesMarca = !marcaFilter || String(o.marca || '').toLowerCase().includes(marcaFilter);
+
+            // Filtro de modelo
+            const matchesModelo = !modeloFilter || String(o.modelo || '').toLowerCase().includes(modeloFilter);
+
+            return matchesNumero && matchesCliente && matchesEquipamento && matchesStatus &&
+                   matchesPrioridade && matchesPeriodo && matchesMarca && matchesModelo;
         });
 
         currentPage = 1;
@@ -532,7 +895,15 @@
 
     // Limpar filtros
     function clearFilters() {
-        $('#filterSearch').val('');
+        $('#filterNumero').val('');
+        $('#filterCliente').val('');
+        $('#filterEquipamento').val('');
+        $('#filterStatus').val('');
+        $('#filterPrioridade').val('');
+        $('#filterDataInicial').val('<?= date('Y-m-d'); ?>');
+        $('#filterDataFinal').val('<?= date('Y-m-d'); ?>');
+        $('#filterMarca').val('');
+        $('#filterModelo').val('');
         filteredOrdens = [...ordensData];
         currentPage = 1;
         renderTable();
@@ -571,7 +942,7 @@
     function createTableRow(ordem) {
         const id = ordem.id || '';
         const numero = ordem.numero || '-';
-        const cliente = ordem.cliente_id || '-';
+        const cliente = ordem.cliente_nome || '-';
         const equipamento = ordem.equipamento || '-';
         const marca = ordem.marca || '-';
         const modelo = ordem.modelo || '-';
@@ -595,6 +966,9 @@
                     <div class="btn-group" role="group">
                         <button type="button" class="btn btn-primary btn-action" onclick="viewOrdem(${id})" title="Visualizar">
                             <i class="fa-solid fa-eye"></i>
+                        </button>
+                        <button type="button" class="btn btn-info btn-action" onclick="openOperacoesModal(${id})" title="Operações">
+                            <i class="fa-solid fa-boxes-stacked"></i>
                         </button>
                         <button type="button" class="btn btn-warning btn-action" onclick="editOrdem(${id})" title="Editar">
                             <i class="fa-solid fa-edit"></i>
@@ -693,21 +1067,237 @@
     }
 
     // Mostrar detalhes da ordem
-    function showOrdemDetails(ordem) {
-        $('#garantiaModalBody').html(`
+    function showOrdemDetails(data) {
+        const ordem = data.ordem;
+        const produtos = data.produtos || [];
+        const servicos = data.servicos || [];
+        const totais = data.totais || {};
+
+        let html = `
             <div class="row g-3">
+                <!-- Cabeçalho da Ordem -->
                 <div class="col-12">
-                    <h6 class="text-primary">Dados da Ordem</h6>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="text-primary mb-0">
+                            <i class="fa-solid fa-file-invoice me-2"></i>
+                            Ordem de Serviço #${ordem.o1_numero_ordem}
+                        </h5>
+                        <span class="badge bg-${getStatusColor(ordem.o1_status)}">${ordem.o1_status}</span>
+                    </div>
                     <hr>
                 </div>
-                <div class="col-12"><strong>Número:</strong><br>${ordem.o1_numero_ordem || '-'}</div>
-                <div class="col-12"><strong>Cliente ID:</strong><br>${ordem.o1_cliente_id || '-'}</div>
-                <div class="col-12"><strong>Equipamento:</strong><br>${ordem.o1_equipamento || '-'}</div>
-                <div class="col-12"><strong>Defeito:</strong><br>${ordem.o1_defeito_relatado || '-'}</div>
-                <div class="col-12"><strong>Valor Final:</strong><br>${ordem.o1_valor_final ?? '0.00'}</div>
-            </div>
-        `);
 
+                <!-- Informações Gerais -->
+                <div class="col-12">
+                    <h6 class="text-info"><i class="fa-solid fa-info-circle me-2"></i>Informações Gerais</h6>
+                    <div class="row g-2">
+                        <div class="col-md-6"><strong>Data de Entrada:</strong><br>${formatDateTime(ordem.o1_data_entrada)}</div>
+                        <div class="col-md-6"><strong>Data Prevista:</strong><br>${ordem.o1_data_previsao ? formatDate(ordem.o1_data_previsao) : '-'}</div>
+                        <div class="col-md-6"><strong>Data de Conclusão:</strong><br>${ordem.o1_data_conclusao ? formatDateTime(ordem.o1_data_conclusao) : '-'}</div>
+                        <div class="col-md-6"><strong>Data de Entrega:</strong><br>${ordem.o1_data_entrega ? formatDateTime(ordem.o1_data_entrega) : '-'}</div>
+                        <div class="col-md-6"><strong>Prioridade:</strong><br><span class="badge bg-${getPrioridadeColor(ordem.o1_prioridade)}">${ordem.o1_prioridade}</span></div>
+                        <div class="col-md-6"><strong>Estado Aparente:</strong><br>${ordem.o1_estado_aparente}</div>
+                    </div>
+                </div>
+
+                <!-- Dados do Cliente -->
+                <div class="col-12">
+                    <h6 class="text-success"><i class="fa-solid fa-user me-2"></i>Dados do Cliente</h6>
+                    <div class="row g-2">
+                        <div class="col-md-6"><strong>Nome:</strong><br>${ordem.cliente_nome}</div>
+                        <div class="col-md-6"><strong>CPF:</strong><br>${ordem.cliente_cpf}</div>
+                        <div class="col-md-6"><strong>Telefone:</strong><br>${ordem.cliente_telefone}</div>
+                        <div class="col-md-6"><strong>Celular:</strong><br>${ordem.cliente_celular}</div>
+                        <div class="col-md-12"><strong>E-mail:</strong><br>${ordem.cliente_email || '-'}</div>
+                        <div class="col-md-12"><strong>Endereço:</strong><br>${ordem.cliente_endereco || '-'}</div>
+                    </div>
+                </div>
+
+                <!-- Dados do Equipamento -->
+                <div class="col-12">
+                    <h6 class="text-warning"><i class="fa-solid fa-tools me-2"></i>Dados do Equipamento</h6>
+                    <div class="row g-2">
+                        <div class="col-md-6"><strong>Equipamento:</strong><br>${ordem.o1_equipamento}</div>
+                        <div class="col-md-6"><strong>Marca:</strong><br>${ordem.o1_marca || '-'}</div>
+                        <div class="col-md-6"><strong>Modelo:</strong><br>${ordem.o1_modelo || '-'}</div>
+                        <div class="col-md-6"><strong>Número de Série:</strong><br>${ordem.o1_numero_serie || '-'}</div>
+                    </div>
+                </div>
+
+                <!-- Defeito e Observações -->
+                <div class="col-12">
+                    <h6 class="text-danger"><i class="fa-solid fa-exclamation-triangle me-2"></i>Defeito Relatado</h6>
+                    <p class="mb-3">${ordem.o1_defeito_relatado}</p>
+
+                    <h6 class="text-secondary"><i class="fa-solid fa-sticky-note me-2"></i>Observações de Entrada</h6>
+                    <p class="mb-3">${ordem.o1_observacoes_entrada || '-'}</p>
+
+                    <h6 class="text-secondary"><i class="fa-solid fa-list me-2"></i>Acessórios de Entrada</h6>
+                    <p class="mb-3">${ordem.o1_acessorios_entrada || '-'}</p>
+                </div>
+
+                <!-- Dados do Técnico -->
+                <div class="col-12">
+                    <h6 class="text-primary"><i class="fa-solid fa-user-cog me-2"></i>Dados do Técnico Responsável</h6>
+                    <div class="row g-2">
+                        <div class="col-md-6"><strong>Nome:</strong><br>${ordem.tecnico_nome}</div>
+                        <div class="col-md-6"><strong>CPF:</strong><br>${ordem.tecnico_cpf}</div>
+                        <div class="col-md-6"><strong>Telefone:</strong><br>${ordem.tecnico_telefone}</div>
+                        <div class="col-md-6"><strong>Celular:</strong><br>${ordem.tecnico_celular}</div>
+                        <div class="col-md-12"><strong>E-mail:</strong><br>${ordem.tecnico_email || '-'}</div>
+                    </div>
+                </div>`;
+
+        // Produtos
+        if (produtos.length > 0) {
+            html += `
+                <div class="col-12">
+                    <h6 class="text-success"><i class="fa-solid fa-box me-2"></i>Produtos Utilizados (${produtos.length})</h6>
+                    <div class="table-responsive">
+                        <table class="table table-sm table-striped">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>Produto</th>
+                                    <th>Código</th>
+                                    <th class="text-center">Qtd</th>
+                                    <th class="text-end">Valor Unit.</th>
+                                    <th class="text-end">Valor Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>`;
+
+            produtos.forEach(produto => {
+                html += `
+                    <tr>
+                        <td>${produto.produto_nome}</td>
+                        <td>${produto.produto_codigo || '-'}</td>
+                        <td class="text-center">${produto.p3_quantidade}</td>
+                        <td class="text-end">R$ ${formatMoney(produto.p3_valor_unitario)}</td>
+                        <td class="text-end">R$ ${formatMoney(produto.p3_valor_total)}</td>
+                    </tr>`;
+            });
+
+            html += `
+                            </tbody>
+                        </table>
+                    </div>
+                </div>`;
+        }
+
+        // Serviços
+        if (servicos.length > 0) {
+            html += `
+                <div class="col-12">
+                    <h6 class="text-info"><i class="fa-solid fa-wrench me-2"></i>Serviços Executados (${servicos.length})</h6>
+                    <div class="table-responsive">
+                        <table class="table table-sm table-striped">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>Serviço</th>
+                                    <th class="text-center">Qtd</th>
+                                    <th class="text-end">Valor Unit.</th>
+                                    <th class="text-end">Valor Total</th>
+                                    <th class="text-center">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>`;
+
+            servicos.forEach(servico => {
+                html += `
+                    <tr>
+                        <td>${servico.servico_nome}</td>
+                        <td class="text-center">${servico.s2_quantidade}</td>
+                        <td class="text-end">R$ ${formatMoney(servico.s2_valor_unitario)}</td>
+                        <td class="text-end">R$ ${formatMoney(servico.s2_valor_total)}</td>
+                        <td class="text-center"><span class="badge bg-${getServicoStatusColor(servico.s2_status)}">${servico.s2_status}</span></td>
+                    </tr>`;
+            });
+
+            html += `
+                            </tbody>
+                        </table>
+                    </div>
+                </div>`;
+        }
+
+        // Laudo Técnico e Observações de Conclusão
+        if (ordem.o1_laudo_tecnico || ordem.o1_observacoes_conclusao) {
+            html += `
+                <div class="col-12">
+                    <h6 class="text-secondary"><i class="fa-solid fa-clipboard-check me-2"></i>Laudo Técnico</h6>
+                    <p class="mb-3">${ordem.o1_laudo_tecnico || '-'}</p>
+
+                    <h6 class="text-secondary"><i class="fa-solid fa-comment me-2"></i>Observações de Conclusão</h6>
+                    <p class="mb-3">${ordem.o1_observacoes_conclusao || '-'}</p>
+                </div>`;
+        }
+
+        // Totais Financeiros
+        html += `
+                <div class="col-12">
+                    <h6 class="text-primary"><i class="fa-solid fa-calculator me-2"></i>Resumo Financeiro</h6>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="card border-success">
+                                <div class="card-body p-3">
+                                    <div class="d-flex justify-content-between">
+                                        <span><strong>Valor Produtos:</strong></span>
+                                        <span class="text-success">R$ ${formatMoney(totais.valor_produtos)}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card border-info">
+                                <div class="card-body p-3">
+                                    <div class="d-flex justify-content-between">
+                                        <span><strong>Valor Serviços:</strong></span>
+                                        <span class="text-info">R$ ${formatMoney(totais.valor_servicos)}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card border-warning">
+                                <div class="card-body p-3">
+                                    <div class="d-flex justify-content-between">
+                                        <span><strong>Valor Total:</strong></span>
+                                        <span class="text-warning">R$ ${formatMoney(totais.valor_total)}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card border-danger">
+                                <div class="card-body p-3">
+                                    <div class="d-flex justify-content-between">
+                                        <span><strong>Desconto:</strong></span>
+                                        <span class="text-danger">R$ ${formatMoney(totais.desconto)}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="card border-primary">
+                                <div class="card-body p-3">
+                                    <div class="d-flex justify-content-between">
+                                        <h5 class="mb-0"><strong>Valor Final:</strong></h5>
+                                        <h5 class="mb-0 text-primary">R$ ${formatMoney(totais.valor_final)}</h5>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Garantia -->
+                <div class="col-12">
+                    <h6 class="text-secondary"><i class="fa-solid fa-shield-alt me-2"></i>Garantia</h6>
+                    <p class="mb-0">${ordem.o1_garantia_servico ? `${ordem.o1_garantia_servico} dias de garantia` : 'Sem garantia'}</p>
+                </div>
+            </div>`;
+
+        $('#garantiaModalBody').html(html);
         $('#editCategoryBtn').data('category-id', ordem.o1_id);
 
         const viewEl = document.getElementById('garantiaModal');
@@ -718,7 +1308,7 @@
     function editOrdem(id) { openEditModal(id); }
 
     // Alias used by table buttons
-    function deleteOrdem(id, numero) { deleteGarantia(id, numero); }
+    function deleteOrdem(id, numero) { deleteOrdemConfirm(id, numero); }
 
     // Abrir modal de edição (reusa modais existentes mas carrega dados da ordem)
     async function openEditModal(id) {
@@ -729,11 +1319,46 @@
                 dataType: 'json'
             });
             if (response) {
-                // preencher campos do modal de edição de garantia com dados relevantes da ordem
-                $('#edit-garantia-id').val(response.o1_id);
-                $('#edit-garantia-nome').val(response.o1_numero_ordem);
-                $('#edit-garantia-descricao').val(response.o1_defeito_relatado || '');
-                $('#edit-garantia-observacao').val(response.o1_observacoes_entrada || '');
+                const ordem = response.ordem;
+                // preencher campos do modal de edição com dados da ordem
+                $('#edit-garantia-id').val(ordem.o1_id);
+                $('#edit-ordem-cliente-id').val(ordem.o1_cliente_id).trigger('change');
+                $('#edit-ordem-equipamento').val(ordem.o1_equipamento || '');
+                $('#edit-ordem-marca').val(ordem.o1_marca || '');
+                $('#edit-ordem-modelo').val(ordem.o1_modelo || '');
+                $('#edit-ordem-numero-serie').val(ordem.o1_numero_serie || '');
+                $('#edit-ordem-tecnico').val(ordem.o1_tecnico_id || '').trigger('change');
+                $('#edit-ordem-data-entrada').val(ordem.o1_data_entrada ? ordem.o1_data_entrada.split(' ')[0] : '');
+                $('#edit-ordem-data-previsao').val(ordem.o1_data_previsao ? ordem.o1_data_previsao.split(' ')[0] : '');
+                $('#edit-ordem-prioridade').val(ordem.o1_prioridade || 'Média');
+                $('#edit-ordem-defeito').val(ordem.o1_defeito_relatado || '');
+                $('#edit-ordem-observacoes').val(ordem.o1_observacoes_entrada || '');
+                $('#edit-ordem-acessorios').val(ordem.o1_acessorios_entrada || '');
+                $('#edit-ordem-estado').val(ordem.o1_estado_aparente || 'Novo');
+
+                // Inicializar Select2 para os selects do modal de edição
+                try {
+                    $('#edit-ordem-cliente-id').select2({
+                        placeholder: 'Selecione um cliente...',
+                        allowClear: true,
+                        width: '100%',
+                        dropdownParent: $('#editgarantiaModal')
+                    });
+                } catch (e) {
+                    // se Select2 não carregar, ignora
+                }
+
+                try {
+                    $('#edit-ordem-tecnico').select2({
+                        placeholder: 'Selecione um técnico...',
+                        allowClear: true,
+                        width: '100%',
+                        dropdownParent: $('#editgarantiaModal')
+                    });
+                } catch (e) {
+                    // se Select2 não carregar, ignora
+                }
+
                 const editEl = document.getElementById('editgarantiaModal');
                 try { new bootstrap.Modal(editEl).show(); } catch (e) { bootstrap.Modal.getOrCreateInstance(editEl).show(); }
             } else {
@@ -823,27 +1448,14 @@
         }
     }
 
-    // Atualizar garantia (reaproveitado para a edição rápida de ordens via modal)
+    // Atualizar ordem (reaproveitado para a edição de ordens)
     async function updateGarantia() {
         const $form = $('#editGarantiaForm');
-        // Temporarily disable HTML5 datetime-local validation for the data_garantia field
-        const $dtInput = $('#edit-garantia-data-garantia');
-        const originalType = $dtInput.prop('type') || 'datetime-local';
-        try {
-            $dtInput.prop('type', 'text');
-        } catch (e) {
-            /* ignore */
-        }
-
         if (!$form[0].checkValidity()) {
             $form.addClass('was-validated');
-            // restore type before returning
-            try { $dtInput.prop('type', originalType); } catch (e) { /* ignore */ }
             return;
         }
 
-        // restore input type for UX
-        try { $dtInput.prop('type', originalType); } catch (e) { /* ignore */ }
         // limpar mensagens anteriores
         clearFieldErrors('edit');
 
@@ -853,42 +1465,18 @@
             data[field.name] = field.value;
         });
 
-        const garantiaId = data.id || data.g1_id;
-
-    // Map garantia form fields to ordem fields expected by the server
-    // controller accepts multiple keys; provide common mappings here
-    if (data.nome) data.numero_ordem = data.nome;
-    if (data.descricao) data.defeito_relatado = data.descricao;
-    if (data.observacao) data.observacoes_entrada = data.observacao;
-
-        // normalize datetime-local to server-friendly format (YYYY-MM-DD HH:MM:SS)
-        if (data.data_garantia) {
-            // e.g. "2025-09-03T13:45" -> "2025-09-03 13:45:00"
-            try {
-                let v = String(data.data_garantia).trim();
-                if (v.includes('T')) {
-                    v = v.replace('T', ' ');
-                }
-                // if no seconds provided, append :00
-                if (/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}$/.test(v)) {
-                    v = v + ':00';
-                }
-                data.data_garantia = v;
-            } catch (e) {
-                // keep original if something goes wrong
-            }
-        }
+        const ordemId = data.id || data.garantia_id;
 
         try {
             const response = await $.ajax({
-                url: `<?= site_url('/ordens/') ?>${garantiaId}`,
+                url: `<?= site_url('/ordens/') ?>${ordemId}`,
                 method: 'PUT',
                 contentType: 'application/json',
                 data: JSON.stringify(data)
             });
 
             if (response) {
-                showAlert('success', 'Garantia atualizada com sucesso!');
+                showAlert('success', 'Ordem atualizada com sucesso!');
                 // hide edit modal via Bootstrap API
                 const editEl = document.getElementById('editgarantiaModal');
                 try {
@@ -898,7 +1486,7 @@
                 $form.removeClass('was-validated');
                 await loadOrdens();
             } else {
-                showAlert('error', response.message || 'Erro ao atualizar garantia');
+                showAlert('error', response.message || 'Erro ao atualizar ordem');
             }
         } catch (error) {
             console.error('Erro:', error);
@@ -919,7 +1507,7 @@
             if (respJson && respJson.messages) {
                 showFieldErrors(respJson.messages, 'edit');
             } else {
-                showAlert('error', 'Erro ao atualizar garantia');
+                showAlert('error', 'Erro ao atualizar ordem');
             }
         }
     }
@@ -1000,27 +1588,27 @@
             },
             'cliente_id': {
                 add: '#add-ordem-cliente-id',
-                edit: null,
+                edit: '#edit-ordem-cliente-id',
                 errorAdd: '#add-ordem-cliente-id-error',
-                errorEdit: null
+                errorEdit: '#edit-ordem-cliente-id-error'
             },
             'equipamento': {
                 add: '#add-ordem-equipamento',
-                edit: null,
+                edit: '#edit-ordem-equipamento',
                 errorAdd: '#add-ordem-equipamento-error',
-                errorEdit: null
+                errorEdit: '#edit-ordem-equipamento-error'
             },
             'defeito_relatado': {
                 add: '#add-ordem-defeito',
-                edit: '#edit-garantia-descricao',
+                edit: '#edit-ordem-defeito',
                 errorAdd: '#add-ordem-defeito-error',
-                errorEdit: '#edit-garantia-descricao-error'
+                errorEdit: '#edit-ordem-defeito-error'
             },
             'observacoes_entrada': {
                 add: '#add-ordem-observacoes',
-                edit: '#edit-garantia-observacao',
+                edit: '#edit-ordem-observacoes',
                 errorAdd: null,
-                errorEdit: '#edit-garantia-observacao-error'
+                errorEdit: null
             },
             'valor_final': {
                 add: '#add-ordem-valor-final',
@@ -1088,10 +1676,11 @@
         }
     }
 
-    // Excluir categoria
-    async function deleteGarantia(id, name) {
+    // Excluir ordem
+    async function deleteOrdemConfirm(id, numero) {
         Swal.fire({
-            title: `Tem certeza que deseja excluir a categoria "${name}"?`,
+            title: `Tem certeza que deseja excluir a ordem "${numero}"?`,
+            text: 'Esta ação não pode ser desfeita. Todos os produtos e serviços relacionados serão removidos.',
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#e74c3c',
@@ -1106,15 +1695,19 @@
                         method: 'DELETE'
                     });
 
-                    if (response) {
-                        showAlert('success', 'Garantia excluída com sucesso!');
+                    if (response && response.success) {
+                        showAlert('success', 'Ordem excluída com sucesso!');
                         await loadOrdens();
                     } else {
-                        showAlert('error', response.message || 'Erro ao excluir garantia');
+                        showAlert('error', response.message || 'Erro ao excluir ordem');
                     }
                 } catch (error) {
                     console.error('Erro:', error);
-                    showAlert('error', 'Erro ao excluir garantia');
+                    if (error.responseJSON && error.responseJSON.message) {
+                        showAlert('error', error.responseJSON.message);
+                    } else {
+                        showAlert('error', 'Erro ao excluir ordem');
+                    }
                 }
             }
         });
@@ -1155,103 +1748,583 @@
         $form.removeClass('was-validated');
     // reset Select2 selection
     try { $('#add-ordem-cliente-id').val('').trigger('change'); } catch (e) { }
+    try { $('#add-ordem-tecnico').val('').trigger('change'); } catch (e) { }
     });
 
     $('#editgarantiaModal').on('hidden.bs.modal', function() {
         $('#editGarantiaForm').removeClass('was-validated');
     });
 
+    // Funções para formatação de dinheiro
+    function setupMoneyMasks() {
+        // Configurar máscara de dinheiro brasileiro
+        const moneyPattern = '000.000.000.000.000,00';
+        if ($.fn && $.fn.mask) {
+            $('#produto-preco, #produto-subtotal, #servico-preco, #servico-subtotal').mask(moneyPattern, { reverse: true });
+            // Aplicar máscara aos campos da tabela também
+            $('.produto-preco, .servico-preco').mask(moneyPattern, { reverse: true });
+        }
+    }
+
+    function formatMoney(value) {
+        // Formatar valor numérico para string monetária brasileira
+        const numValue = parseFloat(value || 0);
+        if (isNaN(numValue)) return '0,00';
+        return numValue.toLocaleString('pt-BR', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        });
+    }
+
+    function parseMoney(value) {
+        // Converter string monetária brasileira para float
+        if (!value || value === '0,00') return 0;
+        // Remove pontos e substitui vírgula por ponto
+        const cleanValue = value.toString().replace(/\./g, '').replace(',', '.');
+        const result = parseFloat(cleanValue) || 0;
+        return isNaN(result) ? 0 : result;
+    }
+
+    // Funções auxiliares para formatação
+    function formatDateTime(dateTime) {
+        if (!dateTime) return '-';
+        const date = new Date(dateTime);
+        return date.toLocaleString('pt-BR', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+    }
+
+    function formatDate(date) {
+        if (!date) return '-';
+        const d = new Date(date);
+        return d.toLocaleDateString('pt-BR');
+    }
+
+    function getStatusColor(status) {
+        const colors = {
+            'Aguardando': 'secondary',
+            'Em Andamento': 'primary',
+            'Aguardando Peças': 'warning',
+            'Concluído': 'success',
+            'Entregue': 'info',
+            'Cancelado': 'danger'
+        };
+        return colors[status] || 'secondary';
+    }
+
+    function getPrioridadeColor(prioridade) {
+        const colors = {
+            'Baixa': 'secondary',
+            'Média': 'warning',
+            'Alta': 'danger',
+            'Urgente': 'dark'
+        };
+        return colors[prioridade] || 'secondary';
+    }
+
+    function getServicoStatusColor(status) {
+        const colors = {
+            'Pendente': 'secondary',
+            'Executando': 'primary',
+            'Concluído': 'success',
+            'Cancelado': 'danger'
+        };
+        return colors[status] || 'secondary';
+    }
+
     // Operações: abrir modal, gerenciar linhas e calcular totais
-    function openOperacoesModal(ordemId, ordemData = null) {
+    async function openOperacoesModal(ordemId, ordemData = null) {
         if (!ordemId) {
             // se não houver id, tenta extrair de ordemData
             ordemId = ordemData && (ordemData.o1_id || ordemData.id) ? (ordemData.o1_id || ordemData.id) : '';
         }
         $('#operacoes-ordem-id').val(ordemId);
-        // limpar tabela
-        $('#operacoesTable tbody').empty();
-        // adicionar uma linha de produto e uma de serviço por padrão
-        addOperacaoRow('produto');
-        addOperacaoRow('servico');
-        // zerar total
-        updateOperacoesTotal();
+
+        // limpar tabelas
+        $('#produtosTable tbody').empty();
+        $('#servicosTable tbody').empty();
+        // limpar formulários
+        $('#produto-select').val('').trigger('change');
+        $('#produto-quantidade').val('1');
+        $('#produto-preco').val('0,00');
+        $('#produto-subtotal').val('0,00');
+        $('#servico-select').val('').trigger('change');
+        $('#servico-quantidade').val('1');
+        $('#servico-preco').val('0,00');
+        $('#servico-subtotal').val('0,00');
+        // zerar totais
+        updateTotais();
+
+        // Carregar produtos e serviços existentes da ordem
+        if (ordemId) {
+            try {
+                const response = await $.ajax({
+                    url: `<?= site_url('/ordens/') ?>${ordemId}`,
+                    method: 'GET',
+                    dataType: 'json'
+                });
+
+                if (response && response.produtos) {
+                    // Carregar produtos existentes
+                    response.produtos.forEach(produto => {
+                        loadExistingProduto(produto);
+                    });
+                }
+
+                if (response && response.servicos) {
+                    // Carregar serviços existentes
+                    response.servicos.forEach(servico => {
+                        loadExistingServico(servico);
+                    });
+                }
+
+                // Atualizar totais após carregar os dados
+                updateTotais();
+
+            } catch (error) {
+                console.error('Erro ao carregar produtos e serviços:', error);
+                showAlert('error', 'Erro ao carregar produtos e serviços da ordem');
+            }
+        }
+
+        // Inicializar Select2 para produtos e serviços
+        try {
+            $('#produto-select').select2({
+                placeholder: 'Selecione um produto...',
+                allowClear: true,
+                width: '100%',
+                dropdownParent: $('#operacoesModal')
+            });
+        } catch (e) {
+            // se Select2 não carregar, ignora
+        }
+
+        try {
+            $('#servico-select').select2({
+                placeholder: 'Selecione um serviço...',
+                allowClear: true,
+                width: '100%',
+                dropdownParent: $('#operacoesModal')
+            });
+        } catch (e) {
+            // se Select2 não carregar, ignora
+        }
+
+        // Configurar máscaras de dinheiro (formato brasileiro)
+        setupMoneyMasks();
+
+        // Aplicar máscara novamente após um pequeno delay para garantir
+        setTimeout(function() {
+            setupMoneyMasks();
+            // Aplicar máscara aos campos da tabela também
+            $('.produto-preco, .servico-preco').mask('000.000.000.000.000,00', { reverse: true });
+        }, 100);
+
+        // Bind events para selects
+        $('#produto-select').on('change', function() {
+            const preco = $(this).find('option:selected').data('preco') || 0;
+            $('#produto-preco').val(formatMoney(preco));
+            updateProdutoSubtotal();
+        });
+
+        $('#servico-select').on('change', function() {
+            const preco = $(this).find('option:selected').data('preco') || 0;
+            $('#servico-preco').val(formatMoney(preco));
+            updateServicoSubtotal();
+        });
+
+        // Bind events para quantidade
+        $('#produto-quantidade').on('input', updateProdutoSubtotal);
+        $('#servico-quantidade').on('input', updateServicoSubtotal);
 
         const el = document.getElementById('operacoesModal');
         try { new bootstrap.Modal(el).show(); } catch (e) { bootstrap.Modal.getOrCreateInstance(el).show(); }
     }
 
-    // Adiciona uma linha na tabela de operações. tipo: 'produto' ou 'servico'
-    function addOperacaoRow(tipo) {
-        const $tbody = $('#operacoesTable tbody');
+    // Carrega produto existente na tabela
+    function loadExistingProduto(produto) {
+        const produtoId = produto.p3_produto_id || produto.produto_id;
+        const produtoNome = produto.produto_nome || produto.nome || 'Produto não encontrado';
+        const quantidade = produto.p3_quantidade || produto.quantidade || 1;
+        const preco = produto.p3_valor_unitario || produto.valor_unitario || produto.preco || 0;
+        const subtotal = produto.p3_valor_total || produto.valor_total || produto.subtotal || (quantidade * preco);
+
+        const $tbody = $('#produtosTable tbody');
         const id = Date.now() + Math.floor(Math.random() * 1000);
-        const tipoLabel = tipo === 'servico' ? 'Serviço' : 'Produto';
-        const row = $(
-            `<tr data-row-id="${id}" data-tipo="${tipo}">
+
+        const row = $(`
+            <tr data-row-id="${id}" data-produto-id="${produtoId}">
                 <td>
-                    <input type="hidden" name="items[][tipo]" value="${tipo}">
-                    ${tipoLabel}
+                    <input type="hidden" name="produtos[][produto_id]" value="${produtoId}">
+                    <input type="hidden" name="produtos[][nome]" value="${produtoNome}">
+                    ${produtoNome}
                 </td>
-                <td><input type="text" name="items[][descricao]" class="form-control form-control-sm" placeholder="Descrição"></td>
-                <td><input type="number" min="0" step="1" name="items[][quantidade]" class="form-control form-control-sm operacao-quantidade" value="1"></td>
-                <td><input type="number" min="0" step="0.01" name="items[][preco_unitario]" class="form-control form-control-sm operacao-preco" value="0.00"></td>
-                <td class="text-end operacao-subtotal">0.00</td>
-                <td class="text-end"><button type="button" class="btn btn-sm btn-danger removeOperacaoBtn"><i class="fa-solid fa-trash"></i></button></td>
-            </tr>`
-        );
+                <td>
+                    <input type="number" name="produtos[][quantidade]" class="form-control form-control-sm produto-quantidade" value="${quantidade}" min="1">
+                </td>
+                <td>
+                    <input type="text" name="produtos[][preco]" class="form-control form-control-sm produto-preco" value="${formatMoney(preco)}" readonly>
+                </td>
+                <td class="text-end produto-subtotal">${formatMoney(subtotal)}</td>
+                <td class="text-end">
+                    <button type="button" class="btn btn-sm btn-danger remove-produto-btn">
+                        <i class="fa-solid fa-trash"></i>
+                    </button>
+                </td>
+            </tr>
+        `);
+
         $tbody.append(row);
 
-        // bind events
-        row.find('.operacao-quantidade, .operacao-preco').on('input', function() { recalcRow($(this).closest('tr')); updateOperacoesTotal(); });
-        row.find('.removeOperacaoBtn').on('click', function() { $(this).closest('tr').remove(); updateOperacoesTotal(); });
-    }
+        // Aplicar máscara aos novos campos
+        setTimeout(function() {
+            row.find('.produto-preco').mask('000.000.000.000.000,00', { reverse: true });
+        }, 50);
 
-    function recalcRow($tr) {
-        const q = parseFloat($tr.find('.operacao-quantidade').val() || 0);
-        const p = parseFloat($tr.find('.operacao-preco').val() || 0);
-        const subtotal = (isFinite(q) && isFinite(p)) ? (q * p) : 0;
-        $tr.find('.operacao-subtotal').text(subtotal.toFixed(2));
-    }
-
-    function updateOperacoesTotal() {
-        let total = 0;
-        $('#operacoesTable tbody tr').each(function() {
-            const s = parseFloat($(this).find('.operacao-subtotal').text() || 0) || 0;
-            total += s;
+        // Bind events
+        row.find('.produto-quantidade').on('input', function() {
+            recalcProdutoRow($(this).closest('tr'));
+            updateTotais();
         });
-        $('#operacoesTotal').text(Number(total).toFixed(2));
+        row.find('.remove-produto-btn').on('click', function() {
+            $(this).closest('tr').remove();
+            updateTotais();
+        });
+    }
+
+    // Carrega serviço existente na tabela
+    function loadExistingServico(servico) {
+        const servicoId = servico.s2_servico_id || servico.servico_id;
+        const servicoNome = servico.servico_nome || servico.nome || 'Serviço não encontrado';
+        const quantidade = servico.s2_quantidade || servico.quantidade || 1;
+        const preco = servico.s2_valor_unitario || servico.valor_unitario || servico.preco || 0;
+        const subtotal = servico.s2_valor_total || servico.valor_total || servico.subtotal || (quantidade * preco);
+
+        const $tbody = $('#servicosTable tbody');
+        const id = Date.now() + Math.floor(Math.random() * 1000);
+
+        const row = $(`
+            <tr data-row-id="${id}" data-servico-id="${servicoId}">
+                <td>
+                    <input type="hidden" name="servicos[][servico_id]" value="${servicoId}">
+                    <input type="hidden" name="servicos[][nome]" value="${servicoNome}">
+                    ${servicoNome}
+                </td>
+                <td>
+                    <input type="number" name="servicos[][quantidade]" class="form-control form-control-sm servico-quantidade" value="${quantidade}" min="1">
+                </td>
+                <td>
+                    <input type="text" name="servicos[][preco]" class="form-control form-control-sm servico-preco" value="${formatMoney(preco)}" readonly>
+                </td>
+                <td class="text-end servico-subtotal">${formatMoney(subtotal)}</td>
+                <td class="text-end">
+                    <button type="button" class="btn btn-sm btn-danger remove-servico-btn">
+                        <i class="fa-solid fa-trash"></i>
+                    </button>
+                </td>
+            </tr>
+        `);
+
+        $tbody.append(row);
+
+        // Aplicar máscara aos novos campos
+        setTimeout(function() {
+            row.find('.servico-preco').mask('000.000.000.000.000,00', { reverse: true });
+        }, 50);
+
+        // Bind events
+        row.find('.servico-quantidade').on('input', function() {
+            recalcServicoRow($(this).closest('tr'));
+            updateTotais();
+        });
+        row.find('.remove-servico-btn').on('click', function() {
+            $(this).closest('tr').remove();
+            updateTotais();
+        });
+    }
+
+    // Funções para calcular subtotais automaticamente
+    function updateProdutoSubtotal() {
+        const quantidade = parseFloat($('#produto-quantidade').val()) || 1;
+        const preco = parseMoney($('#produto-preco').val()) || 0;
+        const subtotal = quantidade * preco;
+        $('#produto-subtotal').val(formatMoney(subtotal));
+    }
+
+    function updateServicoSubtotal() {
+        const quantidade = parseFloat($('#servico-quantidade').val()) || 1;
+        const preco = parseMoney($('#servico-preco').val()) || 0;
+        const subtotal = quantidade * preco;
+        $('#servico-subtotal').val(formatMoney(subtotal));
+    }
+
+    // Adiciona produto à tabela
+    function addProduto() {
+        const produtoId = $('#produto-select').val();
+        const produtoNome = $('#produto-select option:selected').text().split(' - ')[0];
+        const quantidade = parseFloat($('#produto-quantidade').val()) || 1;
+        const preco = parseMoney($('#produto-preco').val()) || 0;
+
+        if (!produtoId || !produtoNome.trim()) {
+            showAlert('error', 'Selecione um produto válido.');
+            return;
+        }
+
+        const subtotal = quantidade * preco;
+        const $tbody = $('#produtosTable tbody');
+        const id = Date.now() + Math.floor(Math.random() * 1000);
+
+        const row = $(`
+            <tr data-row-id="${id}" data-produto-id="${produtoId}">
+                <td>
+                    <input type="hidden" name="produtos[][produto_id]" value="${produtoId}">
+                    <input type="hidden" name="produtos[][nome]" value="${produtoNome}">
+                    ${produtoNome}
+                </td>
+                <td>
+                    <input type="number" name="produtos[][quantidade]" class="form-control form-control-sm produto-quantidade" value="${quantidade}" min="1">
+                </td>
+                <td>
+                    <input type="text" name="produtos[][preco]" class="form-control form-control-sm produto-preco" value="${formatMoney(preco)}" readonly>
+                </td>
+                <td class="text-end produto-subtotal">${formatMoney(subtotal)}</td>
+                <td class="text-end">
+                    <button type="button" class="btn btn-sm btn-danger remove-produto-btn">
+                        <i class="fa-solid fa-trash"></i>
+                    </button>
+                </td>
+            </tr>
+        `);
+
+        $tbody.append(row);
+
+        // Aplicar máscara aos novos campos
+        setTimeout(function() {
+            row.find('.produto-preco').mask('000.000.000.000.000,00', { reverse: true });
+        }, 50);
+
+        // Bind events
+        row.find('.produto-quantidade').on('input', function() {
+            recalcProdutoRow($(this).closest('tr'));
+            updateTotais();
+        });
+        row.find('.remove-produto-btn').on('click', function() {
+            $(this).closest('tr').remove();
+            updateTotais();
+        });
+
+        // Limpar formulário
+        $('#produto-select').val('').trigger('change');
+        $('#produto-quantidade').val('1');
+        $('#produto-preco').val('0,00');
+        $('#produto-subtotal').val('0,00');
+
+        updateTotais();
+    }
+
+    // Adiciona serviço à tabela
+    function addServico() {
+        const servicoId = $('#servico-select').val();
+        const servicoNome = $('#servico-select option:selected').text().split(' - ')[0];
+        const quantidade = parseFloat($('#servico-quantidade').val()) || 1;
+        const preco = parseMoney($('#servico-preco').val()) || 0;
+
+        if (!servicoId || !servicoNome.trim()) {
+            showAlert('error', 'Selecione um serviço válido.');
+            return;
+        }
+
+        const subtotal = quantidade * preco;
+        const $tbody = $('#servicosTable tbody');
+        const id = Date.now() + Math.floor(Math.random() * 1000);
+
+        const row = $(`
+            <tr data-row-id="${id}" data-servico-id="${servicoId}">
+                <td>
+                    <input type="hidden" name="servicos[][servico_id]" value="${servicoId}">
+                    <input type="hidden" name="servicos[][nome]" value="${servicoNome}">
+                    ${servicoNome}
+                </td>
+                <td>
+                    <input type="number" name="servicos[][quantidade]" class="form-control form-control-sm servico-quantidade" value="${quantidade}" min="1">
+                </td>
+                <td>
+                    <input type="text" name="servicos[][preco]" class="form-control form-control-sm servico-preco" value="${formatMoney(preco)}" readonly>
+                </td>
+                <td class="text-end servico-subtotal">${formatMoney(subtotal)}</td>
+                <td class="text-end">
+                    <button type="button" class="btn btn-sm btn-danger remove-servico-btn">
+                        <i class="fa-solid fa-trash"></i>
+                    </button>
+                </td>
+            </tr>
+        `);
+
+        $tbody.append(row);
+
+        // Aplicar máscara aos novos campos
+        setTimeout(function() {
+            row.find('.servico-preco').mask('000.000.000.000.000,00', { reverse: true });
+        }, 50);
+
+        // Bind events
+        row.find('.servico-quantidade').on('input', function() {
+            recalcServicoRow($(this).closest('tr'));
+            updateTotais();
+        });
+        row.find('.remove-servico-btn').on('click', function() {
+            $(this).closest('tr').remove();
+            updateTotais();
+        });
+
+        // Limpar formulário
+        $('#servico-select').val('').trigger('change');
+        $('#servico-quantidade').val('1');
+        $('#servico-preco').val('0,00');
+        $('#servico-subtotal').val('0,00');
+
+        updateTotais();
+    }
+
+    function recalcProdutoRow($tr) {
+        const q = parseFloat($tr.find('.produto-quantidade').val() || 1);
+        const p = parseMoney($tr.find('.produto-preco').val() || '0,00');
+        const subtotal = (isFinite(q) && isFinite(p)) ? (q * p) : 0;
+        $tr.find('.produto-subtotal').text(formatMoney(subtotal));
+    }
+
+    function recalcServicoRow($tr) {
+        const q = parseFloat($tr.find('.servico-quantidade').val() || 1);
+        const p = parseMoney($tr.find('.servico-preco').val() || '0,00');
+        const subtotal = (isFinite(q) && isFinite(p)) ? (q * p) : 0;
+        $tr.find('.servico-subtotal').text(formatMoney(subtotal));
+    }
+
+    function updateTotais() {
+        // Calcular total de produtos
+        let totalProdutos = 0;
+        $('#produtosTable tbody tr').each(function() {
+            const subtotalText = $(this).find('.produto-subtotal').text() || '0,00';
+            const subtotal = parseMoney(subtotalText);
+            totalProdutos += subtotal;
+        });
+        $('#produtosTotal').text(formatMoney(totalProdutos));
+
+        // Calcular total de serviços
+        let totalServicos = 0;
+        $('#servicosTable tbody tr').each(function() {
+            const subtotalText = $(this).find('.servico-subtotal').text() || '0,00';
+            const subtotal = parseMoney(subtotalText);
+            totalServicos += subtotal;
+        });
+        $('#servicosTotal').text(formatMoney(totalServicos));
+
+        // Total geral
+        const totalGeral = totalProdutos + totalServicos;
+        $('#operacoesTotal').text(formatMoney(totalGeral));
     }
 
     // Handlers para botões de adicionar
-    $(document).on('click', '#addProdutoBtn', function(e) { e.preventDefault(); addOperacaoRow('produto'); updateOperacoesTotal(); });
-    $(document).on('click', '#addServicoBtn', function(e) { e.preventDefault(); addOperacaoRow('servico'); updateOperacoesTotal(); });
+    $(document).on('click', '#addProdutoBtn', function(e) {
+        e.preventDefault();
+        addProduto();
+    });
 
-    // Salvar operações (front-end) -> precisa de endpoint backend para persistir
+    $(document).on('click', '#addServicoBtn', function(e) {
+        e.preventDefault();
+        addServico();
+    });
+
+    // Salvar operações (front-end) -> agora com endpoint backend implementado
     $(document).on('click', '#saveOperacoesBtn', async function(e) {
         e.preventDefault();
         const ordemId = $('#operacoes-ordem-id').val();
-        const items = [];
-        $('#operacoesTable tbody tr').each(function() {
-            const tipo = $(this).data('tipo') || $(this).find('input[name="items[][tipo]"]').val();
-            const descricao = $(this).find('input[name="items[][descricao]"]').val() || '';
-            const quantidade = parseFloat($(this).find('input[name="items[][quantidade]"]').val() || 0) || 0;
-            const preco = parseFloat($(this).find('input[name="items[][preco_unitario]"]').val() || 0) || 0;
-            if (descricao === '' && quantidade === 0 && preco === 0) return; // pular linhas vazias
-            items.push({ tipo, descricao, quantidade, preco, subtotal: (quantidade * preco) });
+        
+        if (!ordemId) {
+            showAlert('error', 'ID da ordem não encontrado');
+            return;
+        }
+        
+        // Coletar produtos
+        const produtos = [];
+        $('#produtosTable tbody tr').each(function() {
+            const produtoId = $(this).data('produto-id');
+            const nome = $(this).find('input[name="produtos[][nome]"]').val() || '';
+            const quantidade = parseFloat($(this).find('input[name="produtos[][quantidade]"]').val() || 0) || 0;
+            const preco = parseMoney($(this).find('input[name="produtos[][preco]"]').val() || '0,00') || 0;
+            if (produtoId && quantidade > 0) {
+                produtos.push({ 
+                    produto_id: produtoId, 
+                    nome, 
+                    quantidade, 
+                    preco, 
+                    subtotal: (quantidade * preco) 
+                });
+            }
         });
 
+        // Coletar serviços
+        const servicos = [];
+        $('#servicosTable tbody tr').each(function() {
+            const servicoId = $(this).data('servico-id');
+            const nome = $(this).find('input[name="servicos[][nome]"]').val() || '';
+            const quantidade = parseFloat($(this).find('input[name="servicos[][quantidade]"]').val() || 0) || 0;
+            const preco = parseMoney($(this).find('input[name="servicos[][preco]"]').val() || '0,00') || 0;
+            if (servicoId && quantidade > 0) {
+                servicos.push({ 
+                    servico_id: servicoId, 
+                    nome, 
+                    quantidade, 
+                    preco, 
+                    subtotal: (quantidade * preco) 
+                });
+            }
+        });
+
+        // Validar se há pelo menos um produto ou serviço
+        if (produtos.length === 0 && servicos.length === 0) {
+            showAlert('warning', 'Adicione pelo menos um produto ou serviço');
+            return;
+        }
+
         // estrutura a enviar ao backend
-        const payload = { ordem_id: ordemId, items: items, total: Number($('#operacoesTotal').text() || 0) };
+        const payload = { 
+            ordem_id: ordemId, 
+            produtos: produtos, 
+            servicos: servicos, 
+            total_produtos: parseMoney($('#produtosTotal').text() || '0,00'),
+            total_servicos: parseMoney($('#servicosTotal').text() || '0,00'),
+            total_geral: parseMoney($('#operacoesTotal').text() || '0,00')
+        };
 
         try {
-            // TODO: implementar endpoint POST /ordens/{id}/operacoes
-            // Por enquanto, apenas mostra mensagem e fecha modal
-            showAlert('success', 'Operações preparadas (persistência backend não implementada).');
-            const el = document.getElementById('operacoesModal');
-            try { bootstrap.Modal.getOrCreateInstance(el).hide(); } catch (e) { /* ignore */ }
-            await loadOrdens();
+            const response = await $.ajax({
+                url: `<?= site_url('/ordens/') ?>${ordemId}/operacoes`,
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(payload)
+            });
+
+            if (response.success) {
+                showAlert('success', `Operações salvas com sucesso! ${response.produtos_salvos} produtos e ${response.servicos_salvos} serviços salvos.`);
+                const el = document.getElementById('operacoesModal');
+                try { bootstrap.Modal.getOrCreateInstance(el).hide(); } catch (e) { /* ignore */ }
+                await loadOrdens();
+            } else {
+                showAlert('error', response.message || 'Erro ao salvar operações');
+            }
         } catch (error) {
             console.error('Erro ao salvar operações:', error);
-            showAlert('error', 'Erro ao salvar operações');
+            if (error.responseJSON && error.responseJSON.messages) {
+                const messages = Object.values(error.responseJSON.messages).join(', ');
+                showAlert('error', messages);
+            } else {
+                showAlert('error', 'Erro ao salvar operações');
+            }
         }
     });
 </script>
