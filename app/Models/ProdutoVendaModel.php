@@ -124,14 +124,25 @@ class ProdutoVendaModel extends Model
      */
     public function adicionarProduto($vendaId, $produtoId, $quantidade, $valorUnitario, $desconto = 0)
     {
+        // Calcular subtotal e valor com desconto aqui para garantir que a validação
+        // passe mesmo que os callbacks antes do insert não sejam executados
+        $quant = (int) $quantidade;
+        $valorUnit = (float) $valorUnitario;
+        $desc = (float) $desconto;
+
+        $subtotal = $quant * $valorUnit;
+        $valorComDesconto = $subtotal - $desc;
+
         $dados = [
             'p2_venda_id' => $vendaId,
             'p2_produto_id' => $produtoId,
-            'p2_quantidade' => $quantidade,
-            'p2_valor_unitario' => $valorUnitario,
-            'p2_desconto' => $desconto
+            'p2_quantidade' => $quant,
+            'p2_valor_unitario' => $valorUnit,
+            'p2_subtotal' => $subtotal,
+            'p2_desconto' => $desc,
+            'p2_valor_com_desconto' => $valorComDesconto
         ];
-        
+
         return $this->insert($dados);
     }
     

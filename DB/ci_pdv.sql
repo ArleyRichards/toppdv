@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 06/09/2025 às 17:22
+-- Tempo de geração: 08/09/2025 às 23:03
 -- Versão do servidor: 10.4.32-MariaDB
 -- Versão do PHP: 8.2.12
 
@@ -295,7 +295,10 @@ INSERT INTO `l2_logs` (`l2_id`, `l2_id_usuario`, `l2_tipo_log`, `l2_acao`, `l2_d
 (12, 7, 'login', 'Login realizado com sucesso', 'Usuário: admin', NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:143.0) Gecko/20100101 Firefox/143.0', 'sucesso', '2025-09-04 20:20:03', 'c14c71b374d6ecc9fdd29e38f3ad91bc', '2025-09-04 17:20:03', '2025-09-04 17:20:03', NULL),
 (13, 7, 'login', 'Login realizado com sucesso', 'Usuário: admin', NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:142.0) Gecko/20100101 Firefox/142.0', 'sucesso', '2025-09-05 10:30:14', '8454923dac465d8550b0c6b4ed13d5bb', '2025-09-05 07:30:14', '2025-09-05 07:30:14', NULL),
 (14, 7, 'login', 'Login realizado com sucesso', 'Usuário: admin', NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:143.0) Gecko/20100101 Firefox/143.0', 'sucesso', '2025-09-05 22:06:46', 'a73d0c57f9e31c2d38cfd65ab9e08b9a', '2025-09-05 19:06:46', '2025-09-05 19:06:46', NULL),
-(15, 7, 'login', 'Login realizado com sucesso', 'Usuário: admin', NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:143.0) Gecko/20100101 Firefox/143.0', 'sucesso', '2025-09-06 13:46:17', 'd635816dad60700e55b9a98a04d4d9a9', '2025-09-06 10:46:17', '2025-09-06 10:46:17', NULL);
+(15, 7, 'login', 'Login realizado com sucesso', 'Usuário: admin', NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:143.0) Gecko/20100101 Firefox/143.0', 'sucesso', '2025-09-06 13:46:17', 'd635816dad60700e55b9a98a04d4d9a9', '2025-09-06 10:46:17', '2025-09-06 10:46:17', NULL),
+(16, 7, 'login', 'Login realizado com sucesso', 'Usuário: admin', NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:143.0) Gecko/20100101 Firefox/143.0', 'sucesso', '2025-09-07 10:24:16', 'a0159b1e767d32591ed971b2595d6748', '2025-09-07 07:24:16', '2025-09-07 07:24:16', NULL),
+(17, 7, 'login', 'Login realizado com sucesso', 'Usuário: admin', NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:143.0) Gecko/20100101 Firefox/143.0', 'sucesso', '2025-09-07 17:36:58', 'bc5e466641e3e7eefcd89200dd60938f', '2025-09-07 14:36:58', '2025-09-07 14:36:58', NULL),
+(18, 7, 'login', 'Login realizado com sucesso', 'Usuário: admin', NULL, NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:143.0) Gecko/20100101 Firefox/143.0', 'sucesso', '2025-09-08 11:26:20', '4b45f75ac1db9eeebb749a0cc253119d', '2025-09-08 08:26:20', '2025-09-08 08:26:20', NULL);
 
 -- --------------------------------------------------------
 
@@ -334,6 +337,14 @@ CREATE TABLE `o1_ordens` (
   `o1_updated_at` datetime DEFAULT NULL,
   `o1_deleted_at` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Despejando dados para a tabela `o1_ordens`
+--
+
+INSERT INTO `o1_ordens` (`o1_id`, `o1_numero_ordem`, `o1_cliente_id`, `o1_equipamento`, `o1_marca`, `o1_modelo`, `o1_numero_serie`, `o1_defeito_relatado`, `o1_observacoes_entrada`, `o1_acessorios_entrada`, `o1_estado_aparente`, `o1_tecnico_id`, `o1_status`, `o1_prioridade`, `o1_data_entrada`, `o1_data_previsao`, `o1_data_conclusao`, `o1_data_entrega`, `o1_valor_servicos`, `o1_valor_produtos`, `o1_valor_total`, `o1_desconto`, `o1_valor_final`, `o1_laudo_tecnico`, `o1_observacoes_conclusao`, `o1_garantia_servico`, `o1_created_at`, `o1_updated_at`, `o1_deleted_at`) VALUES
+(1, 'OS000001', 172, 'Notebook ', 'Dell', 'IInspiron', '123456789', 'Notebook apresenta aquecimento ao ligar', 'aparentemente produto sem avarias', 'teste tes tewerwerwer', '', 1, 'Aguardando', 'Média', '2025-09-06 00:00:00', '2025-09-06', NULL, NULL, 25.02, 1499.00, 1524.02, 0.00, 1524.02, NULL, NULL, 0, '2025-09-06 12:31:20', '2025-09-06 17:22:16', NULL),
+(2, 'OS000002', 161, 'Notebook', 'Positivo', 'Gray', '123456789', 'Notebook esquenta muito', 'aparentemente nunhuma avaria', '32132132132132132132132132321321321321321321321321321321321321321322313213213', '', 1, 'Aguardando', 'Média', '2025-09-06 00:00:00', '2025-09-06', NULL, NULL, 60.00, 109.90, 169.90, 0.00, 169.90, NULL, NULL, 0, '2025-09-06 16:58:45', '2025-09-07 07:33:35', '2025-09-07 07:33:35');
 
 -- --------------------------------------------------------
 
@@ -430,6 +441,16 @@ CREATE TABLE `p3_produtos_ordem` (
   `p3_deleted_at` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Despejando dados para a tabela `p3_produtos_ordem`
+--
+
+INSERT INTO `p3_produtos_ordem` (`p3_id`, `p3_ordem_id`, `p3_produto_id`, `p3_quantidade`, `p3_valor_unitario`, `p3_valor_total`, `p3_observacoes`, `p3_created_at`, `p3_updated_at`, `p3_deleted_at`) VALUES
+(1, 1, 14, 1, 59.90, 59.90, NULL, '2025-09-06 15:37:00', '2025-09-06 16:05:38', '2025-09-06 16:05:38'),
+(2, 1, 7, 1, 1499.00, 1499.00, NULL, '2025-09-06 16:05:38', '2025-09-06 16:05:38', NULL),
+(3, 2, 21, 1, 109.90, 109.90, NULL, '2025-09-06 16:59:14', '2025-09-06 17:22:19', '2025-09-06 17:22:19'),
+(4, 2, 21, 1, 109.90, 109.90, NULL, '2025-09-06 17:22:19', '2025-09-07 07:33:35', '2025-09-07 07:33:35');
+
 -- --------------------------------------------------------
 
 --
@@ -481,6 +502,16 @@ CREATE TABLE `s2_servicos_ordem` (
   `s2_updated_at` datetime DEFAULT NULL,
   `s2_deleted_at` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Despejando dados para a tabela `s2_servicos_ordem`
+--
+
+INSERT INTO `s2_servicos_ordem` (`s2_id`, `s2_ordem_id`, `s2_servico_id`, `s2_quantidade`, `s2_valor_unitario`, `s2_valor_total`, `s2_observacoes`, `s2_status`, `s2_tecnico_id`, `s2_data_inicio`, `s2_data_conclusao`, `s2_created_at`, `s2_updated_at`, `s2_deleted_at`) VALUES
+(1, 1, 1, 1, 25.02, 25.02, NULL, 'Pendente', NULL, NULL, NULL, '2025-09-06 15:37:00', '2025-09-06 16:05:38', '2025-09-06 16:05:38'),
+(2, 1, 1, 1, 25.02, 25.02, NULL, 'Pendente', NULL, NULL, NULL, '2025-09-06 16:05:38', '2025-09-06 16:05:38', NULL),
+(3, 2, 2, 1, 60.00, 60.00, NULL, 'Pendente', NULL, NULL, NULL, '2025-09-06 16:59:14', '2025-09-06 17:22:19', '2025-09-06 17:22:19'),
+(4, 2, 2, 1, 60.00, 60.00, NULL, 'Pendente', NULL, NULL, NULL, '2025-09-06 17:22:19', '2025-09-07 07:33:35', '2025-09-07 07:33:35');
 
 -- --------------------------------------------------------
 
@@ -537,7 +568,7 @@ CREATE TABLE `u1_usuarios` (
 --
 
 INSERT INTO `u1_usuarios` (`u1_id`, `u1_cpf`, `u1_nome`, `u1_email`, `u1_usuario_acesso`, `u1_senha_usuario`, `u1_tipo_permissao`, `u1_data_ultimo_acesso`, `u1_horario_geracao_token`, `u1_token_reset_senha_acesso`, `u1_created_at`, `u1_updated_at`, `u1_deleted_at`) VALUES
-(7, '123.456.789-00', 'Administrador Sistema', 'admin@sistema.com', 'admin', '$2y$10$bsuRIaYh/5aEbDe10ZeKcuAgmbWhcER02mjIBPjcYlA8DVBKIyN1S', 'administrador', '2025-09-06 13:46:17', NULL, NULL, '2025-09-03 11:22:57', '2025-09-06 10:46:17', NULL),
+(7, '123.456.789-00', 'Administrador Sistema', 'admin@sistema.com', 'admin', '$2y$10$bsuRIaYh/5aEbDe10ZeKcuAgmbWhcER02mjIBPjcYlA8DVBKIyN1S', 'administrador', '2025-09-08 11:26:20', NULL, NULL, '2025-09-03 11:22:57', '2025-09-08 08:26:20', NULL),
 (8, '987.654.321-00', 'João Vendedor', 'joao.vendedor@sistema.com', 'joao.vendas', '$2y$10$bsuRIaYh/5aEbDe10ZeKcuAgmbWhcER02mjIBPjcYlA8DVBKIyN1S', 'venda', '2025-09-03 14:22:57', NULL, NULL, '2025-09-03 11:22:57', '2025-09-03 11:23:49', NULL),
 (9, '456.789.123-00', 'Maria Cadastro', 'maria.cadastro@sistema.com', 'maria.cad', '$2y$10$bsuRIaYh/5aEbDe10ZeKcuAgmbWhcER02mjIBPjcYlA8DVBKIyN1S', 'cadastro', '2025-09-03 14:22:57', NULL, NULL, '2025-09-03 11:22:57', '2025-09-04 15:31:51', '2025-09-04 15:31:51'),
 (10, '32132116544', 'Isaías Oliveira', 'visaotec@gmail.com', 'visaotec10', '$2y$10$aDb5PqIxXVj8uruevvyCwem29GDxwq81vaKi8yoUG68m0Uw62bNZO', 'administrador', '2025-09-04 18:38:00', NULL, NULL, '2025-09-04 15:38:00', '2025-09-04 15:50:59', NULL),
@@ -551,23 +582,36 @@ INSERT INTO `u1_usuarios` (`u1_id`, `u1_cpf`, `u1_nome`, `u1_email`, `u1_usuario
 
 CREATE TABLE `v1_vendas` (
   `v1_id` bigint(20) NOT NULL,
-  `v1_numero_da_venda` int(10) UNSIGNED NOT NULL,
+  `v1_numero_venda` varchar(50) NOT NULL DEFAULT '',
   `v1_cliente_id` bigint(20) NOT NULL,
   `v1_vendedor_nome` varchar(255) NOT NULL,
   `v1_vendedor_id` bigint(20) UNSIGNED NOT NULL,
-  `v1_tipo_de_pagamento` enum('dinheiro','cartao_credito','cartao_debito','pix','transferencia','boleto') NOT NULL,
+  `v1_tipo_de_pagamento` enum('dinheiro','cartao_credito','cartao_debito','pix','transferencia','boleto','a_prazo') NOT NULL,
   `v1_desconto` decimal(10,2) DEFAULT 0.00,
   `v1_valor_total` decimal(10,2) NOT NULL DEFAULT 0.00,
   `v1_codigo_transacao` varchar(255) DEFAULT NULL,
   `v1_valor_a_ser_pago` decimal(10,2) NOT NULL DEFAULT 0.00,
   `v1_status` enum('Em Aberto','Faturado','Atrasado','Cancelado') NOT NULL DEFAULT 'Em Aberto',
-  `v1_created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `v1_created_at` datetime DEFAULT NULL,
   `v1_data_pagamento` date DEFAULT NULL,
   `v1_data_faturamento` date DEFAULT NULL,
   `v1_observacoes` text DEFAULT NULL,
-  `v1_updated_at` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  `v1_deleted_at` timestamp NULL DEFAULT NULL
+  `v1_updated_at` datetime DEFAULT NULL,
+  `v1_deleted_at` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='Tabela para registro de vendas do sistema PDV';
+
+--
+-- Despejando dados para a tabela `v1_vendas`
+--
+
+INSERT INTO `v1_vendas` (`v1_id`, `v1_numero_venda`, `v1_cliente_id`, `v1_vendedor_nome`, `v1_vendedor_id`, `v1_tipo_de_pagamento`, `v1_desconto`, `v1_valor_total`, `v1_codigo_transacao`, `v1_valor_a_ser_pago`, `v1_status`, `v1_created_at`, `v1_data_pagamento`, `v1_data_faturamento`, `v1_observacoes`, `v1_updated_at`, `v1_deleted_at`) VALUES
+(2, 'VD0002', 172, 'Isaías Oliveira', 10, 'dinheiro', 0.00, 0.00, NULL, 0.00, 'Em Aberto', '2025-09-07 18:52:19', NULL, NULL, 'teste 1234', '2025-09-07 18:52:19', NULL),
+(3, 'VD0003', 172, 'Isaías Oliveira', 10, 'dinheiro', 0.00, 0.00, NULL, 0.00, 'Em Aberto', '2025-09-07 18:56:59', NULL, NULL, 'teste 1234', '2025-09-07 18:56:59', NULL),
+(4, 'VD0004', 160, 'João Vendedor', 8, 'dinheiro', 0.00, 0.00, NULL, 0.00, 'Em Aberto', '2025-09-07 19:04:41', NULL, NULL, 'teste 1234', '2025-09-07 19:04:41', NULL),
+(5, 'VD0005', 172, 'Isaías Oliveira', 10, 'transferencia', 0.00, 0.00, NULL, 0.00, 'Em Aberto', '2025-09-07 19:07:42', NULL, NULL, 'teste 1234', '2025-09-07 19:07:42', NULL),
+(6, 'VD0006', 160, 'Isaías Oliveira', 10, 'cartao_debito', 0.00, 0.00, NULL, 0.00, 'Em Aberto', '2025-09-07 19:09:54', NULL, NULL, 'teste', '2025-09-07 19:09:54', NULL),
+(7, 'VD0007', 172, 'Isaías Oliveira', 10, 'cartao_credito', 0.00, 0.00, NULL, 0.00, 'Em Aberto', '2025-09-07 19:11:45', NULL, NULL, 'teste', '2025-09-07 19:11:45', NULL),
+(8, 'VD0008', 160, 'João Vendedor', 8, 'cartao_credito', 0.00, 0.00, NULL, 0.00, 'Em Aberto', '2025-09-07 19:16:44', NULL, NULL, 'teste', '2025-09-07 19:16:44', NULL);
 
 --
 -- Índices para tabelas despejadas
@@ -699,7 +743,7 @@ ALTER TABLE `u1_usuarios`
 --
 ALTER TABLE `v1_vendas`
   ADD PRIMARY KEY (`v1_id`) USING BTREE,
-  ADD UNIQUE KEY `v1_numero_da_venda` (`v1_numero_da_venda`) USING BTREE,
+  ADD UNIQUE KEY `v1_numero_da_venda` (`v1_numero_venda`) USING BTREE,
   ADD KEY `v1_cliente_id` (`v1_cliente_id`) USING BTREE,
   ADD KEY `idx_v1_vendedor_id` (`v1_vendedor_id`) USING BTREE;
 
@@ -747,13 +791,13 @@ ALTER TABLE `l2_licencas`
 -- AUTO_INCREMENT de tabela `l2_logs`
 --
 ALTER TABLE `l2_logs`
-  MODIFY `l2_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `l2_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT de tabela `o1_ordens`
 --
 ALTER TABLE `o1_ordens`
-  MODIFY `o1_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `o1_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de tabela `p1_produtos`
@@ -771,7 +815,7 @@ ALTER TABLE `p2_produtos_venda`
 -- AUTO_INCREMENT de tabela `p3_produtos_ordem`
 --
 ALTER TABLE `p3_produtos_ordem`
-  MODIFY `p3_id` bigint(20) NOT NULL AUTO_INCREMENT;
+  MODIFY `p3_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de tabela `s1_servicos`
@@ -783,7 +827,7 @@ ALTER TABLE `s1_servicos`
 -- AUTO_INCREMENT de tabela `s2_servicos_ordem`
 --
 ALTER TABLE `s2_servicos_ordem`
-  MODIFY `s2_id` bigint(20) NOT NULL AUTO_INCREMENT;
+  MODIFY `s2_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de tabela `t1_tecnicos`
@@ -801,7 +845,7 @@ ALTER TABLE `u1_usuarios`
 -- AUTO_INCREMENT de tabela `v1_vendas`
 --
 ALTER TABLE `v1_vendas`
-  MODIFY `v1_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `v1_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- Restrições para tabelas despejadas

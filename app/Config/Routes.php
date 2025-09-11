@@ -135,3 +135,40 @@ $routes->resource('ordens', [
     'controller' => 'OrdemController',
     'except' => ['new', 'edit']
 ]);
+
+// Rotas para gerenciamento de vendas
+$routes->get('vendas', 'VendaController::index');
+$routes->get('vendas/estatisticas', 'VendaController::estatisticas');
+$routes->get('vendas/buscar', 'VendaController::buscar');
+$routes->get('vendas/cep', 'VendaController::consultarCep');
+$routes->get('vendas/list', 'VendaController::list');
+$routes->post('vendas/(:num)/operacoes', 'VendaController::saveOperacoes/$1');
+// Rota para faturamento de venda via POST
+$routes->post('vendas/(:num)/faturar', 'VendaController::faturar/$1');
+// Fallbacks: aceitar também formatos onde a id é concatenada sem '/' (ex: vendas13/produtos)
+// Esses padrões usam regex para capturar o número logo após 'vendas'
+$routes->post('vendas(\d+)/operacoes', 'VendaController::saveOperacoes/$1');
+$routes->post('vendas(\d+)/produtos', 'VendaController::saveOperacoes/$1');
+// Alias para compatibilidade com o frontend que posta em /vendas/{id}/produtos
+$routes->post('vendas/(:num)/produtos', 'VendaController::saveOperacoes/$1');
+// Padrão controller/metodo/parametro solicitado: vendas/add_produtos/13
+$routes->post('vendas/add_produtos/(:num)', 'VendaController::saveOperacoes/$1');
+// Allow POST with X-HTTP-Method-Override for update (some servers block PUT)
+$routes->post('vendas/(:num)', 'VendaController::update/$1');
+// Fallback to allow deleting via POST for environments that block DELETE
+$routes->post('vendas/(:num)/delete', 'VendaController::delete/$1');
+$routes->resource('vendas', [
+    'controller' => 'VendaController',
+    'except' => ['new', 'edit']
+]);
+
+// Rotas para PDV (Ponto de Venda)
+$routes->get('pdv', 'PdvController::index');
+$routes->get('pdv/buscarClientes', 'PdvController::buscarClientes');
+$routes->get('pdv/buscarProdutos', 'PdvController::buscarProdutos');
+$routes->post('pdv/processarVenda', 'PdvController::processarVenda');
+$routes->post('pdv/abrirCaixa', 'PdvController::abrirCaixa');
+$routes->post('pdv/fecharCaixa', 'PdvController::fecharCaixa');
+$routes->post('pdv/cancelarVenda', 'PdvController::cancelarVenda');
+$routes->get('pdv/gerarCupom/(:num)', 'PdvController::gerarCupom/$1');
+$routes->get('pdv/downloadCupom/(:num)', 'PdvController::downloadCupom/$1');

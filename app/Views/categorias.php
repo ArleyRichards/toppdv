@@ -36,11 +36,11 @@
                     </div>
                     <div class="col-lg-3 col-md-3">
                         <label for="filterCommissionMin" class="form-label">Comissão mínima (%)</label>
-                        <input type="number" class="form-control" id="filterCommissionMin" placeholder="0" min="0" step="0.01">
+                        <input type="text" class="form-control" id="filterCommissionMin" placeholder="0,00">
                     </div>
                     <div class="col-lg-3 col-md-3">
                         <label for="filterCommissionMax" class="form-label">Comissão máxima (%)</label>
-                        <input type="number" class="form-control" id="filterCommissionMax" placeholder="100" min="0" step="0.01">
+                        <input type="text" class="form-control" id="filterCommissionMax" placeholder="100,00">
                     </div>
                     <div class="col-lg-2 col-md-2 d-flex align-items-end">
                         <button class="btn btn-outline-danger btn-sm w-100" id="clearFilters">
@@ -136,7 +136,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="category-comissao" class="form-label">Comissão (%)</label>
-                        <input type="number" class="form-control" id="category-comissao" name="c1_comissao" step="0.01" min="0">
+                        <input type="text" class="form-control" id="category-comissao" name="c1_comissao" placeholder="0,00">
                     </div>
                 </form>
             </div>
@@ -166,7 +166,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="edit-category-comissao" class="form-label">Comissão (%)</label>
-                        <input type="number" class="form-control" id="edit-category-comissao" name="c1_comissao" step="0.01" min="0">
+                        <input type="text" class="form-control" id="edit-category-comissao" name="c1_comissao" placeholder="0,00">
                     </div>
                 </form>
             </div>
@@ -193,7 +193,8 @@
     // Inicialização quando o DOM estiver carregado
     $(document).ready(function() {
         loadCategories();
-        setupEventListeners();        
+        setupEventListeners();
+        setupMasks();
     });
 
     // Toggle dos Filtros com jQuery
@@ -244,6 +245,15 @@
         });
     } 
 
+    // Configurar máscaras nos campos
+    function setupMasks() {
+        // Aplicar máscara de percentual nos campos de comissão
+        $('#filterCommissionMin, #filterCommissionMax, #category-comissao, #edit-category-comissao').mask('000.000.000,00', {
+            reverse: true,
+            placeholder: "0,00"
+        });
+    }
+
     // Carregar dados das categorias
     async function loadCategories() {
         try {
@@ -270,8 +280,12 @@
     // Aplicar filtros: nome e intervalo de comissão
     function applyFilters() {
         const nameFilter = ($('#filterName').val() || '').toLowerCase();
-        const min = parseFloat($('#filterCommissionMin').val());
-        const max = parseFloat($('#filterCommissionMax').val());
+        const minStr = $('#filterCommissionMin').val();
+        const maxStr = $('#filterCommissionMax').val();
+        
+        // Converter valores mascarados para float
+        const min = minStr ? parseFloat(minStr.replace(/\./g, '').replace(',', '.')) : NaN;
+        const max = maxStr ? parseFloat(maxStr.replace(/\./g, '').replace(',', '.')) : NaN;
 
         filteredCategories = categoriesData.filter(category => {
             const nomeOk = !nameFilter || (category.nome && category.nome.toLowerCase().includes(nameFilter));
@@ -493,7 +507,10 @@
     function fillEditForm(category) {
         $('#edit-category-id').val(category.c1_id);
         $('#edit-category-name').val(category.c1_categoria);
-        $('#edit-category-comissao').val(category.c1_comissao || '');
+        
+        // Formatar valor da comissão para o campo mascarado
+        const comissao = category.c1_comissao ? parseFloat(category.c1_comissao).toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2}) : '';
+        $('#edit-category-comissao').val(comissao);
     }
 
     // Salvar nova categoria
@@ -507,7 +524,13 @@
         const formData = $form.serializeArray();
         const data = {};
         $.each(formData, function(i, field) {
-            data[field.name] = field.value;
+            if (field.name === 'c1_comissao') {
+                // Converter valor mascarado para formato numérico
+                const valorMascarado = field.value;
+                data[field.name] = valorMascarado ? parseFloat(valorMascarado.replace(/\./g, '').replace(',', '.')).toFixed(2) : null;
+            } else {
+                data[field.name] = field.value;
+            }
         });
 
         try {
@@ -544,7 +567,13 @@
         const formData = $form.serializeArray();
         const data = {};
         $.each(formData, function(i, field) {
-            data[field.name] = field.value;
+            if (field.name === 'c1_comissao') {
+                // Converter valor mascarado para formato numérico
+                const valorMascarado = field.value;
+                data[field.name] = valorMascarado ? parseFloat(valorMascarado.replace(/\./g, '').replace(',', '.')).toFixed(2) : null;
+            } else {
+                data[field.name] = field.value;
+            }
         });
 
         const categoryId = data.c1_id;

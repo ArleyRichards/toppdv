@@ -1,6 +1,7 @@
 <?= $this->extend('templates/app') ?>
 
 <?= $this->section('content') ?>
+
 <div class="container-fluid" style="margin-top: 10px; padding: 15px;">
     <!-- Cabeçalho -->
     <div class="row mb-3 animate-fade-in">
