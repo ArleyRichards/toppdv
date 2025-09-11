@@ -38,6 +38,7 @@ class OrdemModel extends Model
         'o1_valor_final',
         'o1_laudo_tecnico',
         'o1_observacoes_conclusao',
+    'o1_data_faturamento',
         'o1_garantia_servico',
         'o1_created_at',
         'o1_updated_at',

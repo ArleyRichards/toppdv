@@ -25,11 +25,11 @@ class VendaController extends BaseController
         // Carregar dados necessários para o formulário
         $clienteModel = new \App\Models\ClienteModel();
         $usuarioModel = new \App\Models\UsuarioModel();
-    $produtoModel = new \App\Models\ProdutoModel();
+        $produtoModel = new \App\Models\ProdutoModel();
 
         $clientes = $clienteModel->where('c2_deleted_at', null)->orderBy('c2_nome', 'ASC')->findAll();
         $vendedores = $usuarioModel->buscarVendedores();
-    $produtos = $produtoModel->buscarParaVenda();
+        $produtos = $produtoModel->buscarParaVenda();
         // Log para debug: confirmar quantidade de produtos carregados para a view
         try {
             $produtosCount = is_countable($produtos) ? count($produtos) : 0;
@@ -91,7 +91,6 @@ class VendaController extends BaseController
             }
 
             return $this->respond($data);
-
         } catch (\Exception $e) {
             log_message('error', 'Erro ao listar vendas: ' . $e->getMessage());
             return $this->failServerError('Erro interno do servidor ao listar vendas');
@@ -257,7 +256,6 @@ class VendaController extends BaseController
             } else {
                 return $this->failServerError('Erro ao cadastrar venda');
             }
-
         } catch (\Exception $e) {
             log_message('error', 'Erro ao criar venda: ' . $e->getMessage());
             return $this->failServerError('Erro interno do servidor ao criar venda');
@@ -358,7 +356,6 @@ class VendaController extends BaseController
                 'servicos' => $servicos,
                 'totais' => $totais
             ]);
-
         } catch (\Exception $e) {
             log_message('error', 'Erro em VendaController::show: ' . $e->getMessage());
             return $this->failServerError('Erro interno do servidor ao buscar venda');
@@ -401,7 +398,7 @@ class VendaController extends BaseController
                 log_message('error', 'VendaController::delete - DB error: ' . print_r($dbError, true));
             }
 
-            return $this->respond([ 'success' => false, 'message' => 'Não foi possível excluir a venda', 'dbError' => $dbError ], 500);
+            return $this->respond(['success' => false, 'message' => 'Não foi possível excluir a venda', 'dbError' => $dbError], 500);
         } catch (\Exception $e) {
             log_message('error', 'VendaController::delete - exception: ' . $e->getMessage());
             return $this->failServerError('Erro interno ao excluir venda');
@@ -511,7 +508,6 @@ class VendaController extends BaseController
             }
 
             return $this->respond(['success' => false, 'message' => 'Não foi possível atualizar a venda', 'modelErrors' => $modelErrors, 'dbError' => $dbError], 500);
-
         } catch (\Exception $e) {
             log_message('error', 'VendaController::update - exception: ' . $e->getMessage());
             return $this->failServerError('Erro interno ao atualizar venda');
@@ -646,7 +642,6 @@ class VendaController extends BaseController
             }
 
             return $this->respond(['success' => true, 'inserted_ids' => $inserts]);
-
         } catch (\Exception $e) {
             log_message('error', 'VendaController::saveOperacoes - exception: ' . $e->getMessage());
             return $this->failServerError('Erro interno ao salvar operações');
@@ -708,7 +703,6 @@ class VendaController extends BaseController
                 $dbError = $vendaModel->db->error();
             }
             return $this->respond(['success' => false, 'message' => 'Não foi possível faturar a venda', 'dbError' => $dbError], 500);
-
         } catch (\Exception $e) {
             log_message('error', 'VendaController::faturar - exception: ' . $e->getMessage());
             return $this->failServerError('Erro interno ao faturar venda');

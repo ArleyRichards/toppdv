@@ -131,6 +131,10 @@ $routes->get('ordens/list', 'OrdemController::list');
 $routes->post('ordens/(:num)/operacoes', 'OrdemController::saveOperacoes/$1');
 // Allow POST with X-HTTP-Method-Override for update (some servers block PUT)
 $routes->post('ordens/(:num)', 'OrdemController::update/$1');
+$routes->get('ordens/gerarCupom/(:any)', 'OrdemController::gerarCupom/$1');
+$routes->get('ordens/downloadCupom/(:any)', 'OrdemController::downloadCupom/$1');
+// Rota para faturamento de ordem via POST
+$routes->post('ordens/(:num)/faturar', 'OrdemController::faturar/$1');
 $routes->resource('ordens', [
     'controller' => 'OrdemController',
     'except' => ['new', 'edit']

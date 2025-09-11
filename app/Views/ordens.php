@@ -166,6 +166,36 @@
                 </button>
             </div>
         </div>
+
+            <!-- Modal de Faturamento (ordens) -->
+            <div class="modal fade" id="faturarModal" tabindex="-1" aria-labelledby="faturarModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="faturarModalLabel"><i class="fa-solid fa-calculator text-success me-2"></i>Faturar Ordem</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="faturarForm">
+                                <input type="hidden" id="faturar-ordem-id" name="id" value="">
+                                <div class="mb-3">
+                                    <label for="faturar-data" class="form-label">Data de Faturamento <span class="text-danger">*</span></label>
+                                    <input type="date" id="faturar-data" name="data_faturamento" class="form-control" required>
+                                    <div class="invalid-feedback">Informe a data de faturamento.</div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="faturar-observacoes" class="form-label">Observações</label>
+                                    <textarea id="faturar-observacoes" name="observacoes" class="form-control" rows="3" placeholder="Observações sobre o faturamento (opcional)"></textarea>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                            <button type="button" class="btn btn-success" id="faturarSubmitBtn">Faturar</button>
+                        </div>
+                    </div>
+                </div>
+             </div>
     </div>
 </div>
 
@@ -946,10 +976,35 @@
         const equipamento = ordem.equipamento || '-';
         const marca = ordem.marca || '-';
         const modelo = ordem.modelo || '-';
-        const status = ordem.status || '-';
+    const status = ordem.status || '-';
+    const statusText = ordem.o1_status || ordem.status || '-';
         const prioridade = ordem.prioridade || '-';
         const valor = ordem.valor_final ? Number(ordem.valor_final).toFixed(2) : '0.00';
         const dataEntrada = ordem.data_entrada || '-';
+        const isFaturado = String(statusText || '').toLowerCase() === 'faturado';
+
+        const actionsHtml = `
+                            <button type="button" class="btn btn-primary btn-action" onclick="viewOrdem(${id})" title="Visualizar">
+                                <i class="fa-solid fa-eye"></i>
+                            </button>
+                            <button type="button" class="btn btn-secondary btn-action" onclick="printCupomOrdem(${id})" title="Imprimir">
+                                <i class="fa-solid fa-print"></i>
+                            </button>
+                            ${!isFaturado ? `
+                            <button type="button" class="btn btn-info btn-action" onclick="openOperacoesModal(${id})" title="Operações">
+                                <i class="fa-solid fa-boxes-stacked"></i>
+                            </button>
+                            <button type="button" class="btn btn-success btn-action" onclick="openFaturarModal(${id})" data-bs-toggle="modal" data-bs-target="#faturarModal" title="Faturar">
+                                <i class="fa-solid fa-check"></i>
+                            </button>
+                            <button type="button" class="btn btn-warning btn-action" onclick="editOrdem(${id})" title="Editar">
+                                <i class="fa-solid fa-edit"></i>
+                            </button>
+                            <button type="button" class="btn btn-danger btn-action" onclick="deleteOrdem(${id}, '${String(numero).replace(/'/g, "\\'")}')" title="Excluir">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                            ` : ''}
+                        `;
 
         return `
             <tr>
@@ -958,24 +1013,13 @@
                 <td>${equipamento}</td>
                 <td>${marca}</td>
                 <td>${modelo}</td>
-                <td>${status}</td>
+                <td><span class="badge bg-${getStatusColor(statusText)}">${statusText}</span></td>
                 <td>${prioridade}</td>
                 <td class="text-end">${valor}</td>
                 <td>${dataEntrada}</td>
                 <td>
                     <div class="btn-group" role="group">
-                        <button type="button" class="btn btn-primary btn-action" onclick="viewOrdem(${id})" title="Visualizar">
-                            <i class="fa-solid fa-eye"></i>
-                        </button>
-                        <button type="button" class="btn btn-info btn-action" onclick="openOperacoesModal(${id})" title="Operações">
-                            <i class="fa-solid fa-boxes-stacked"></i>
-                        </button>
-                        <button type="button" class="btn btn-warning btn-action" onclick="editOrdem(${id})" title="Editar">
-                            <i class="fa-solid fa-edit"></i>
-                        </button>
-                        <button type="button" class="btn btn-danger btn-action" onclick="deleteOrdem(${id}, '${String(numero).replace(/'/g, "\\'")}')" title="Excluir">
-                            <i class="fa-solid fa-trash"></i>
-                        </button>
+                        ${actionsHtml}
                     </div>
                 </td>
             </tr>
@@ -1806,7 +1850,8 @@
 
     function getStatusColor(status) {
         const colors = {
-            'Aguardando': 'secondary',
+            'Faturado': 'success',
+            'Aguardando': 'warning',
             'Em Andamento': 'primary',
             'Aguardando Peças': 'warning',
             'Concluído': 'success',
@@ -1835,6 +1880,27 @@
         };
         return colors[status] || 'secondary';
     }
+
+    // Abrir/Imprimir cupom da ordem (comportamento equivalente ao de vendas)
+    async function printCupomOrdem(id) {
+        try {
+            if (!id) {
+                showAlert('error', 'ID da ordem inválido para impressão');
+                return;
+            }
+
+            // Reutiliza a mesma URL de cupom do sistema (agora via OrdemController)
+            const CUPOM_BASE = <?= json_encode(rtrim(site_url('ordens/downloadCupom'), '/') . '/') ?>;
+            const url = CUPOM_BASE + id;
+            window.open(url, '_blank');
+        } catch (error) {
+            console.error('Erro ao abrir cupom da ordem:', error);
+            showAlert('error', 'Erro ao abrir cupom da ordem');
+        }
+    }
+
+    // Expose to global scope for inline onclick handlers
+    window.printCupomOrdem = printCupomOrdem;
 
     // Operações: abrir modal, gerenciar linhas e calcular totais
     async function openOperacoesModal(ordemId, ordemData = null) {
@@ -2328,5 +2394,146 @@
         }
     });
 </script>
+
+    <script>
+    (function(){
+        'use strict';
+
+        function openFaturarModal(id) {
+            try {
+                console.log('openFaturarModal called for id:', id);
+                if (!id) return;
+
+                // Preparar campos com valores padrões enquanto carregamos os dados
+                $('#faturar-ordem-id').val(id);
+                $('#faturar-data').val(new Date().toISOString().slice(0,10));
+                $('#faturar-observacoes').val('');
+
+                const el = document.getElementById('faturarModal');
+                if (!el) {
+                    console.warn('openFaturarModal: elemento #faturarModal não encontrado');
+                    return;
+                }
+
+                // Função que exibe o modal (mantém fallback já existente)
+                const showModal = function() {
+                    try {
+                        // Mover para body para evitar problemas de z-index/backdrop
+                        if (el.parentElement !== document.body) {
+                            try { document.body.appendChild(el); } catch (moveErr) { console.warn('openFaturarModal: não foi possível mover modal para body', moveErr); }
+                        }
+
+                        // Tentar usar API do Bootstrap
+                        try {
+                            const mi = bootstrap.Modal.getOrCreateInstance(el) || new bootstrap.Modal(el);
+                            mi.show();
+                            return;
+                        } catch (apiErr) {
+                            console.warn('openFaturarModal: falha ao usar bootstrap.Modal API, tentando fallback', apiErr);
+                        }
+
+                        // Fallback manual
+                        el.classList.add('show');
+                        el.style.display = 'block';
+                        el.removeAttribute('aria-hidden');
+                        el.setAttribute('aria-modal', 'true');
+                        if (!document.body.classList.contains('modal-open')) {
+                            document.body.classList.add('modal-open');
+                            document.body.style.overflow = 'hidden';
+                        }
+                        let backdrop = document.querySelector('.modal-backdrop');
+                        if (!backdrop) {
+                            backdrop = document.createElement('div');
+                            backdrop.className = 'modal-backdrop fade show';
+                            document.body.appendChild(backdrop);
+                        } else {
+                            backdrop.classList.add('show');
+                        }
+                        const focusable = el.querySelector('button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled])');
+                        if (focusable) try { focusable.focus(); } catch(e){}
+
+                    } catch (manualErr) {
+                        console.error('openFaturarModal: fallback manual falhou', manualErr);
+                    }
+                };
+
+                // Buscar dados da ordem para preencher observações/data se existirem
+                const BASE_URL = <?= json_encode(rtrim(site_url('ordens'), '/') . '/') ?>;
+                $.ajax({
+                    url: BASE_URL + id,
+                    method: 'GET',
+                    dataType: 'json',
+                    timeout: 8000,
+                    success: function(resp){
+                        try {
+                            if (resp && resp.ordem) {
+                                const o = resp.ordem;
+                                if (o.o1_observacoes_conclusao) $('#faturar-observacoes').val(o.o1_observacoes_conclusao);
+                                if (o.o1_data_faturamento) $('#faturar-data').val(o.o1_data_faturamento.split(' ')[0] || o.o1_data_faturamento);
+                            }
+                        } catch(e){
+                            console.warn('openFaturarModal: falha ao preencher dados da ordem', e);
+                        } finally {
+                            showModal();
+                        }
+                    },
+                    error: function(xhr, status, err){
+                        console.warn('openFaturarModal: não foi possível carregar ordem, exibindo modal com valores padrão', status, err);
+                        showModal();
+                    }
+                });
+
+            } catch (err) {
+                console.error('openFaturarModal error:', err);
+                showAlert('error', 'Erro ao abrir modal de faturamento');
+            }
+        }
+
+        async function submitFaturar() {
+            try {
+                const ordemId = $('#faturar-ordem-id').val();
+                const dataFaturamento = $('#faturar-data').val();
+                const observacoes = $('#faturar-observacoes').val() || null;
+
+                if (!ordemId) { showAlert('error', 'ID da ordem inválido'); return; }
+                if (!dataFaturamento) { $('#faturar-data')[0].reportValidity(); return; }
+
+                const payload = { data_faturamento: dataFaturamento, observacoes: observacoes };
+
+                const resp = await $.ajax({
+                    url: `<?= rtrim(site_url('ordens'), '/') . '/' ?>${ordemId}/faturar`,
+                    method: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(payload),
+                    timeout: 15000
+                });
+
+                if (resp && resp.success) {
+                    try { const el = document.getElementById('faturarModal'); if (el) { bootstrap.Modal.getInstance(el)?.hide(); } } catch(e){}
+                    showAlert('success', 'Ordem faturada com sucesso');
+                    try { await loadOrdens(); } catch(e){}
+                } else {
+                    const msg = resp && resp.message ? resp.message : 'Erro ao faturar ordem';
+                    showAlert('error', msg);
+                }
+
+            } catch (error) {
+                console.error('submitFaturar error:', error);
+                showAlert('error', 'Erro ao faturar ordem (verifique console)');
+            }
+        }
+
+        // wire up button
+        $(document).off('click.faturar', '#faturarSubmitBtn').on('click.faturar', '#faturarSubmitBtn', function(e){ e.preventDefault(); submitFaturar(); });
+
+        // expose globally
+        window.openFaturarModal = openFaturarModal;
+        window.submitFaturar = submitFaturar;
+        window.OrdensManager = window.OrdensManager || {};
+        window.OrdensManager.openFaturarModal = openFaturarModal;
+        window.OrdensManager.submitFaturar = submitFaturar;
+
+    })();
+    </script>
 
 <?= $this->endSection() ?>

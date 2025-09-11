@@ -720,4 +720,242 @@ class OrdemController extends ResourceController
             return $this->failServerError('Erro ao salvar operações: ' . $e->getMessage());
         }
     }
+
+    /**
+     * Faturar uma ordem: define data de faturamento, observações e atualiza status para 'Faturado'.
+     * Método POST: /ordens/{id}/faturar
+     */
+    public function faturar($id = null)
+    {
+        try {
+            if (empty($id) || !is_numeric($id)) {
+                return $this->failValidationErrors(['id' => 'ID da ordem inválido']);
+            }
+
+            // Ler payload (aceitar JSON ou form)
+            $request = service('request');
+            $payload = $request->getJSON(true);
+            if (empty($payload)) {
+                $post = $request->getPost();
+                $payload = is_array($post) ? $post : [];
+            }
+
+            $dataFaturamento = $payload['data_faturamento'] ?? ($payload['data'] ?? null);
+            $observacoes = $payload['observacoes'] ?? null;
+
+            if (empty($dataFaturamento)) {
+                return $this->failValidationErrors(['data_faturamento' => 'Data de faturamento é obrigatória']);
+            }
+
+            // Buscar ordem
+            $ordemModel = new \App\Models\OrdemModel();
+            $ordem = $ordemModel->find($id);
+            if (!$ordem) {
+                return $this->failNotFound('Ordem não encontrada');
+            }
+
+            // Atualizar campos
+            $update = [
+                'o1_data_faturamento' => $dataFaturamento,
+                'o1_observacoes_conclusao' => $observacoes,
+                'o1_status' => 'Faturado'
+            ];
+
+            try {
+                $ok = $ordemModel->update((int)$id, $update);
+            } catch (\Throwable $t) {
+                log_message('error', 'OrdemController::faturar - update error: ' . $t->getMessage());
+                $ok = false;
+            }
+
+            if ($ok) {
+                return $this->respond(['success' => true, 'message' => 'Ordem faturada com sucesso']);
+            }
+
+            $dbError = [];
+            if (isset($ordemModel->db)) {
+                $dbError = $ordemModel->db->error();
+            }
+            return $this->respond(['success' => false, 'message' => 'Não foi possível faturar a ordem', 'dbError' => $dbError], 500);
+        } catch (\Exception $e) {
+            log_message('error', 'OrdemController::faturar - exception: ' . $e->getMessage());
+            return $this->failServerError('Erro interno ao faturar ordem');
+        }
+    }
+
+    /**
+     * Gerar cupom para uma ordem (salva arquivo) e retorna URL para download
+     * Método GET: /ordens/{id}/gerarCupom
+     * @return JSON
+     * @author Arley Richards <arleyrichards@gmail.com>
+     */
+    public function gerarCupom($ordemId = null)
+    {
+        if (!$ordemId) {
+            return $this->failNotFound('ID da ordem é obrigatório');
+        }
+
+        try {
+            $db = \Config\Database::connect();
+
+            // Buscar ordem: aceita id numérico ou número da ordem (ex: OS000001)
+            log_message('debug', 'gerarCupom requested param: ' . $ordemId);
+            $ordem = null;
+            if (is_numeric($ordemId)) {
+                $ordem = $db->table('o1_ordens')->where('o1_id', $ordemId)->where('o1_deleted_at IS NULL')->get()->getRowArray();
+            }
+            if (!$ordem) {
+                // tentar buscar pelo número da ordem
+                $ordem = $db->table('o1_ordens')->where('o1_numero_ordem', $ordemId)->where('o1_deleted_at IS NULL')->get()->getRowArray();
+            }
+            if (!$ordem) return $this->failNotFound('Ordem não encontrada');
+
+            // Buscar produtos da ordem
+            $produtos = $db->table('p3_produtos_ordem p')
+                ->select('p.*, pr.p1_nome_produto as produto_nome, pr.p1_codigo_produto as produto_codigo')
+                ->join('p1_produtos pr', 'pr.p1_id = p.p3_produto_id', 'left')
+                ->where('p.p3_ordem_id', $ordemId)
+                ->where('p.p3_deleted_at IS NULL')
+                ->get()
+                ->getResultArray();
+
+            // Mapear dados para o formato esperado pelo CupomService (sem alterar vendas DB)
+            $venda = [
+                'v1_id' => $ordem['o1_id'],
+                'v1_numero_venda' => $ordem['o1_numero_ordem'] ?? ('OS' . str_pad($ordem['o1_id'], 6, '0', STR_PAD_LEFT)),
+                'v1_created_at' => $ordem['o1_data_entrada'] ?? date('Y-m-d H:i:s'),
+                'v1_vendedor_nome' => $ordem['tecnico_nome'] ?? null,
+                'v1_tipo_de_pagamento' => 'a_prazo',
+                'v1_desconto' => isset($ordem['o1_desconto']) ? (float) $ordem['o1_desconto'] : 0.0,
+                'v1_valor_total' => isset($ordem['o1_valor_final']) ? (float) $ordem['o1_valor_final'] : ((float) ($ordem['o1_valor_total'] ?? 0)),
+                'v1_valor_a_ser_pago' => isset($ordem['o1_valor_final']) ? (float) $ordem['o1_valor_final'] : ((float) ($ordem['o1_valor_total'] ?? 0)),
+                'v1_observacoes' => $ordem['o1_observacoes_conclusao'] ?? $ordem['o1_observacoes_entrada'] ?? ''
+            ];
+
+            $produtosParaCupom = [];
+            foreach ($produtos as $p) {
+                $produtosParaCupom[] = [
+                    'nome_produto' => $p['produto_nome'] ?? ($p['nome'] ?? 'Produto'),
+                    'p2_quantidade' => isset($p['p3_quantidade']) ? (int) $p['p3_quantidade'] : 1,
+                    'p2_valor_unitario' => isset($p['p3_valor_unitario']) ? (float) $p['p3_valor_unitario'] : (float) ($p['p3_valor_unitario'] ?? 0),
+                    'p2_subtotal' => isset($p['p3_valor_total']) ? (float) $p['p3_valor_total'] : (float) ($p['p3_valor_total'] ?? 0)
+                ];
+            }
+
+            // Extrair configurações do próprio campo de observações da ordem (opcional)
+            $configuracoes = $this->extrairConfiguracoesCupomOrden($venda['v1_observacoes'] ?? '');
+
+            $cupomService = new \App\Libraries\CupomService();
+            $cupomInfo = $cupomService->salvarCupom($venda, $produtosParaCupom, $configuracoes);
+
+            if ($cupomInfo && file_exists($cupomInfo['caminho'])) {
+                return $this->respond([
+                    'success' => true,
+                    'message' => 'Cupom gerado com sucesso',
+                    'cupom' => $cupomInfo,
+                    // manter o parâmetro original na URL para permitir lookup por número
+                    'download_url' => base_url('ordens/downloadCupom/' . $ordemId)
+                ]);
+            }
+
+            return $this->failServerError('Erro ao salvar o cupom');
+
+        } catch (\Exception $e) {
+            log_message('error', 'Erro ao gerar cupom da ordem: ' . $e->getMessage());
+            return $this->failServerError('Erro ao gerar cupom: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Entrega o PDF do cupom da ordem inline (rota: /ordens/downloadCupom/{id})
+     */
+    public function downloadCupom($ordemId = null)
+    {
+        try {
+            if (!$ordemId) return redirect()->back()->with('error', 'ID da ordem é obrigatório');
+
+            $db = \Config\Database::connect();
+            // aceitar id numérico ou número da ordem (ex: OS000001)
+            log_message('debug', 'downloadCupom requested param: ' . $ordemId);
+            $ordem = null;
+            if (is_numeric($ordemId)) {
+                $ordem = $db->table('o1_ordens')->where('o1_id', $ordemId)->where('o1_deleted_at IS NULL')->get()->getRowArray();
+            }
+            if (!$ordem) {
+                $ordem = $db->table('o1_ordens')->where('o1_numero_ordem', $ordemId)->where('o1_deleted_at IS NULL')->get()->getRowArray();
+            }
+            if (!$ordem) return redirect()->back()->with('error', 'Ordem não encontrada');
+
+            $produtos = $db->table('p3_produtos_ordem p')
+                ->select('p.*, pr.p1_nome_produto as produto_nome, pr.p1_codigo_produto as produto_codigo')
+                ->join('p1_produtos pr', 'pr.p1_id = p.p3_produto_id', 'left')
+                ->where('p.p3_ordem_id', $ordemId)
+                ->where('p.p3_deleted_at IS NULL')
+                ->get()
+                ->getResultArray();
+
+            $venda = [
+                'v1_id' => $ordem['o1_id'],
+                'v1_numero_venda' => $ordem['o1_numero_ordem'] ?? ('OS' . str_pad($ordem['o1_id'], 6, '0', STR_PAD_LEFT)),
+                'v1_created_at' => $ordem['o1_data_entrada'] ?? date('Y-m-d H:i:s'),
+                'v1_vendedor_nome' => $ordem['tecnico_nome'] ?? null,
+                'v1_tipo_de_pagamento' => 'a_prazo',
+                'v1_desconto' => isset($ordem['o1_desconto']) ? (float) $ordem['o1_desconto'] : 0.0,
+                'v1_valor_total' => isset($ordem['o1_valor_final']) ? (float) $ordem['o1_valor_final'] : ((float) ($ordem['o1_valor_total'] ?? 0)),
+                'v1_valor_a_ser_pago' => isset($ordem['o1_valor_final']) ? (float) $ordem['o1_valor_final'] : ((float) ($ordem['o1_valor_total'] ?? 0)),
+                'v1_observacoes' => $ordem['o1_observacoes_conclusao'] ?? $ordem['o1_observacoes_entrada'] ?? ''
+            ];
+
+            $produtosParaCupom = [];
+            foreach ($produtos as $p) {
+                $produtosParaCupom[] = [
+                    'nome_produto' => $p['produto_nome'] ?? ($p['nome'] ?? 'Produto'),
+                    'p2_quantidade' => isset($p['p3_quantidade']) ? (int) $p['p3_quantidade'] : 1,
+                    'p2_valor_unitario' => isset($p['p3_valor_unitario']) ? (float) $p['p3_valor_unitario'] : (float) ($p['p3_valor_unitario'] ?? 0),
+                    'p2_subtotal' => isset($p['p3_valor_total']) ? (float) $p['p3_valor_total'] : (float) ($p['p3_valor_total'] ?? 0)
+                ];
+            }
+
+            $configuracoes = $this->extrairConfiguracoesCupomOrden($venda['v1_observacoes'] ?? '');
+
+            $cupomService = new \App\Libraries\CupomService();
+            $pdf = $cupomService->gerarCupom($venda, $produtosParaCupom, $configuracoes);
+
+            $nomeArquivo = 'cupom_ordem_' . ($venda['v1_numero_venda'] ?? $venda['v1_id']) . '.pdf';
+
+            header('Content-Type: application/pdf');
+            header('Content-Disposition: inline; filename="' . $nomeArquivo . '"');
+            header('Content-Transfer-Encoding: binary');
+            header('Accept-Ranges: bytes');
+
+            $pdf->Output($nomeArquivo, 'I');
+            exit;
+
+        } catch (\Exception $e) {
+            log_message('error', 'Erro ao gerar/download cupom da ordem: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Erro ao gerar cupom para download');
+        }
+    }
+
+    /**
+     * Extrair configurações de cupom a partir das observações da ordem
+     */
+    private function extrairConfiguracoesCupomOrden($observacoes)
+    {
+        $configuracoes = [
+            'imprimir_nome_cliente' => false,
+            'imprimir_garantias' => false
+        ];
+
+        if (empty($observacoes)) return $configuracoes;
+
+        if (strpos($observacoes, 'Nome cliente: SIM') !== false) {
+            $configuracoes['imprimir_nome_cliente'] = true;
+        }
+        if (strpos($observacoes, 'Garantias: SIM') !== false) {
+            $configuracoes['imprimir_garantias'] = true;
+        }
+
+        return $configuracoes;
+    }
 }
