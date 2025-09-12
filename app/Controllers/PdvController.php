@@ -6,6 +6,7 @@ use App\Controllers\BaseController;
 use App\Helpers\ConfigHelper;
 use App\Models\ClienteModel;
 use App\Models\ProdutoModel;
+use App\Models\LivroCaixaModel;
 use App\Libraries\CupomService;
 use CodeIgniter\HTTP\ResponseInterface;
 
@@ -13,11 +14,13 @@ class PdvController extends BaseController
 {
     protected $clienteModel;
     protected $produtoModel;
+    protected $livroCaixaModel;
 
     public function __construct()
     {
         $this->clienteModel = new ClienteModel();
         $this->produtoModel = new ProdutoModel();
+        $this->livroCaixaModel = new LivroCaixaModel();
     }
 
     /**
@@ -365,22 +368,61 @@ class PdvController extends BaseController
                 ]);
             }
 
-            // Salvar na sessão (pode ser expandido para salvar no banco)
+            // Verificar se já existe um caixa aberto
+            if (session('caixa_aberto')) {
+                return $this->response->setJSON([
+                    'success' => false,
+                    'message' => 'Já existe um caixa aberto'
+                ]);
+            }
+
+            $usuarioId = session('user_id');
+            $valorInicial = floatval($data['valor_inicial']);
+            $observacoes = $data['observacoes'] ?? null;
+            $dataOperacao = date('Y-m-d H:i:s');
+
+            // Registrar abertura no livro de caixa
+            $dadosLivroCaixa = [
+                'l3_usuario_id' => $usuarioId,
+                'l3_data_operacao' => $dataOperacao,
+                'l3_tipo_operacao' => 'abertura',
+                'l3_valor_inicial' => $valorInicial,
+                'l3_valor_final' => $valorInicial, // No início, final = inicial
+                'l3_valor_vendas' => 0,
+                'l3_numero_vendas' => 0,
+                'l3_valor_diferenca' => 0,
+                'l3_status_caixa' => 'aberto',
+                'l3_observacoes' => $observacoes
+            ];
+
+            $livroCaixaId = $this->livroCaixaModel->insert($dadosLivroCaixa);
+
+            if (!$livroCaixaId) {
+                return $this->response->setJSON([
+                    'success' => false,
+                    'message' => 'Erro ao registrar abertura do caixa'
+                ]);
+            }
+
+            // Salvar na sessão
             session()->set([
                 'caixa_aberto' => true,
-                'caixa_valor_inicial' => $data['valor_inicial'],
-                'caixa_data_abertura' => date('Y-m-d H:i:s'),
-                'caixa_usuario_id' => session('user_id'),
-                'caixa_observacoes_abertura' => $data['observacoes'] ?? null
+                'caixa_livro_id' => $livroCaixaId,
+                'caixa_valor_inicial' => $valorInicial,
+                'caixa_data_abertura' => $dataOperacao,
+                'caixa_usuario_id' => $usuarioId,
+                'caixa_observacoes_abertura' => $observacoes
             ]);
 
             return $this->response->setJSON([
                 'success' => true,
                 'message' => 'Caixa aberto com sucesso!',
-                'data_abertura' => date('Y-m-d H:i:s'),
-                'valor_inicial' => $data['valor_inicial']
+                'data_abertura' => $dataOperacao,
+                'valor_inicial' => $valorInicial,
+                'livro_caixa_id' => $livroCaixaId
             ]);
         } catch (\Exception $e) {
+            log_message('error', 'Erro ao abrir caixa: ' . $e->getMessage());
             return $this->response->setJSON([
                 'success' => false,
                 'message' => 'Erro ao abrir caixa: ' . $e->getMessage()
@@ -410,14 +452,68 @@ class PdvController extends BaseController
                 ]);
             }
 
-            // Calcular totais do dia (pode ser expandido)
+            // Verificar se existe um caixa aberto
+            if (!session('caixa_aberto')) {
+                return $this->response->setJSON([
+                    'success' => false,
+                    'message' => 'Não há caixa aberto para fechar'
+                ]);
+            }
+
+            $usuarioId = session('caixa_usuario_id');
             $valorInicial = session('caixa_valor_inicial') ?? 0;
-            $valorFinal = $data['valor_final'];
-            $diferenca = $valorFinal - $valorInicial;
+            $valorFinal = floatval($data['valor_final']);
+            $observacoes = $data['observacoes'] ?? null;
+            $dataOperacao = date('Y-m-d H:i:s');
+            $dataAbertura = session('caixa_data_abertura');
+
+            // Calcular vendas do período (entre abertura e fechamento)
+            $vendas = $this->calcularVendasPeriodo($dataAbertura, $dataOperacao, $usuarioId);
+            $valorVendas = $vendas['total_vendas'];
+            $numeroVendas = $vendas['numero_vendas'];
+
+            // Calcular diferença (valor final - valor inicial - valor vendas)
+            $valorEsperado = $valorInicial + $valorVendas;
+            $diferenca = $valorFinal - $valorEsperado;
+
+            // Atualizar o registro de abertura com dados do fechamento
+            $livroCaixaId = session('caixa_livro_id');
+            if ($livroCaixaId) {
+                $dadosAtualizacao = [
+                    'l3_valor_final' => $valorFinal,
+                    'l3_valor_vendas' => $valorVendas,
+                    'l3_numero_vendas' => $numeroVendas,
+                    'l3_valor_diferenca' => $diferenca,
+                    'l3_status_caixa' => 'fechado',
+                    'l3_data_fechamento' => $dataOperacao,
+                    'l3_observacoes_fechamento' => $observacoes,
+                    'l3_updated_at' => $dataOperacao
+                ];
+
+                $this->livroCaixaModel->update($livroCaixaId, $dadosAtualizacao);
+            }
+
+            // Criar registro de fechamento separado para histórico
+            $dadosFechamento = [
+                'l3_usuario_id' => $usuarioId,
+                'l3_data_operacao' => $dataOperacao,
+                'l3_tipo_operacao' => 'fechamento',
+                'l3_valor_inicial' => $valorInicial,
+                'l3_valor_final' => $valorFinal,
+                'l3_valor_vendas' => $valorVendas,
+                'l3_numero_vendas' => $numeroVendas,
+                'l3_valor_diferenca' => $diferenca,
+                'l3_status_caixa' => 'fechado',
+                'l3_observacoes' => $observacoes,
+                'l3_data_fechamento' => $dataOperacao
+            ];
+
+            $this->livroCaixaModel->insert($dadosFechamento);
 
             // Limpar sessão do caixa
             session()->remove([
                 'caixa_aberto',
+                'caixa_livro_id',
                 'caixa_valor_inicial',
                 'caixa_data_abertura',
                 'caixa_usuario_id',
@@ -430,14 +526,156 @@ class PdvController extends BaseController
                 'resumo' => [
                     'valor_inicial' => $valorInicial,
                     'valor_final' => $valorFinal,
+                    'valor_vendas' => $valorVendas,
+                    'numero_vendas' => $numeroVendas,
+                    'valor_esperado' => $valorEsperado,
                     'diferenca' => $diferenca,
-                    'data_fechamento' => date('Y-m-d H:i:s')
+                    'data_fechamento' => $dataOperacao,
+                    'periodo' => [
+                        'abertura' => $dataAbertura,
+                        'fechamento' => $dataOperacao
+                    ]
                 ]
             ]);
         } catch (\Exception $e) {
+            log_message('error', 'Erro ao fechar caixa: ' . $e->getMessage());
             return $this->response->setJSON([
                 'success' => false,
                 'message' => 'Erro ao fechar caixa: ' . $e->getMessage()
+            ]);
+        }
+    }
+
+    /**
+     * Realizar sangria (retirada de dinheiro do caixa)
+     */
+    public function sangriaCaixa()
+    {
+        try {
+            $data = $this->request->getJSON(true);
+
+            $validation = \Config\Services::validation();
+            $validation->setRules([
+                'valor' => 'required|decimal|greater_than[0]',
+                'observacoes' => 'permit_empty|string|max_length[500]'
+            ]);
+
+            if (!$validation->run($data)) {
+                return $this->response->setJSON([
+                    'success' => false,
+                    'message' => 'Dados inválidos',
+                    'errors' => $validation->getErrors()
+                ]);
+            }
+
+            // Verificar se existe um caixa aberto
+            if (!session('caixa_aberto')) {
+                return $this->response->setJSON([
+                    'success' => false,
+                    'message' => 'Não há caixa aberto para realizar sangria'
+                ]);
+            }
+
+            $usuarioId = session('caixa_usuario_id');
+            $valor = floatval($data['valor']);
+            $observacoes = $data['observacoes'] ?? null;
+            $dataOperacao = date('Y-m-d H:i:s');
+
+            // Registrar sangria no livro de caixa
+            $dadosSangria = [
+                'l3_usuario_id' => $usuarioId,
+                'l3_data_operacao' => $dataOperacao,
+                'l3_tipo_operacao' => 'sangria',
+                'l3_valor_inicial' => $valor,
+                'l3_valor_final' => 0,
+                'l3_valor_vendas' => 0,
+                'l3_numero_vendas' => 0,
+                'l3_valor_diferenca' => -$valor, // Negativo porque é uma retirada
+                'l3_status_caixa' => 'aberto',
+                'l3_observacoes' => $observacoes
+            ];
+
+            $sangriaId = $this->livroCaixaModel->insert($dadosSangria);
+
+            return $this->response->setJSON([
+                'success' => true,
+                'message' => 'Sangria realizada com sucesso!',
+                'sangria_id' => $sangriaId,
+                'valor' => $valor,
+                'data_operacao' => $dataOperacao
+            ]);
+        } catch (\Exception $e) {
+            log_message('error', 'Erro ao realizar sangria: ' . $e->getMessage());
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'Erro ao realizar sangria: ' . $e->getMessage()
+            ]);
+        }
+    }
+
+    /**
+     * Realizar suprimento (depósito de dinheiro no caixa)
+     */
+    public function suprimentoCaixa()
+    {
+        try {
+            $data = $this->request->getJSON(true);
+
+            $validation = \Config\Services::validation();
+            $validation->setRules([
+                'valor' => 'required|decimal|greater_than[0]',
+                'observacoes' => 'permit_empty|string|max_length[500]'
+            ]);
+
+            if (!$validation->run($data)) {
+                return $this->response->setJSON([
+                    'success' => false,
+                    'message' => 'Dados inválidos',
+                    'errors' => $validation->getErrors()
+                ]);
+            }
+
+            // Verificar se existe um caixa aberto
+            if (!session('caixa_aberto')) {
+                return $this->response->setJSON([
+                    'success' => false,
+                    'message' => 'Não há caixa aberto para realizar suprimento'
+                ]);
+            }
+
+            $usuarioId = session('caixa_usuario_id');
+            $valor = floatval($data['valor']);
+            $observacoes = $data['observacoes'] ?? null;
+            $dataOperacao = date('Y-m-d H:i:s');
+
+            // Registrar suprimento no livro de caixa
+            $dadosSuprimento = [
+                'l3_usuario_id' => $usuarioId,
+                'l3_data_operacao' => $dataOperacao,
+                'l3_tipo_operacao' => 'suprimento',
+                'l3_valor_inicial' => 0,
+                'l3_valor_final' => $valor,
+                'l3_valor_vendas' => 0,
+                'l3_numero_vendas' => 0,
+                'l3_valor_diferenca' => $valor, // Positivo porque é um depósito
+                'l3_status_caixa' => 'aberto',
+                'l3_observacoes' => $observacoes
+            ];
+
+            $suprimentoId = $this->livroCaixaModel->insert($dadosSuprimento);
+
+            return $this->response->setJSON([
+                'success' => true,
+                'message' => 'Suprimento realizado com sucesso!',
+                'suprimento_id' => $suprimentoId,
+                'valor' => $valor,
+                'data_operacao' => $dataOperacao
+            ]);
+        } catch (\Exception $e) {
+            log_message('error', 'Erro ao realizar suprimento: ' . $e->getMessage());
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'Erro ao realizar suprimento: ' . $e->getMessage()
             ]);
         }
     }
@@ -642,11 +880,31 @@ class PdvController extends BaseController
      */
     private function getCaixaStatus()
     {
+        $caixaAberto = session('caixa_aberto') ?? false;
+        
+        // Se não há caixa aberto na sessão, verificar no banco de dados
+        if (!$caixaAberto) {
+            $usuarioId = session('user_id');
+            $caixaAberto = $this->livroCaixaModel->verificarCaixaAberto($usuarioId);
+            
+            // Se encontrou caixa aberto no banco, restaurar na sessão
+            if ($caixaAberto) {
+                session()->set([
+                    'caixa_aberto' => true,
+                    'caixa_livro_id' => $caixaAberto['l3_id'],
+                    'caixa_valor_inicial' => $caixaAberto['l3_valor_inicial'],
+                    'caixa_data_abertura' => $caixaAberto['l3_data_operacao'],
+                    'caixa_usuario_id' => $caixaAberto['l3_usuario_id']
+                ]);
+            }
+        }
+
         return [
-            'aberto' => session('caixa_aberto') ?? false,
+            'aberto' => (bool)$caixaAberto,
             'valor_inicial' => session('caixa_valor_inicial') ?? 0,
             'data_abertura' => session('caixa_data_abertura'),
-            'usuario_id' => session('caixa_usuario_id')
+            'usuario_id' => session('caixa_usuario_id'),
+            'livro_caixa_id' => session('caixa_livro_id')
         ];
     }
 
@@ -796,5 +1054,43 @@ class PdvController extends BaseController
         }
 
         return $configuracoes;
+    }
+
+    /**
+     * Calcular vendas realizadas no período do caixa
+     */
+    private function calcularVendasPeriodo($dataInicio, $dataFim, $usuarioId = null)
+    {
+        try {
+            $db = \Config\Database::connect();
+            
+            $builder = $db->table('v1_vendas')
+                ->select('
+                    COUNT(*) as numero_vendas,
+                    COALESCE(SUM(v1_valor_total), 0) as total_vendas
+                ')
+                ->where('v1_created_at >=', $dataInicio)
+                ->where('v1_created_at <=', $dataFim)
+                ->where('v1_deleted_at IS NULL')
+                ->where('v1_status !=', 'Cancelado');
+
+            // Filtrar por usuário se especificado
+            if ($usuarioId) {
+                $builder->where('v1_vendedor_id', $usuarioId);
+            }
+
+            $resultado = $builder->get()->getRowArray();
+
+            return [
+                'numero_vendas' => (int)($resultado['numero_vendas'] ?? 0),
+                'total_vendas' => (float)($resultado['total_vendas'] ?? 0.0)
+            ];
+        } catch (\Exception $e) {
+            log_message('error', 'Erro ao calcular vendas do período: ' . $e->getMessage());
+            return [
+                'numero_vendas' => 0,
+                'total_vendas' => 0.0
+            ];
+        }
     }
 }

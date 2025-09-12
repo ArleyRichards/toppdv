@@ -19,6 +19,12 @@ $routes->post('auth/redefinir-senha', 'AuthController::processRedefinirSenha');
 $routes->get('acesso-negado', 'AuthController::acessoNegado');
 
 $routes->get('/home', 'Home::index');
+$routes->get('relatorios', 'RelatoriosController::index');
+$routes->get('relatorios/vendas/pdf', 'RelatoriosController::vendasPdf');
+// Additional relatorios PDF endpoints
+$routes->get('relatorios/ordens/pdf', 'RelatoriosController::ordensPdf');
+$routes->get('relatorios/comissoes/pdf', 'RelatoriosController::comissoesPdf');
+$routes->get('relatorios/livrocaixa/pdf', 'RelatoriosController::livroCaixaPdf');
 // Licença
 $routes->get('licenca', 'LicencaController::index');
 
@@ -173,6 +179,8 @@ $routes->get('pdv/buscarProdutos', 'PdvController::buscarProdutos');
 $routes->post('pdv/processarVenda', 'PdvController::processarVenda');
 $routes->post('pdv/abrirCaixa', 'PdvController::abrirCaixa');
 $routes->post('pdv/fecharCaixa', 'PdvController::fecharCaixa');
+$routes->post('pdv/sangriaCaixa', 'PdvController::sangriaCaixa');
+$routes->post('pdv/suprimentoCaixa', 'PdvController::suprimentoCaixa');
 $routes->post('pdv/cancelarVenda', 'PdvController::cancelarVenda');
 $routes->get('pdv/gerarCupom/(:num)', 'PdvController::gerarCupom/$1');
 $routes->get('pdv/downloadCupom/(:num)', 'PdvController::downloadCupom/$1');

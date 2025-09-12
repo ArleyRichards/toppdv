@@ -170,6 +170,30 @@
             </div>
         </a>
     </div>
+
+    <div class="col-md-4 col-lg-2">
+        <a href="<?= base_url('vendedores') ?>" class="text-decoration-none">
+            <div class="card h-100 text-center">
+                <div class="card-body">
+                    <i class="bi bi-person display-4 text-success mb-3"></i>
+                    <h5 class="card-title">Vendedores</h5>
+                    <p class="card-text text-muted">Visualizar vendedores</p>
+                </div>
+            </div>
+        </a>
+    </div>
+
+    <div class="col-md-4 col-lg-2">
+        <a href="<?= base_url('financeiro') ?>" class="text-decoration-none">
+            <div class="card h-100 text-center">
+                <div class="card-body">
+                    <i class="bi bi-cash display-4 text-warning mb-3"></i>
+                    <h5 class="card-title">Financeiro</h5>
+                    <p class="card-text text-muted">Visualizar movimentações financeiras</p>
+                </div>
+            </div>
+        </a>
+    </div>
 </div>
 
 <?= $this->include('templates/footer_home') ?>
